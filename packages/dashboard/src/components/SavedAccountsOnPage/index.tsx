@@ -5,7 +5,6 @@ import ButtonAnimated from '@components/ButtonAnimated';
 import { RawLink } from '@components/Link';
 import Icon from '@components/Icon';
 import { styled, BREAKPOINT_DATA_TABLE_M } from '@stitched';
-import { getRouteByName } from '@utils/routes';
 import { useWindowResize } from '@hooks/windowResize';
 import { trimAccount } from '@utils/account';
 import Identicon from '@components/Identicon';
@@ -77,7 +76,7 @@ const SavedItemRow = ({
   >
     <span>
       <Identicon />
-      <RawLink to={getRouteByName('Account', { id: account })}>{account}</RawLink>
+      <RawLink to="TODO: account route">{account}</RawLink>
     </span>
     <ButtonAnimated
       type="button"

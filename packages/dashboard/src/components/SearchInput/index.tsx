@@ -9,7 +9,6 @@ import { styled } from '@stitched';
 import Icon from '@components/Icon';
 import { useAccountStore } from '@hooks/store';
 import { RawLink } from '@components/Link';
-import { getRouteByName } from '@utils/routes';
 import { useOutsideHandler } from '@hooks/dom';
 
 const SearchAccount = styled('div', {
@@ -186,7 +185,7 @@ const SearchInput = () => {
                   data-suggestion-acc-id
                 >
                   <RawLink
-                    to={getRouteByName('Account', { id })}
+                    to="TODO: route"
                   >
                     <SuggestionItem>
                       { id }
@@ -200,7 +199,7 @@ const SearchInput = () => {
                 data-suggestion
                 data-suggestions-more-acc
               >
-                <RawLink to={getRouteByName('Accounts')}>
+                <RawLink to="TODO: route">
                   See more accounts...
                 </RawLink>
               </span>

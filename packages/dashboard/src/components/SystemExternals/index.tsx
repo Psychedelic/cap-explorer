@@ -84,7 +84,7 @@ const SystemExternals = () => {
       data-externals
     >
       <ColumnExternalLinks />
-      <Polling sessionTimePassed={sessionTimePassed} />
+      <Polling sessionTimePassed={(sessionTimePassed as unknown as number)} />
     </SystemExternalsContainer>
   );
 };

@@ -4,8 +4,6 @@ import { trimAccount } from '@utils/account';
 import { useBookmarkPersistedState } from '@hooks/bookmarks';
 import ButtonAnimated from '@components/ButtonAnimated';
 import Icon from '@components/Icon';
-import { getRouteByName } from '@utils/routes';
-import { useHistory } from 'react-router-dom';
 
 const SavedContainer = styled('div', {
   display: 'grid',
@@ -58,33 +56,29 @@ const SavedItem = ({
 }: {
   account: string,
   removeHandler: (account: string) => void,
-}) => {
-  const history = useHistory();
-
-  return (
-    <div>
-      <button
-        type="button"
-        aria-label="Saved account"
-        data-saved-acc-id={account}
-        onClick={() => history.push(getRouteByName('Account', { id: account }))}
-      >
-        {trimAccount(account)}
-      </button>
-      <ButtonAnimated
-        type="button"
-        aria-label="Remove account"
-        onClick={() => removeHandler(account)}
-      >
-        <Icon
-          icon="Times"
-          size="sm"
-          title="Remove from saved accounts"
-        />
-      </ButtonAnimated>
-    </div>
-  );
-};
+}) => (
+  <div>
+    <button
+      type="button"
+      aria-label="Saved account"
+      data-saved-acc-id={account}
+      onClick={() => console.log('TODO: on saved account link')}
+    >
+      {trimAccount(account)}
+    </button>
+    <ButtonAnimated
+      type="button"
+      aria-label="Remove account"
+      onClick={() => removeHandler(account)}
+    >
+      <Icon
+        icon="Times"
+        size="sm"
+        title="Remove from saved accounts"
+      />
+    </ButtonAnimated>
+  </div>
+);
 
 const initialState: string[] = [];
 

@@ -3,7 +3,7 @@ import {
   Link as RouterLink,
 } from 'react-router-dom';
 import { styled } from '@stitched';
-import { RouteNames, getRouteByName } from '@utils/routes';
+import { RouteNames } from '@utils/routes';
 import { trimAccount } from '@utils/account';
 
 const Container = styled('span', {
@@ -44,20 +44,6 @@ export const PrimaryLink = ({
   </Container>
 );
 
-export const AccountLink = ({
-  account,
-  trim,
-}: {
-  account: string,
-  trim: boolean,
-}) => (
-  <PrimaryLink
-    to={getRouteByName('Account', { id: account })}
-  >
-    {trim ? trimAccount(account) : account}
-  </PrimaryLink>
-);
-
 enum ExternalLinks {
   docs = 'docs.cap.ooo',
   discord = 'discord.gg/yVEcEzmrgm',
@@ -76,4 +62,18 @@ export const ExternalLink = ({
       { description }
     </a>
   </Container>
+);
+
+export const AccountLink = ({
+  account,
+  trim,
+}: {
+  account: string,
+  trim: boolean,
+}) => (
+  <PrimaryLink
+    to="TODO: Account"
+  >
+    {trim ? trimAccount(account) : account}
+  </PrimaryLink>
 );
