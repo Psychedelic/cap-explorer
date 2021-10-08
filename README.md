@@ -25,6 +25,24 @@ Use the Lerna boostrap command to install and link the packages and their depend
 yarn bootstrap
 ```
 
+
+## ⚡ Development
+
+For the main `Dashboard` UI development work, you'll fire the `dev server` by:
+
+```sh
+yarn dev:dashboard
+```
+
+
+## 💍 Tests
+
+Run unit-tests for the `Dashboard UI` by:
+
+```sh
+yarn test:dashboard-unit
+```
+
 ## 🙏 Contribution guideline
 
 Create branches from the `main` branch and name it in accordance to **conventional commits** [here](https://www.conventionalcommits.org/en/v1.0.0/), or follow the examples bellow:
