@@ -1,7 +1,27 @@
 {
   "name": "cap-explorer",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Psychedelic/cap-explorer"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@psychedelic"
+  },
   "devDependencies": {
     "lerna": "^4.0.0"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "dev:dashboard": "lerna run --scope dashboard start",
+    "test:dashboard-unit": "lerna run --scope dashboard test:unit"
+  },
+  "engines": {
+    "node": ">=16.9.1",
+    "npm": ">=7.21.1"
   }
 }

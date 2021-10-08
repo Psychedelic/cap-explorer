@@ -1,0 +1,521 @@
+/* eslint-disable react/require-default-props */
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+} from 'react';
+import {
+  useTable,
+  Column,
+  usePagination,
+  useColumnOrder,
+  HeaderGroup,
+  ColumnInstance,
+} from 'react-table';
+import ContainerBox from '@components/ContainerBox';
+import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
+import { TransactionTypes } from '@components/Tables/TransactionsTable';
+import TableDropDownSelect from '@components/TableDropdownSelect';
+import Icon from '@components/Icon';
+import { useWindowResize } from '@hooks/windowResize';
+import Loading from '@components/Loading';
+
+const RowWrapper = styled('div', {
+  display: 'grid',
+  gap: '1em',
+  gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
+  columnGap: '$tableColumnSpacing',
+  alignItems: 'flex-start',
+  width: '100%',
+  borderBottom: '1px solid $borderGrey',
+  padding: '20px 0',
+  color: '$defaultTxtColour',
+  fontFamily: 'Inter',
+
+  '&:last-child': {
+    borderBottom: 'none',
+  },
+
+  '& > div': {
+    fontSize: '$s',
+    justifySelf: 'flex-end',
+  },
+
+  '& > div:first-child': {
+    justifySelf: 'flex-start',
+  },
+});
+
+const ColWrapper = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+  width: 'calc(100vw - 80px)',
+  margin: 0,
+  padding: 0,
+
+  '@lg': {
+    width: '100%',
+    padding: '0 10px',
+  },
+});
+
+const Pagination = styled('div', {
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'flex-end',
+  marginTop: '2em',
+  marginBottom: '2em',
+  fontFamily: 'Inter',
+  fontSize: '$s',
+  color: '$defaultTxtColour',
+
+  '& > span': {
+    padding: '0 20px',
+  },
+
+  '& svg': {
+    fontSize: '$s',
+    color: '$defaultTxtColour',
+  },
+
+  '& button': {
+    transform: 'translateX(0)',
+    transition: 'transform 0.2s ease-in',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+
+    '&:hover': {
+      transform: 'translateX(2px)',
+    },
+
+    '&:first-child': {
+      '&:hover': {
+        transform: 'translateX(-2px)',
+      },
+    },
+  },
+});
+
+const Tabs = styled('div', {
+  display: 'flex',
+
+  '& > button': {
+    marginRight: '20px',
+    textTransform: 'capitalize',
+
+    '&:last-child': {
+      marginRight: 0,
+    },
+  },
+});
+
+const TabButton = styled('button', {
+  color: '$midGrey',
+
+  variants: {
+    selected: {
+      true: {
+        color: '$defaultTxtColour',
+      },
+    },
+  },
+});
+
+const ScrollXContainer = styled('div', {
+  overflowX: 'scroll',
+  width: 'calc(100vw - 80px)',
+
+  '& > div': {
+    display: 'table',
+    minWidth: '968px',
+  },
+
+  '@lg': {
+    width: '100%',
+    overflowX: 'hidden',
+
+    '& > div': {
+      display: 'block',
+      minWidth: 'auto',
+    },
+  },
+});
+
+const DropdownContainer = styled('div', {
+  position: 'relative',
+  transform: 'translateX(-8px)',
+
+  '& [data-dd-ctrlr]': {
+    background: 'transparent',
+  },
+});
+
+const LoadingContainer = styled('div', {
+  width: '100%',
+  padding: '80px 0',
+});
+
+const Cell = styled('div', {
+  overflow: 'hidden',
+  wordBreak: 'break-word',
+});
+
+const IconHintScrollXContainer = styled('span', {
+  position: 'absolute',
+  top: '34px',
+  right: '24px',
+  opacity: 1,
+  transition: 'opacity 0.3s ease-out',
+
+  variants: {
+    show: {
+      false: {
+        opacity: 0,
+      },
+    },
+  },
+
+  '@dataTableBreakPointS': {
+    display: 'none',
+  },
+});
+
+const IconHintScrollX = ({
+  show,
+}: {
+  show: boolean,
+}) => (
+  <IconHintScrollXContainer
+    show={show}
+  >
+    <Icon
+      icon="ArrowRight"
+      size="lg"
+      title="Previous page"
+    />
+  </IconHintScrollXContainer>
+);
+
+const RowCell = ({
+  cid,
+  value,
+}: {
+  cid: string,
+  value: React.ReactNode,
+}) => (
+  <Cell data-cid={cid}>
+    {value}
+  </Cell>
+);
+
+export type TableTitle = 'Accounts' | 'Transactions';
+
+export type TableId = 'overview-page-transactions' | 'accounts-page-accounts-table' | 'account-page-transactions';
+
+export const HeaderTabs = <T extends string>({
+  filters,
+  onSelectionHandler,
+  id,
+}: {
+  filters: T[],
+  onSelectionHandler: (filter: T) => void,
+  id: TableId
+}) => {
+  const isSmallerThanBreakpointL = useWindowResize({
+    breakpoint: BREAKPOINT_DATA_TABLE_L,
+  });
+  const [selectedTab, setSelectedTab] = useState<number>(0);
+  const selectHandler = (index: number, selection: T) => {
+    setSelectedTab(index);
+    onSelectionHandler(selection);
+  };
+
+  return (
+    (
+      isSmallerThanBreakpointL
+      && (
+      <DropdownContainer
+        data-filters
+      >
+        <TableDropDownSelect
+          show
+          title="Drop down options"
+          options={filters}
+          onSelectHandler={onSelectionHandler}
+          id={id}
+        />
+      </DropdownContainer>
+      )
+    )
+    || (
+      <Tabs
+        data-filters
+      >
+        {
+          filters.map((v, key) => (
+            <TabButton
+              // eslint-disable-next-line react/no-array-index-key
+              key={key}
+              type="button"
+              onClick={() => selectHandler(key, v)}
+              selected={key === selectedTab}
+              data-option={v}
+            >
+              {v}
+            </TabButton>
+          ))
+        }
+      </Tabs>
+    )
+  );
+};
+
+export interface HeaderItem extends Record<string, string> {
+  Header: string,
+  accessor: string,
+}
+
+export type DataItem<T> = {
+  [P in keyof T]?: T[P]
+}
+
+interface FormatterTypesHeader extends Record<string, string | React.ReactNode> {
+  transactionType?: (value: TransactionTypes[]) => React.ReactNode,
+  order?: () => string,
+}
+
+type FormatterTypesBody = {
+  account?: (value: string) => React.ReactNode,
+  transactionType?: (value: TransactionTypes) => string,
+  from?: (value: string) => React.ReactNode,
+  to?: (value: string) => React.ReactNode,
+  totalValue?: (value: string) => string,
+  time?: (value: string) => string,
+}
+
+export interface FormatterTypes {
+  header?: FormatterTypesHeader,
+  body?: FormatterTypesBody,
+}
+
+interface DataTableProps<T extends object> {
+  columns: Column<T>[],
+  data: T[],
+  formatters?: FormatterTypes,
+  columnOrder: string[],
+  isLoading: boolean,
+}
+
+interface HeaderGroupExtented {
+  filters?: TransactionTypes[],
+}
+
+const formatterCallbackHandler = <T extends {}>(
+  formatters: FormatterTypes,
+  formatterType: keyof FormatterTypes,
+  column: (HeaderGroup<T> | ColumnInstance<T>) & HeaderGroupExtented,
+  baseValue: React.ReactNode,
+): React.ReactNode => {
+  let callback;
+
+  if (formatters[formatterType]
+      && column.id in formatters[formatterType]!) {
+    const ft = formatters[formatterType]!;
+    const { id } = column;
+    callback = ft[(id as keyof (FormatterTypesBody | FormatterTypesHeader))];
+  }
+
+  if (typeof callback !== 'function') return baseValue;
+
+  if (formatterType === 'header'
+      && column?.filters) {
+    return callback(column.filters);
+  }
+
+  return callback(baseValue);
+};
+
+export const PAGE_SIZE = 10;
+
+const DataTable = <T extends {}>({
+  columns,
+  data,
+  formatters = {},
+  columnOrder,
+  isLoading,
+}: DataTableProps<T>) => {
+  const [showIconHintScrollX, setShowIconHintScrollX] = useState(true);
+  const memoizedColumns = useMemo(() => columns, [columns]);
+  const memoizedData = useMemo(() => data, [data]);
+  const refDOMScrollXContainer = useRef<HTMLDivElement | undefined>();
+
+  const tableInstance = useTable<T>({
+    columns: memoizedColumns,
+    data: memoizedData,
+    initialState: {
+      pageSize: PAGE_SIZE,
+    },
+  },
+  usePagination,
+  useColumnOrder);
+
+  const {
+    headerGroups,
+    page,
+    prepareRow,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    nextPage,
+    previousPage,
+    setColumnOrder,
+    state: {
+      pageIndex,
+    },
+  } = tableInstance;
+
+  useEffect(() => {
+    setColumnOrder(columnOrder);
+  }, [columnOrder]);
+
+  useEffect(() => {
+    if (!refDOMScrollXContainer?.current) return;
+
+    const handler = () => {
+      if (
+        showIconHintScrollX
+        && refDOMScrollXContainer?.current
+        && refDOMScrollXContainer?.current?.scrollLeft <= 40
+      ) return;
+      setShowIconHintScrollX(false);
+    };
+    const destroyListener = () => refDOMScrollXContainer?.current?.removeEventListener('scroll', handler);
+
+    refDOMScrollXContainer?.current?.addEventListener('scroll', handler);
+    // eslint-disable-next-line consistent-return
+    return destroyListener;
+  }, [refDOMScrollXContainer?.current]);
+
+  const currentPageIndex = pageIndex + 1;
+
+  return (
+    <>
+      <ContainerBox>
+        {
+          (
+            isLoading
+            && (
+              <LoadingContainer>
+                <Loading alt="Loading the data table" size="m" />
+              </LoadingContainer>
+            )
+          )
+          || (
+            <ColWrapper data-table>
+              <ScrollXContainer
+                ref={refDOMScrollXContainer as React.RefObject<HTMLDivElement>}
+                data-scroll-controller
+              >
+                <div data-scrollable>
+                  <RowWrapper data-header>
+                    {
+                      headerGroups.map(
+                        (headerGroup) => headerGroup.headers.map((
+                          column,
+                        ) => {
+                          const { key: colHeaderKey } = column.getHeaderProps();
+
+                          return (
+                            <div
+                              key={colHeaderKey}
+                              data-cid={column?.id}
+                            >
+                              {
+                                formatterCallbackHandler(
+                                  formatters,
+                                  'header',
+                                  column,
+                                  column.render('Header'),
+                                )
+                              }
+                            </div>
+                          );
+                        }),
+                      )
+                    }
+                  </RowWrapper>
+                  {
+                    page.map((row) => {
+                      prepareRow(row);
+
+                      return (
+                        <RowWrapper key={row.index} data-row>
+                          {
+                            row.cells.map((cell) => {
+                              const { key: colHeaderKey } = cell.column.getHeaderProps();
+
+                              return (
+                                <RowCell
+                                  key={colHeaderKey}
+                                  cid={cell?.column?.id}
+                                  value={
+                                    formatterCallbackHandler(
+                                      formatters,
+                                      'body',
+                                      cell?.column,
+                                      cell.value,
+                                    )
+                                  }
+                                />
+                              );
+                            })
+                          }
+                        </RowWrapper>
+                      );
+                    })
+                  }
+                </div>
+                <IconHintScrollX show={showIconHintScrollX} />
+              </ScrollXContainer>
+              <Pagination data-pagination>
+                <button
+                  type="button"
+                  aria-label="Previous page"
+                  onClick={() => previousPage()}
+                  disabled={!canPreviousPage}
+                >
+                  <Icon
+                    icon="ArrowLeft"
+                    size="lg"
+                    title="Previous page"
+                  />
+                </button>
+                <span data-page-index={currentPageIndex}>
+                  {`${currentPageIndex} of ${pageOptions.length}`}
+                </span>
+                <button
+                  type="button"
+                  aria-label="Next page"
+                  onClick={() => nextPage()}
+                  disabled={!canNextPage}
+                >
+                  <Icon
+                    icon="ArrowRight"
+                    size="lg"
+                    title="Next page"
+                  />
+                </button>
+              </Pagination>
+            </ColWrapper>
+          )
+        }
+      </ContainerBox>
+    </>
+  );
+};
+
+export default DataTable;

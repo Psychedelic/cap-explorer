@@ -1,0 +1,48 @@
+import React from 'react';
+import { styled } from '@stitched';
+
+const Overall = styled('div', {
+  fontSize: '$s',
+  boxSizing: 'border-box',
+  margin: '0px',
+  minWidth: '0px',
+  display: 'flex',
+  alignItems: 'center',
+  width: 'fit-content',
+
+  '& > div': {
+    boxSizing: 'border-box',
+    margin: '0px 1rem 0px 0px',
+    minWidth: '0px',
+    fontWeight: 500,
+    fontSize: '14px',
+
+    '& span': {
+      paddingRight: '4px',
+
+      '&:first-child:after': {
+        content: ':',
+      },
+
+      '&:nth-child(2)': {
+        padding: 0,
+        fontWeight: 'bold',
+      },
+    },
+  },
+});
+
+const OverallValues = () => (
+  <Overall>
+    <div>
+      <span>Users</span>
+      <span>21,321</span>
+    </div>
+    <div>
+      <span>Transactions(24h)</span>
+      <span>209,201</span>
+    </div>
+  </Overall>
+);
+
+export default OverallValues;
