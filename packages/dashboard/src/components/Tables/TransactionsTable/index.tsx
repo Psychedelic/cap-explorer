@@ -20,14 +20,11 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
-    gridTemplateAreas: '"transactionType from to time cycles totalValue"',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 0.8fr 0.8fr 0.8fr 0.8fr',
+    gridTemplateAreas: '"operation caller from to time memo fee amount"',
+    justifySelf: 'left',
 
-    '& [data-cid="transactionType"]': {
-      display: 'block',
-    },
-
-    '& [data-cid="from"], & [data-cid="to"]': {
+    '& [data-cid]': {
       justifySelf: 'left',
     },
   },
@@ -54,12 +51,14 @@ enum TransactionTypeAlias {
 }
 
 export interface Data {
-  transactionType: TransactionTypes,
+  operation: string,
+  caller: string,
   from: string,
   to: string,
-  totalValue: number,
-  cycles: number,
   time: string,
+  memo: string,
+  fee: string,
+  amount: number,
 }
 
 interface Column {
@@ -71,19 +70,24 @@ interface Column {
 const DEFAULT_BASE_STATE = TransactionTypes.all;
 
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
-  'transactionType',
+  'operation',
+  'caller',
   'from',
   'to',
   'time',
-  'cycles',
-  'totalValue',
+  'memo',
+  'fee',
+  'amount',
 ];
 
 const columns: Column[] = [
   {
-    Header: 'All',
-    accessor: 'transactionType',
-    filters: ['all', 'deposit', 'withdraw'],
+    Header: 'Operation',
+    accessor: 'operation',
+  },
+  {
+    Header: 'Caller',
+    accessor: 'caller',
   },
   {
     Header: 'From',
@@ -94,16 +98,20 @@ const columns: Column[] = [
     accessor: 'to',
   },
   {
-    Header: 'Total Value',
-    accessor: 'totalValue',
-  },
-  {
-    Header: 'Cycles Amount',
-    accessor: 'cycles',
-  },
-  {
     Header: 'Time',
     accessor: 'time',
+  },
+  {
+    Header: 'Memo',
+    accessor: 'memo',
+  },
+  {
+    Header: 'Fee',
+    accessor: 'fee',
+  },
+  {
+    Header: 'Amount',
+    accessor: 'amount',
   },
 ];
 
@@ -142,7 +150,12 @@ const TransactionsTable = ({
 
   const formatters = useMemo(() => ({
     body: {
-      transactionType: (value: TransactionTypes) => TransactionTypeAlias[value],
+      caller: (cellValue: string) => (
+        <AccountLink
+          account={cellValue}
+          trim
+        />
+      ),
       from: (cellValue: string) => (
         <AccountLink
           account={cellValue}
@@ -155,8 +168,8 @@ const TransactionsTable = ({
           trim
         />
       ),
-      cycles: (cellValue: string) => <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />,
-      totalValue: (cellValue: string) => formatPriceForChart({ value: cellValue, abbreviation: 'USD' }),
+      fee: (cellValue: string) => <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />,
+      amount: (cellValue: string) => formatPriceForChart({ value: cellValue, abbreviation: 'USD' }),
       time: (cellValue: string) => dateRelative(cellValue),
     },
   }), [headerGroupHandler]);
