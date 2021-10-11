@@ -56,8 +56,8 @@ export interface Data {
   from: string,
   to: string,
   time: string,
-  memo: string,
-  fee: string,
+  memo: number,
+  fee: number,
   amount: number,
 }
 
@@ -135,9 +135,10 @@ const TransactionsTable = ({
       return;
     }
 
-    setCurrentData(
-      data.filter((v) => v.transactionType === selected),
-    );
+    // TODO: set current, as disabled transaction type
+    // setCurrentData(
+    //   data.filter((v) => v.transactionType === selected),
+    // );
   }, [data]);
 
   const headerGroupHandler = useCallback((filters: TransactionTypes[]) => (
