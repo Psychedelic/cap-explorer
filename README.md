@@ -22,7 +22,7 @@ The project is split into different packages and uses [Lerna](https://lerna.js.o
 Use the Lerna boostrap command to install and link the packages and their dependencies.
 
 ```sh
-yarn bootstrap
+lerna bootstrap
 ```
 
 
