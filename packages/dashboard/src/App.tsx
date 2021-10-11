@@ -42,28 +42,22 @@ const Routes = ({
   bookmarkColumnMode: BookmarkColumnModes,
   bookmarkExpandHandler: BookmarkExpandHandler,
   loading: boolean,
-}) => {
-  const location = useLocation();
-
-  const showBookmarkCol = location.pathname !== '/';
-
-  return (
-    <Layout
-      bookmarkColumnMode={bookmarkColumnMode}
-      bookmarkExpandHandler={bookmarkExpandHandler}
-      loading={loading}
-      showBookmarkCol={showBookmarkCol}
-    >
-      <Switch>
-        <Route path={RouteNames.Home}>
-          <LazyOverview
-            bookmarkColumnMode={bookmarkColumnMode}
-          />
-        </Route>
-      </Switch>
-    </Layout>
-  );
-};
+}) => (
+  <Layout
+    bookmarkColumnMode={bookmarkColumnMode}
+    bookmarkExpandHandler={bookmarkExpandHandler}
+    loading={loading}
+    showBookmarkCol={false}
+  >
+    <Switch>
+      <Route path={RouteNames.Home}>
+        <LazyOverview
+          bookmarkColumnMode={bookmarkColumnMode}
+        />
+      </Route>
+    </Switch>
+  </Layout>
+);
 
 const App = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
