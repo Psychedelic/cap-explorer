@@ -214,7 +214,7 @@ const RowCell = ({
 
 export type TableTitle = 'Accounts' | 'Transactions';
 
-export type TableId = 'overview-page-transactions' | 'accounts-page-accounts-table' | 'account-page-transactions';
+export type TableId = 'overview-page-transactions' | 'app-transactions-page';
 
 export const HeaderTabs = <T extends string>({
   filters,

@@ -3,7 +3,7 @@ import { styled } from '@stitched';
 import DataTable, { FormatterTypes, TableId } from '@components/Tables/DataTable';
 import Title from '@components/Title';
 import { dateRelative } from '@utils/date';
-import { formattedNum } from '@utils/formatters';
+import { formattedTransactionNumber } from '@utils/formatters';
 import { isTableDataReady } from '@utils/tables';
 import { AccountLink } from '@components/Link';
 import ValueCell from '@components/Tables/ValueCell';
@@ -15,11 +15,11 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '20px 1fr 1fr 1fr 1fr',
-    gridTemplateAreas: '"order account transactions age cycles"',
+    gridTemplateColumns: '2fr 1fr 1fr',
+    gridTemplateAreas: '"canister transactions age"',
   },
 
-  '& [data-cid="account"]': {
+  '& [data-cid]': {
     justifySelf: 'left',
   },
 
@@ -33,11 +33,9 @@ const Container = styled('div', {
 });
 
 export interface Data {
-  order: number,
-  account: string,
+  canister: string,
   transactions: number,
   age: string,
-  cycles: number,
 }
 
 interface Column {
@@ -46,21 +44,15 @@ interface Column {
 }
 
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
-  'order',
-  'account',
+  'canister',
   'transactions',
   'age',
-  'cycles',
 ];
 
 const columns: Column[] = [
   {
-    Header: 'Order',
-    accessor: 'order',
-  },
-  {
-    Header: 'Account',
-    accessor: 'account',
+    Header: 'Canister',
+    accessor: 'canister',
   },
   {
     Header: 'Transactions',
@@ -69,10 +61,6 @@ const columns: Column[] = [
   {
     Header: 'Age',
     accessor: 'age',
-  },
-  {
-    Header: 'Cycles',
-    accessor: 'cycles',
   },
 ];
 
@@ -87,15 +75,10 @@ const AccountsTable = ({
   const [isLoading, setIsLoading] = useState<boolean>(isTableDataReady(data));
 
   const formatters = useMemo(() => ({
-    header: {
-      order: () => '#',
-    },
     body: {
-      account: (cellValue: string) => <AccountLink account={cellValue} trim />,
+      canister: (cellValue: string) => <AccountLink account={cellValue} trim={false} />,
+      transactions: (cellValue: string) => formattedTransactionNumber(parseFloat(cellValue)),
       age: (cellValue: string) => dateRelative(cellValue),
-      // MockData has the symbol $, we replace for now
-      value: (cellValue: string) => formattedNum(parseFloat(cellValue.replace('$', ''))),
-      cycles: (cellValue: string) => <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />,
     },
   } as FormatterTypes), []);
 
@@ -107,7 +90,7 @@ const AccountsTable = ({
     <Container
       data-id={id}
     >
-      <Title size="ml">Accounts</Title>
+      <Title size="ml">Token Contracts</Title>
 
       <DataTable
         columns={columns}

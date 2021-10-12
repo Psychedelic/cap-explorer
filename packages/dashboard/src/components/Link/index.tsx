@@ -3,7 +3,7 @@ import {
   Link as RouterLink,
 } from 'react-router-dom';
 import { styled } from '@stitched';
-import { RouteNames } from '@utils/routes';
+import { RouteNames, getRouteByName } from '@utils/routes';
 import { trimAccount } from '@utils/account';
 
 const Container = styled('span', {
@@ -13,7 +13,21 @@ const Container = styled('span', {
 
     '&:hover': {
       opacity: 0.8,
-      color: '$yellowBrand',
+      color: '$primaryBlue',
+    },
+  },
+
+  variants: {
+    tableLink: {
+      true: {
+        a: {
+          color: '$primaryBlue',
+
+          '&:hover': {
+            color: '$defaultTxtColour',
+          },
+        },
+      },
     },
   },
 });
@@ -33,11 +47,13 @@ export const RawLink = ({
 export const PrimaryLink = ({
   to,
   children,
+  tableLink = false,
 }: {
   to: string,
   children: React.ReactNode,
+  tableLink: boolean,
 }) => (
-  <Container>
+  <Container tableLink={tableLink}>
     <RouterLink to={to}>
       {children}
     </RouterLink>
@@ -72,7 +88,8 @@ export const AccountLink = ({
   trim: boolean,
 }) => (
   <PrimaryLink
-    to="TODO: Account"
+    to={getRouteByName('AppTransactions', { id: account })}
+    tableLink={true}
   >
     {trim ? trimAccount(account) : account}
   </PrimaryLink>

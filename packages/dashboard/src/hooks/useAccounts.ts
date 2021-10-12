@@ -5,7 +5,7 @@ export default () => {
   const [accountsData, setAccountsData] = useState<Data[]>([]);
 
   useEffect(() => {
-    import('../utils/mocks/accountsMockData').then((module) => {
+    import('@utils/mocks/accountsMockData').then((module) => {
       // Mock short delay for loading state tests...
       setTimeout(() => {
         setAccountsData((module.data as Data[]));

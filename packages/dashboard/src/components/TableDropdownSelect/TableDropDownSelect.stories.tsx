@@ -20,7 +20,7 @@ const Template: Story<any> = () => (
       options={['All', 'Lorem', 'Ipsum']}
       // eslint-disable-next-line no-console
       onSelectHandler={() => console.log('does something')}
-      id="account-page-transactions"
+      id="app-transactions-page"
     />
   </Container>
 );

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import TransactionsTable from '@components/Tables/TransactionsTable';
+import AccountsTable from '@components/Tables/AccountsTable';
 import {
   BookmarkColumnModes,
 } from '@components/BookmarkPanel';
@@ -8,7 +8,7 @@ import OverallValues from '@components/OverallValues';
 import Title from '@components/Title';
 import Page, { PageRow } from '@components/Page';
 import { useAccountStore } from '@hooks/store';
-import useTransactions from '@hooks/useTransactions';
+import useAccounts from '@hooks/useAccounts';
 
 const Overview = ({
   bookmarkColumnMode,
@@ -16,12 +16,12 @@ const Overview = ({
   bookmarkColumnMode: BookmarkColumnModes,
 }) => {
   const { add } = useAccountStore((state) => state);
-  const transactionsData = useTransactions();
+  const accountsData = useAccounts();
 
   useEffect(() => {
-    if (!transactionsData || !transactionsData.length) return;
-    transactionsData.forEach((item) => add(item.from));
-  }, [transactionsData]);
+    if (!accountsData) return;
+    accountsData.forEach((item) => add(item.canister));
+  }, [accountsData]);
 
   return (
     <Page
@@ -37,8 +37,8 @@ const Overview = ({
         <OverallValues />
       </PageRow>
       <PageRow>
-        <TransactionsTable
-          data={transactionsData}
+        <AccountsTable
+          data={accountsData}
           id="overview-page-transactions"
         />
       </PageRow>

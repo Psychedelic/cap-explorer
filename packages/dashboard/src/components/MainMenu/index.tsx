@@ -4,7 +4,7 @@ import { styled } from '@stitched';
 import Icon, { IconType } from '@components/Icon';
 import { RouteNames, getRouteByName } from '@utils/routes';
 
-export type MenuItemName = 'Home' | 'Accounts';
+export type MenuItemName = 'Home';
 
 interface MenuItem {
   name: MenuItemName,

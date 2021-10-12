@@ -5,6 +5,8 @@ import numeral from 'numeral';
 numeral.zeroFormat('n/a');
 numeral.nullFormat('n/a');
 
+export const formattedTransactionNumber = (num: number) => numeral(num).format('0.0a') 
+
 export const toK = (num: number) => numeral(num).format('0.[00]a');
 
 export const CurrencyOptions = {

@@ -16,7 +16,7 @@ export const PageRow = styled('div', {
   position: 'relative',
 });
 
-export type PageId = 'overview' | 'accounts' | 'account';
+export type PageId = 'overview' | 'app-transactions-page';
 
 const Page = ({
   children,

@@ -34,6 +34,10 @@ const LazyOverview = loadable(() => import('@views/Overview'), {
   fallback: <Loading alt="Loading overview page" size="m" />,
 });
 
+const LazyAppTransactions = loadable(() => import('@views/AppTransactions'), {
+  fallback: <Loading alt="Loading App Transactions page" size="m" />,
+});
+
 const Routes = ({
   bookmarkColumnMode,
   bookmarkExpandHandler,
@@ -50,6 +54,11 @@ const Routes = ({
     showBookmarkCol={false}
   >
     <Switch>
+      <Route path={RouteNames.AppTransactions}>
+        <LazyAppTransactions
+          bookmarkColumnMode={bookmarkColumnMode}
+        />
+      </Route>
       <Route path={RouteNames.Home}>
         <LazyOverview
           bookmarkColumnMode={bookmarkColumnMode}
