@@ -60,10 +60,10 @@ You only need to do it once, for example, after you cloned the `CAP Explorer` re
 
 >Note: Make sure you have the [DFX SDK](https://smartcontracts.org/) installed to run the DFX cli, otherwise visit the [Dfinity](https://dfinity.org/) for instructions
 
-Afterwards, launch the local replica in the background (you're advised to do so, to monitor the service, otherwise feel free to omit the flag):
+Afterwards, launch the local replica in the foreground (you're advised to do so, to monitor the service, otherwise feel free to add the --background flag):
 
 ```sh
-dfx start --background
+dfx start --clean
 ```
 
 Once the local replica is running, start the `CAP Service` (you need to initialise it in a separate terminal session/window, if the local replica is running in the background):
