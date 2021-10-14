@@ -16,6 +16,7 @@ Learn more about [Cap](https://github.com/Psychedelic/cap) by reading the origin
   - [Dashboard development](#dashboard-development)
   - [The CAP Service](#the-cap-service)
     - [Version control](#cap-service-version-control)
+    - [Mock data generator](#cap-service-mock-data-generator)
 - [Tests](#tests)
 - [Contribution guideline](#contribution-guideline)
 
@@ -108,6 +109,16 @@ Here's an example:
 git add cap
 git commit "chore: 🤖 switched to commit of production version"
 ```
+
+#### CAP Service mock data generator
+
+On development, use the CAP Service Mock generator to get some data for testing by executing the command from the project root:
+
+```sh
+yarn cap:generate-mocks
+```
+
+The process handles the creation of `Root bucket Canister` for the `Router Canister` and inserting a transaction, which while sounding trivial is a long process at time of writing.
 
 ## 💍 Tests
 
