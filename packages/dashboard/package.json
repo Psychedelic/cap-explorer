@@ -64,6 +64,7 @@
     "@fortawesome/pro-regular-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@loadable/component": "^5.14.1",
+    "@psychedelic/cap-js": "^0.0.1",
     "@stitches/react": "^1.2.5",
     "@storybook/react": "^6.2.8",
     "dayjs": "^1.10.4",
