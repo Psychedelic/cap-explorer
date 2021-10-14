@@ -1,0 +1,15 @@
+{
+  "name": "generate-random-principal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Helder Oliveira",
+  "license": "ISC",
+  "dependencies": {
+    "@dfinity/identity": "^0.10.1",
+    "@dfinity/principal": "^0.10.1"
+  }
+}
