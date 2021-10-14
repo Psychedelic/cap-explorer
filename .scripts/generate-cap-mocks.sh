@@ -9,12 +9,6 @@ echo ""
 is_dfx_alive || exit 1
 
 ROUTER_CANISTER_ID=$(cat cap_canister_id)
-IC_MANAGEMENT_CANISTER="aaaaa-aa"
-ROUTER_CANISTER_NAME="ic-history-router"
-DFX_USER_WALLET=$(dfx identity get-wallet)
-DFX_USER_PRINCIPAL=$(dfx identity get-principal)
-GENERATED_CAP_MOCK_LOG_FILENAME="generate_cap_mock"
-GENERATED_CAP_MOCK_LOG_FILEPATH="../$GENERATED_CAP_MOCK_LOG_FILENAME.log"
 
 if [[ -z "$ROUTER_CANISTER_ID" ]]; then
   echo "🤡 Oops! Is the CAP Service \`ic-history-router\` running?"
@@ -27,7 +21,15 @@ fi
 echo "💡 The CAP Service ic-history-router Canister id is $ROUTER_CANISTER_ID"
 echo ""
 
+# Open the CAP workdir or exit
 cd ./cap || exit 1
+
+IC_MANAGEMENT_CANISTER="aaaaa-aa"
+ROUTER_CANISTER_NAME="ic-history-router"
+DFX_USER_WALLET=$(dfx identity get-wallet)
+DFX_USER_PRINCIPAL=$(dfx identity get-principal)
+GENERATED_CAP_MOCK_LOG_FILENAME="generate_cap_mock"
+GENERATED_CAP_MOCK_LOG_FILEPATH="../$GENERATED_CAP_MOCK_LOG_FILENAME.log"
 
 if [ -f "$GENERATED_CAP_MOCK_LOG_FILEPATH" ]; then
   echo "🦄 Clearing previous generated mock log..."
@@ -53,6 +55,9 @@ CREATE_CANISTER_RESULT=$(dfx canister --wallet="$DFX_USER_WALLET" call "$IC_MANA
 
 if [ $? -ne 0 ]; then
   echo "🤡 Oops! Failed to create root bucket canister..."
+  echo "💡 Oops! Was the CAP Service \`ic-history-router\` deployed?"
+  # Extra-white space between icon and text for alignment
+  echo "✏️ Check the docs to learn how to deploy the CAP Service, please!"
 
   exit 1
 fi;
