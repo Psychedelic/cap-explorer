@@ -113,10 +113,11 @@ fi;
 
 echo "🤖 Mock Transaction data insertion"
 echo "🦄 A total of $MOCK_COUNT will be inserted to the Root bucket $ROOT_CANISTER_ID"
+echo ""
 
 # Iterator over the request mock count (or default count)
 for i in $(seq "$MOCK_COUNT"); do
-  echo "🤖 Inserting transaction nr $i to the Root bucket"
+  echo "Inserting transaction nr $i to the Root bucket"
 
   dfx canister call "$ROOT_CANISTER_ID" insert "(record { to=(principal \"$DFX_USER_PRINCIPAL\"); fee=(1:nat64); from=(opt principal \"$DFX_USER_PRINCIPAL\"); memo=(0:nat32); operation=(variant {\"Approve\"}); caller=(principal \"$DFX_USER_PRINCIPAL\"); amount=(10:nat64); })"
 
