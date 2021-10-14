@@ -18,7 +18,10 @@
   },
   "scripts": {
     "dev:dashboard": "lerna run --scope dashboard start",
-    "test:dashboard-unit": "lerna run --scope dashboard test:unit"
+    "test:dashboard-unit": "lerna run --scope dashboard test:unit",
+    "cap:init": "git submodule update --init --recursive",
+    "cap:update": "git submodule update --remote --merge",
+    "cap:start": "./.scripts/run-cap-service.sh"
   },
   "engines": {
     "node": ">=16.9.1",
