@@ -2,6 +2,13 @@
 
 source "${BASH_SOURCE%/*}/utils.sh"
 
+echo "🦖 Generate CAP mock data"
+echo ""
+
+# Check if DFX alive or abort
+is_dfx_alive || exit 1
+
+ROUTER_CANISTER_ID=$(cat cap_canister_id)
 IC_MANAGEMENT_CANISTER="aaaaa-aa"
 ROUTER_CANISTER_NAME="ic-history-router"
 DFX_USER_WALLET=$(dfx identity get-wallet)
@@ -9,7 +16,15 @@ DFX_USER_PRINCIPAL=$(dfx identity get-principal)
 GENERATED_CAP_MOCK_LOG_FILENAME="generate_cap_mock"
 GENERATED_CAP_MOCK_LOG_FILEPATH="../$GENERATED_CAP_MOCK_LOG_FILENAME.log"
 
-echo "🤖 Generate CAP mock data"
+if [[ -z "$ROUTER_CANISTER_ID" ]]; then
+  echo "🤡 Oops! Is the CAP Service \`ic-history-router\` running?"
+  # Extra-white space between icon and text for alignment
+  echo "✏️ Check the docs to learn how to deploy the CAP Service, please!"
+
+  exit 1;
+fi
+
+echo "💡 The CAP Service ic-history-router Canister id is $ROUTER_CANISTER_ID"
 echo ""
 
 cd ./cap || exit 1
@@ -20,14 +35,6 @@ if [ -f "$GENERATED_CAP_MOCK_LOG_FILEPATH" ]; then
 
   rm "$GENERATED_CAP_MOCK_LOG_FILEPATH" || exit 1
 fi
-
-dfx deploy "$ROUTER_CANISTER_NAME"
-
-if [ $? -ne 0 ]; then
-  echo "🤡 Oops! Failed to deploy $ROUTER_CANISTER_NAME"
-
-  exit 1
-fi;
 
 ROUTER_CANISTER_ID=$(dfx canister id "$ROUTER_CANISTER_NAME")
 
@@ -127,6 +134,9 @@ LOG_CONTRACT_ROOT_BUCKETS=$(dfx canister call "$ROUTER_CANISTER_ID" get_token_co
 echo "🤖 Log the details onto project root $GENERATED_CAP_MOCK_LOG_FILENAME"
 
 {
+  echo "🦖 Generated CAP mock data (Log)"
+  echo ""
+
   insert_to_log "The Router Canister id" "$ROUTER_CANISTER_ID"
   insert_to_log "The Root Canister id" "$ROOT_CANISTER_ID"
   insert_to_log "All transactions" "$LOG_ALL_TRANSACTIONS"
@@ -136,6 +146,9 @@ echo "🤖 Log the details onto project root $GENERATED_CAP_MOCK_LOG_FILENAME"
   insert_to_log "Index Canisters" "$LOG_INDEX_CANISTERS"
   insert_to_log "Get next Canisters" "$LOG_GET_NEXT_CANISTERS"
   insert_to_log "Contract root buckets" "$LOG_CONTRACT_ROOT_BUCKETS"
+  echo ""
+
+  echo "🏁 End of generated CAP mock data log file!"
 } >> "$GENERATED_CAP_MOCK_LOG_FILEPATH"
 
 if [ $? -ne 0 ]; then
