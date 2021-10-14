@@ -5,6 +5,12 @@ source "${BASH_SOURCE%/*}/utils.sh"
 echo "🦖 Generate CAP mock data"
 echo ""
 
+DEFAULT_MOCK_COUNT=20
+MOCK_COUNT=${1:-$DEFAULT_MOCK_COUNT}
+
+echo "🦄 A total of $MOCK_COUNT transactions will be generated"
+echo ""
+
 # Check if DFX alive or abort
 is_dfx_alive || exit 1
 
@@ -55,7 +61,7 @@ CREATE_CANISTER_RESULT=$(dfx canister --wallet="$DFX_USER_WALLET" call "$IC_MANA
 
 if [ $? -ne 0 ]; then
   echo "🤡 Oops! Failed to create root bucket canister..."
-  echo "💡 Oops! Was the CAP Service \`ic-history-router\` deployed?"
+  echo "💡 Oops! Was the CAP Service ic-history-router deployed?"
   # Extra-white space between icon and text for alignment
   echo "✏️ Check the docs to learn how to deploy the CAP Service, please!"
 
@@ -105,16 +111,21 @@ if [ $? -ne 0 ]; then
   exit 1
 fi;
 
-# TODO: Add support for user insert request count
-echo "🤖 Insert a transaction to the Root bucket $ROOT_CANISTER_ID"
+echo "🤖 Mock Transaction data insertion"
+echo "🦄 A total of $MOCK_COUNT will be inserted to the Root bucket $ROOT_CANISTER_ID"
 
-dfx canister call "$ROOT_CANISTER_ID" insert "(record { to=(principal \"$DFX_USER_PRINCIPAL\"); fee=(1:nat64); from=(opt principal \"$DFX_USER_PRINCIPAL\"); memo=(0:nat32); operation=(variant {\"Approve\"}); caller=(principal \"$DFX_USER_PRINCIPAL\"); amount=(10:nat64); })"
+# Iterator over the request mock count (or default count)
+for i in $(seq "$MOCK_COUNT"); do
+  echo "🤖 Inserting transaction nr $i to the Root bucket"
 
-if [ $? -ne 0 ]; then
-  echo "🤡 Oops! Failed to Insert a transaction to the Root bucket..."
+  dfx canister call "$ROOT_CANISTER_ID" insert "(record { to=(principal \"$DFX_USER_PRINCIPAL\"); fee=(1:nat64); from=(opt principal \"$DFX_USER_PRINCIPAL\"); memo=(0:nat32); operation=(variant {\"Approve\"}); caller=(principal \"$DFX_USER_PRINCIPAL\"); amount=(10:nat64); })"
 
-  exit 1
-fi;
+  if [ $? -ne 0 ]; then
+    echo "🤡 Oops! Failed to Insert a transaction to the Root bucket..."
+
+    exit 1
+  fi;
+done
 
 echo "🤖 Get all transactions for the root bucket"
 LOG_ALL_TRANSACTIONS=$(dfx canister call "$ROOT_CANISTER_ID" get_transactions "(record {page=null; witness=(false:bool)})")

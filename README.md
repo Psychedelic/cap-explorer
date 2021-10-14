@@ -124,6 +124,12 @@ On development, use the CAP Service Mock generator to get some data for testing 
 yarn cap:generate-mocks
 ```
 
+The command will generate 20 mocks by default, optionally, a number can be passed to set the generator count, here's an example for 16 records:
+
+```sh
+yarn cap:generate-mocks 16
+```
+
 The process handles the creation of `Root bucket Canister` for the `Router Canister` and inserting a transaction, which while sounding trivial is a long process at time of writing.
 
 ## 💍 Tests
