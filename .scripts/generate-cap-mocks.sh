@@ -115,16 +115,23 @@ echo "🤖 Mock Transaction data insertion"
 echo "🦄 A total of $MOCK_COUNT will be inserted to the Root bucket $ROOT_CANISTER_ID"
 echo ""
 
+PKG_GENERATE_RANDOM_PRINCIPAL="../packages/generate-random-principal"
+
 # Iterator over the request mock count (or default count)
 for i in $(seq "$MOCK_COUNT"); do
-  echo "Inserting transaction nr $i to the Root bucket"
+  RANDOM_PRINCIPAL_TXT_ID=$(node "$PKG_GENERATE_RANDOM_PRINCIPAL")
 
-  if ! dfx canister call "$ROOT_CANISTER_ID" insert "(record { to=(principal \"$DFX_USER_PRINCIPAL\"); fee=(1:nat64); from=(opt principal \"$DFX_USER_PRINCIPAL\"); memo=(0:nat32); operation=(variant {\"Approve\"}); caller=(principal \"$DFX_USER_PRINCIPAL\"); amount=(10:nat64); })"; then
+  echo "Inserting transaction nr $i with random id ($RANDOM_PRINCIPAL_TXT_ID) to the Root bucket"
+
+
+  if ! dfx canister call "$ROOT_CANISTER_ID" insert "(record { to=(principal \"$DFX_USER_PRINCIPAL\"); fee=(1:nat64); from=(opt principal \"$RANDOM_PRINCIPAL_TXT_ID\"); memo=(0:nat32); operation=(variant {\"Approve\"}); caller=(principal \"$RANDOM_PRINCIPAL_TXT_ID\"); amount=(10:nat64); })"; then
     echo "🤡 Oops! Failed to Insert a transaction to the Root bucket..."
 
     exit 1
   fi;
 done
+
+echo ""
 
 echo "🤖 Get all transactions for the root bucket"
 LOG_ALL_TRANSACTIONS=$(dfx canister call "$ROOT_CANISTER_ID" get_transactions "(record {page=null; witness=(false:bool)})")
