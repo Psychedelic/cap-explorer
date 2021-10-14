@@ -16,6 +16,7 @@ Learn more about [Cap](https://github.com/Psychedelic/cap) by reading the origin
   - [Dashboard development](#dashboard-development)
   - [The CAP Service](#the-cap-service)
     - [Version control](#cap-service-version-control)
+    - [Mock data generator](#cap-service-mock-data-generator)
 - [Tests](#tests)
 - [Contribution guideline](#contribution-guideline)
 
@@ -72,6 +73,12 @@ Once the local replica is running, start the `CAP Service` (you need to initiali
 yarn cap:start
 ```
 
+💡 If errors occur, run the following command before starting the local replica `dfx start` and `cap:start`:
+
+```sh
+yarn cap:reset
+```
+
 From then on, the Service is available and you can follow up with your development work but while contributing, you'll need to understand how to manage the [CAP Service version](#cap-service-version-control) you're creating a feature against.
 
 #### CAP Service version control
@@ -108,6 +115,22 @@ Here's an example:
 git add cap
 git commit "chore: 🤖 switched to commit of production version"
 ```
+
+#### CAP Service mock data generator
+
+On development, use the CAP Service Mock generator to get some data for testing by executing the command from the project root:
+
+```sh
+yarn cap:generate-mocks
+```
+
+The command will generate 20 mocks by default, optionally, a number can be passed to set the generator count, here's an example for 16 records:
+
+```sh
+yarn cap:generate-mocks 16
+```
+
+The process handles the creation of `Root bucket Canister` for the `Router Canister` and inserting a transaction, which while sounding trivial is a long process at time of writing.
 
 ## 💍 Tests
 
