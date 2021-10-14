@@ -119,9 +119,7 @@ echo ""
 for i in $(seq "$MOCK_COUNT"); do
   echo "Inserting transaction nr $i to the Root bucket"
 
-  dfx canister call "$ROOT_CANISTER_ID" insert "(record { to=(principal \"$DFX_USER_PRINCIPAL\"); fee=(1:nat64); from=(opt principal \"$DFX_USER_PRINCIPAL\"); memo=(0:nat32); operation=(variant {\"Approve\"}); caller=(principal \"$DFX_USER_PRINCIPAL\"); amount=(10:nat64); })"
-
-  if [ $? -ne 0 ]; then
+  if ! dfx canister call "$ROOT_CANISTER_ID" insert "(record { to=(principal \"$DFX_USER_PRINCIPAL\"); fee=(1:nat64); from=(opt principal \"$DFX_USER_PRINCIPAL\"); memo=(0:nat32); operation=(variant {\"Approve\"}); caller=(principal \"$DFX_USER_PRINCIPAL\"); amount=(10:nat64); })"; then
     echo "🤡 Oops! Failed to Insert a transaction to the Root bucket..."
 
     exit 1
