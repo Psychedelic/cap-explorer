@@ -22,6 +22,7 @@
     "cap:init": "git submodule update --init --recursive",
     "cap:update": "git submodule update --remote --merge",
     "cap:start": "./.scripts/run-cap-service.sh",
+    "cap:reset": "./.scripts/cap-reset.sh",
     "cap:generate-mocks": ".scripts/generate-cap-mocks.sh"
   },
   "engines": {

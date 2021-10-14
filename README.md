@@ -73,6 +73,12 @@ Once the local replica is running, start the `CAP Service` (you need to initiali
 yarn cap:start
 ```
 
+💡 If errors occur, run the following command before starting the local replica `dfx start` and `cap:start`:
+
+```sh
+yarn cap:reset
+```
+
 From then on, the Service is available and you can follow up with your development work but while contributing, you'll need to understand how to manage the [CAP Service version](#cap-service-version-control) you're creating a feature against.
 
 #### CAP Service version control
