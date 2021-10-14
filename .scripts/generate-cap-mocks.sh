@@ -105,6 +105,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi;
 
+# TODO: Add support for user insert request count
 echo "🤖 Insert a transaction to the Root bucket $ROOT_CANISTER_ID"
 
 dfx canister call "$ROOT_CANISTER_ID" insert "(record { to=(principal \"$DFX_USER_PRINCIPAL\"); fee=(1:nat64); from=(opt principal \"$DFX_USER_PRINCIPAL\"); memo=(0:nat32); operation=(variant {\"Approve\"}); caller=(principal \"$DFX_USER_PRINCIPAL\"); amount=(10:nat64); })"
