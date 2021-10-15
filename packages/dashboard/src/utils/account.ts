@@ -55,11 +55,14 @@ export const createBookmarkExpandHandler = ({
 export const parseUserRootBucketsResponse = ({
   contracts,
 }: {
-  contracts: Principal[],
-}): AccountData[] =>
-  contracts
+  contracts?: Principal[],
+}): AccountData[] | [] => {
+  if (!contracts || !Array.isArray(contracts)) return [];
+
+  return contracts
     .map((principal: Principal) => ({
       canister: principal.toText(),
-      transactions: 0,
-      age: '',
+      transactions: undefined,
+      age: undefined,
     }));
+}

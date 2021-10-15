@@ -2,6 +2,8 @@ import {
   BookmarkColumnModes,
 } from '@components/BookmarkPanel';
 import { createBookmarkExpandHandler, trimAccount } from './account';
+import { parseUserRootBucketsResponse } from '@utils/account';
+import { getRandomIdentity } from '@utils/principal';
 
 describe('Account', () => {
   describe('trimAccount', () => {
@@ -118,6 +120,82 @@ describe('Account', () => {
         });
 
         bookmarkExpandHandler();
+      });
+    });
+  });
+
+  describe('parseUserRootBucketsResponse', () => {
+    let identity = getRandomIdentity();
+    let response = {};
+
+    describe('on valid response', () => {
+      beforeAll(() => {
+        identity = getRandomIdentity();
+        response = {
+          contracts: [
+            identity,
+          ],
+        };
+      });
+
+      afterAll(() => {
+        identity = getRandomIdentity();
+        response = {};
+      });
+
+      it('should parse the data', () => {
+        const parsed = parseUserRootBucketsResponse(response);
+        expect(parsed).toBeTruthy();
+      });
+
+      it('should parse the data to the expected object type', () => {
+        const parsed = parseUserRootBucketsResponse(response);
+        const expectedData = [{
+          canister: identity.toText(),
+          age: undefined,
+          transactions: undefined,
+        }];
+        expect(parsed).toStrictEqual(expectedData);
+      });
+    });
+
+    describe('on invalid response', () => {
+      describe('on missing contract field', () => {
+        beforeAll(() => {
+          identity = getRandomIdentity();
+          response = {};
+        });
+  
+        afterAll(() => {
+          identity = getRandomIdentity();
+          response = {};
+        });
+  
+        it('should return empty list', () => {
+          const parsed = parseUserRootBucketsResponse(response);
+          const expectedData: any[] = [];
+          expect(parsed).toStrictEqual(expectedData);
+        });
+      });
+
+      describe('on invalid contract field', () => {
+        beforeAll(() => {
+          identity = getRandomIdentity();
+          response = {
+            contract: undefined,
+          };
+        });
+  
+        afterAll(() => {
+          identity = getRandomIdentity();
+          response = {};
+        });
+  
+        it('should return empty list', () => {
+          const parsed = parseUserRootBucketsResponse(response);
+          const expectedData: any[] = [];
+          expect(parsed).toStrictEqual(expectedData);
+        });
       });
     });
   });
