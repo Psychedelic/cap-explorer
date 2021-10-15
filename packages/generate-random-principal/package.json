@@ -1,5 +1,5 @@
 {
-  "name": "generate-random-principal",
+  "name": "@psychedelic/generate-random-principal",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

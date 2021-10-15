@@ -1,16 +1,30 @@
 import { useEffect, useState } from 'react';
-import { Data } from '@components/Tables/AccountsTable';
+import { AccountData } from '@components/Tables/AccountsTable';
+import { cap } from '@psychedelic/cap-js';
+import { parseUserRootBucketsResponse } from '@utils/account';
 
 export default () => {
-  const [accountsData, setAccountsData] = useState<Data[]>([]);
+  const [accountsData, setAccountsData] = useState<AccountData[]>([]);
 
   useEffect(() => {
-    import('@utils/mocks/accountsMockData').then((module) => {
-      // Mock short delay for loading state tests...
-      setTimeout(() => {
-        setAccountsData((module.data as Data[]));
-      }, 400);
-    });
+    const getAllTokenContracts = async () => {
+      const response = await cap.get_user_root_buckets({
+        user: "aaaaa-aa",
+        witness: false,
+      });
+
+      if (!response || !Array.isArray(response?.contracts)) {
+        // TODO: What to do if no response? Handle gracefully
+
+        return;
+      }
+
+      setAccountsData(
+        parseUserRootBucketsResponse(response),
+      );
+    };
+
+    getAllTokenContracts();
   }, []);
 
   return accountsData;

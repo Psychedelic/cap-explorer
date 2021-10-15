@@ -32,18 +32,18 @@ const Container = styled('div', {
   },
 });
 
-export interface Data {
+export interface AccountData {
   canister: string,
-  transactions: number,
-  age: string,
+  transactions?: number,
+  age?: string,
 }
 
 interface Column {
   Header: string,
-  accessor: keyof Data
+  accessor: keyof AccountData
 }
 
-export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
+export const DEFAULT_COLUMN_ORDER: (keyof AccountData)[] = [
   'canister',
   'transactions',
   'age',
@@ -69,7 +69,7 @@ const AccountsTable = ({
   id,
 }: {
   // eslint-disable-next-line react/require-default-props
-  data?: Data[],
+  data?: AccountData[],
   id: TableId,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(isTableDataReady(data));
@@ -77,8 +77,8 @@ const AccountsTable = ({
   const formatters = useMemo(() => ({
     body: {
       canister: (cellValue: string) => <AccountLink account={cellValue} trim={false} />,
-      transactions: (cellValue: string) => formattedTransactionNumber(parseFloat(cellValue)),
-      age: (cellValue: string) => dateRelative(cellValue),
+      transactions: (cellValue: string) => cellValue && formattedTransactionNumber(parseFloat(cellValue)) || 'n/a',
+      age: (cellValue: string) => cellValue && dateRelative(cellValue) || 'n/a',
     },
   } as FormatterTypes), []);
 

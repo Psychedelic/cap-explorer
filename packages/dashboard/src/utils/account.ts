@@ -3,6 +3,8 @@ import {
   BookmarkColumnModes,
   isBookmarkColumnModeCollapsed,
 } from '../components/BookmarkPanel';
+import { Principal } from "@dfinity/principal";
+import { AccountData as AccountData } from '@components/Tables/AccountsTable';
 
 export const hashTrimmer = (hash: string) => {
   const size = 6;
@@ -49,3 +51,18 @@ export const createBookmarkExpandHandler = ({
   };
   return bookmarkExpandHandler;
 };
+
+export const parseUserRootBucketsResponse = ({
+  contracts,
+}: {
+  contracts?: Principal[],
+}): AccountData[] | [] => {
+  if (!contracts || !Array.isArray(contracts)) return [];
+
+  return contracts
+    .map((principal: Principal) => ({
+      canister: principal.toText(),
+      transactions: undefined,
+      age: undefined,
+    }));
+}

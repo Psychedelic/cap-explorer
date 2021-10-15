@@ -1,3 +1,6 @@
 [submodule "cap"]
 	path = cap
 	url = git@github.com:Psychedelic/cap.git
+[submodule "packages/cap-js"]
+	path = packages/cap-js
+	url = git@github.com:Psychedelic/cap-js.git
