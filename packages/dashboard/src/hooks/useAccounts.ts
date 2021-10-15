@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AccountData } from '@components/Tables/AccountsTable';
 import { cap } from '@psychedelic/cap-js';
 import { parseUserRootBucketsResponse } from '@utils/account';
+import { Principal } from "@dfinity/principal";
 
 export default () => {
   const [accountsData, setAccountsData] = useState<AccountData[]>([]);
@@ -13,7 +14,7 @@ export default () => {
         witness: false,
       });
 
-      if (!response || !Array.isArray(response?.contracts)) {
+      if (!response || !Array.isArray(response?.contracts) || !response?.contracts.length) {
         // TODO: What to do if no response? Handle gracefully
 
         return;

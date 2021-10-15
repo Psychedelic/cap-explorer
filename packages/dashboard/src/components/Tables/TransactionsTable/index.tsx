@@ -180,6 +180,8 @@ const TransactionsTable = ({
     setIsLoading(isTableDataReady(data));
   }, [data]);
 
+  console.log('[debug] transactionsTable: currentData: ', currentData);
+
   return (
     <Container
       data-id={id}
