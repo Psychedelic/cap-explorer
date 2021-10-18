@@ -339,7 +339,7 @@ const formatterCallbackHandler = <T extends {}>(
   return callback(baseValue);
 };
 
-export const PAGE_SIZE = 10;
+export const PAGE_SIZE = 50;
 
 const DataTable = <T extends {}>({
   columns,
