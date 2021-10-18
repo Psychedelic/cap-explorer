@@ -7,12 +7,18 @@ import SearchInput from '@components/SearchInput';
 // import OverallValues from '@components/OverallValues';
 import Title from '@components/Title';
 import Page, { PageRow } from '@components/Page';
-import { useAccountStore } from '@hooks/store';
-import useTransactions from '@hooks/useTransactions';
+import {
+  useAccountStore,
+  useTransactionStore,
+} from '@hooks/store';
 import {
   useParams
 } from "react-router-dom";
 import { trimAccount } from '@utils/account';
+import {
+  GetTransactionsResponseBorrowed as TransactionsResponse,
+  Event as TransactionEvent,
+} from '@psychedelic/cap-js';
 
 const AppTransactions = ({
   bookmarkColumnMode,
@@ -20,27 +26,36 @@ const AppTransactions = ({
   bookmarkColumnMode: BookmarkColumnModes,
 }) => {
   const { add } = useAccountStore((state) => state);
-  const transactionsData = useTransactions();
-  let { id } = useParams() as { id: string };
+  const {fetch, transactions } = useTransactionStore((state) => state);
+  const transactionEvents: TransactionEvent[] = transactions[0] ?? [];
+
+  let { id: tokenId } = useParams() as { id: string };
 
   useEffect(() => {
-    if (!transactionsData || !transactionsData.length) return;
-    transactionsData.forEach((item) => add(item.from));
-  }, [transactionsData]);
+    fetch({
+      tokenId,
+      witness: false,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!transactionEvents || !transactionEvents.length) return;
+    transactionEvents.forEach((item) => add(item.from));
+  }, [transactionEvents]);
 
   return (
     <Page
       pageId="app-transactions-page"
     >
       <PageRow>
-        <Title size="xl">{`Application transactions for ${trimAccount(id)}`}</Title>
+        <Title size="xl">{`Application transactions for ${trimAccount(tokenId)}`}</Title>
       </PageRow>
       <PageRow>
         <SearchInput />
       </PageRow>
       <PageRow>
         <TransactionsTable
-          data={transactionsData}
+          data={transactionEvents}
           id="app-transactions-page"
         />
       </PageRow>
