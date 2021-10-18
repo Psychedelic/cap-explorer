@@ -12,6 +12,7 @@ import { isTableDataReady } from '@utils/tables';
 import ValueCell from '@components/Tables/ValueCell';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
+import { trimAccount } from '@utils/account';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -151,24 +152,9 @@ const TransactionsTable = ({
 
   const formatters = useMemo(() => ({
     body: {
-      caller: (cellValue: string) => (
-        <AccountLink
-          account={cellValue}
-          trim
-        />
-      ),
-      from: (cellValue: string) => (
-        <AccountLink
-          account={cellValue}
-          trim
-        />
-      ),
-      to: (cellValue: string) => (
-        <AccountLink
-          account={cellValue}
-          trim
-        />
-      ),
+      caller: (cellValue: string) => trimAccount(cellValue),
+      from: (cellValue: string) => trimAccount(cellValue),
+      to: (cellValue: string) => trimAccount(cellValue),
       fee: (cellValue: string) => <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />,
       amount: (cellValue: string) => formatPriceForChart({ value: cellValue, abbreviation: 'USD' }),
       time: (cellValue: string) => dateRelative(cellValue),
