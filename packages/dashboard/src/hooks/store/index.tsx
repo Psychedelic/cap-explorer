@@ -29,12 +29,12 @@ interface TransactionsFetchParams {
 }
 
 interface TransactionsStore {
-  transactions: TransactionEvent[] | [],
+  transactionEvents: TransactionEvent[] | [],
   fetch: (params: TransactionsFetchParams) => void,
 }
 
 export const useTransactionStore: UseStore<TransactionsStore> = create((set) => ({
-  transactions: [...new Set([])],
+  transactionEvents: [...new Set([])],
   fetch: async ({
     tokenId,
     page,
@@ -52,10 +52,13 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
       return;
     }
 
-    const transactions = parseGetTransactionsResponse(response);
+    const parsedTransactionEvents = parseGetTransactionsResponse(response);
 
     set((state: TransactionsStore) => ({
-      transactions: [...state.transactions, transactions],
+      transactionEvents: [
+        ...state.transactionEvents,
+        parsedTransactionEvents,
+      ],
     }));
   },
 }));
