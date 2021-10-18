@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Data } from '@components/Tables/TransactionsTable';
 import { Principal } from "@dfinity/principal";
 import {
   cap,
@@ -20,8 +19,9 @@ export default () => {
       const response: TransactionsResponse = await cap.get_transactions({
         tokenId: Principal.fromText(tokenId),
         witness: false,
-        page: 0,
       });
+
+      console.log('[debug] useTransactions: response: ', response);
 
       if (!response || !Array.isArray(response?.data) || !response?.data.length) {
         // TODO: What to do if no response? Handle gracefully
