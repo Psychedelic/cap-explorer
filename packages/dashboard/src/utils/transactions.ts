@@ -28,21 +28,29 @@ export const toTransactionTime = (time: bigint) => {
   return formated;
 }
 
+const toOperationTerm = (operation: Record<string, string>) => {
+  let term = 'n/a';
+
+  try {
+    term = Object.keys(operation)[0]
+  } catch (err) {};
+
+  return term;
+};
+
 export const parseGetTransactionsResponse = ({
   data,
 }: {
   data?: TransactionEvent[],
 }): Transaction[] | [] => {
   if (!data || !Array.isArray(data) || !data.length) return [];
-  
-  console.log(data);
 
   return data.map(v => ({
     ...v,
     to: v.to.toText(),
     from: v?.from?.pop()?.toText() as string,
     caller: v.caller.toText(),
-    operation: 'TODO: operation parse',
+    operation: toOperationTerm(v.operation),
     time: toTransactionTime(v.time),
   }));
 }

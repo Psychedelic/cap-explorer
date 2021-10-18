@@ -21,8 +21,6 @@ export default () => {
         witness: false,
       });
 
-      console.log('[debug] useTransactions: response: ', response);
-
       if (!response || !Array.isArray(response?.data) || !response?.data.length) {
         // TODO: What to do if no response? Handle gracefully
 
