@@ -3,12 +3,9 @@ import TransactionsTable, { FetchPageDataHandler } from '@components/Tables/Tran
 import {
   BookmarkColumnModes,
 } from '@components/BookmarkPanel';
-import SearchInput from '@components/SearchInput';
-// import OverallValues from '@components/OverallValues';
 import Title from '@components/Title';
 import Page, { PageRow } from '@components/Page';
 import {
-  useAccountStore,
   useTransactionStore,
 } from '@hooks/store';
 import {
@@ -25,7 +22,6 @@ const AppTransactions = ({
 }: {
   bookmarkColumnMode: BookmarkColumnModes,
 }) => {
-  const { add } = useAccountStore((state) => state);
   const {
     pageData,
     fetch,
@@ -61,20 +57,12 @@ const AppTransactions = ({
     return () => reset();
   }, []);
 
-  useEffect(() => {
-    if (!transactions || !transactions.length) return;
-    transactions.forEach((item) => add(item.from));
-  }, [transactions]);
-
   return (
     <Page
       pageId="app-transactions-page"
     >
       <PageRow>
         <Title size="xl">{`Application transactions for ${trimAccount(tokenId)}`}</Title>
-      </PageRow>
-      <PageRow>
-        <SearchInput />
       </PageRow>
       <PageRow>
         <TransactionsTable
