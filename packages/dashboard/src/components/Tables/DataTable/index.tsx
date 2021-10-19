@@ -419,9 +419,14 @@ const DataTable = <T extends {}>({
   useEffect(() => {
     if (typeof fetchPageDataHandler !== 'function') return;
 
-    fetchPageDataHandler({
-      pageIndex,
-    });
+    try {
+      fetchPageDataHandler({
+        pageIndex,
+      });
+    } catch (err) {
+      // TODO: What to do on failure? Handle gracefully
+      console.warn(`Oops! Failed to fetch the page ${pageIndex} data`);
+    };
   }, [pageIndex]);
 
   return (

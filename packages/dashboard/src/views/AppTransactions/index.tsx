@@ -39,18 +39,11 @@ const AppTransactions = ({
   // TODO: on fetch by token id and page nr, cache/memoize
   const fetchPageDataHandler: FetchPageDataHandler = ({
     pageIndex,
-  }) => {
-    try {
-      (() => fetch({
-        tokenId,
-        page: pageIndex,
-        witness: false,
-      }))();
-    } catch (err) {
-      // TODO: What to do on failure? Handle gracefully
-      console.warn(`Oops! Failed to fetch the page ${pageIndex} data for ${tokenId}`);
-    };
-  };
+  }) => fetch({
+    tokenId,
+    page: pageIndex,
+    witness: false,
+  });
 
   useEffect(() => {
     fetch({
