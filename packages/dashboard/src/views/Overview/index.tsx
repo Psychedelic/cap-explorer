@@ -2,10 +2,23 @@ import React, { useEffect } from 'react';
 import AccountsTable from '@components/Tables/AccountsTable';
 import Title from '@components/Title';
 import Page, { PageRow } from '@components/Page';
-import useAccounts from '@hooks/useAccounts';
+import {
+  useAccountStore,
+} from '@hooks/store';
 
 const Overview = () => {
-  const accountsData = useAccounts();
+  const {
+    pageData,
+    fetch,
+    reset,
+  } = useAccountStore((state) => state);
+
+  useEffect(() => {
+    // TODO: cache/memoizing fetch call
+    fetch();
+
+    return () => reset();
+  }, []);
 
   return (
     <Page
@@ -16,7 +29,7 @@ const Overview = () => {
       </PageRow>
       <PageRow>
         <AccountsTable
-          data={accountsData}
+          data={pageData}
           id="overview-page-transactions"
         />
       </PageRow>

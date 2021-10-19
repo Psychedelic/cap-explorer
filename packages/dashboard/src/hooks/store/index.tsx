@@ -4,23 +4,58 @@ import {
   cap,
   GetTransactionsResponseBorrowed as TransactionsResponse,
   Event as TransactionEvent,
+  GetUserRootBucketsResponse as ContractsResponse,
 } from '@psychedelic/cap-js';
 import { Principal } from "@dfinity/principal";
 import { parseGetTransactionsResponse } from '@utils/transactions';
+import { parseUserRootBucketsResponse } from '@utils/account';
+import { managementCanisterPrincipal } from '@utils/ic-management-api';
+import { AccountData } from '@components/Tables/AccountsTable';
 
 interface AccountStore {
-  accounts: string[],
-  add: (account: string) => void,
+  accounts: ContractsResponse | {},
+  pageData: AccountData[],
+  totalContracts: number,
+  totalPages: number,
+  fetch: () => void,
+  reset: () => void,
 }
 
-export const useAccountStore: UseStore<AccountStore> = create((set) => (
-  {
-    accounts: [],
-    add: (account: string) => set((state: AccountStore) => ({
-      accounts: [...state.accounts, account],
-    })),
-  }
-));
+export const useAccountStore: UseStore<AccountStore> = create((set) => ({
+  accounts: {},
+  pageData: [],
+  totalContracts: 0,
+  totalPages: 0,
+  fetch: async () => {
+    // Note: at time of writing the `get_user_root_buckets`
+    // has no support for paginated response
+    const response = await cap.get_user_root_buckets({
+      user: managementCanisterPrincipal.toText(),
+      witness: false,
+    });
+
+    if (!response || !Array.isArray(response?.contracts) || !response?.contracts.length) {
+      // TODO: What to do if no response? Handle gracefully
+
+      return;
+    }
+
+    const pageData = parseUserRootBucketsResponse(response);
+
+    set((state: AccountStore) => ({
+      accounts: response,
+      pageData,
+      totalContracts: pageData.length,
+      totalPages: 1,
+    }));
+  },
+  reset: () => set((state: AccountStore) => ({
+    pageData: [],
+    accounts: {},
+    totalContracts: 0,
+    totalPages: 0,
+  })),
+}));
 
 interface TransactionsFetchParams {
   tokenId: string,
@@ -65,14 +100,13 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
     // then the total transactions calculation will fail...
     const totalTransactions = PAGE_SIZE * response.page + response.data.length;
     const totalPages = totalTransactions > PAGE_SIZE ? totalTransactions / PAGE_SIZE : 1;
-    const parsedTransactionEvents = parseGetTransactionsResponse(response);
-    const pageData = parsedTransactionEvents;
+    const pageData = parseGetTransactionsResponse(response);
 
     set((state: TransactionsStore) => ({
       pageData,
       transactionEvents: [
         ...state.transactionEvents,
-        parsedTransactionEvents,
+        pageData,
       ],
       // TODO: For totalTransactions/Pages Check TODO above,
       // as total transactions at time of writing
