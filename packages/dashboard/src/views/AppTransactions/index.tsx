@@ -62,7 +62,7 @@ const AppTransactions = ({
       pageId="app-transactions-page"
     >
       <PageRow>
-        <Title size="xl">{`Application transactions for ${trimAccount(tokenId)}`}</Title>
+        <Title size="xl">{`Transactions for ${trimAccount(tokenId)}`}</Title>
       </PageRow>
       <PageRow>
         <TransactionsTable

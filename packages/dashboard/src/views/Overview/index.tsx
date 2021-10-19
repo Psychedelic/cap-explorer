@@ -25,7 +25,7 @@ const Overview = () => {
       pageId="overview"
     >
       <PageRow>
-        <Title size="xl">Cap Explorer</Title>
+        <Title size="xl">CAP Explorer</Title>
       </PageRow>
       <PageRow>
         <AccountsTable
