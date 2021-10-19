@@ -15,9 +15,9 @@ interface AccountStore {
 
 export const useAccountStore: UseStore<AccountStore> = create((set) => (
   {
-    accounts: [...new Set([])],
+    accounts: [],
     add: (account: string) => set((state: AccountStore) => ({
-      accounts: [...new Set([...state.accounts, account])],
+      accounts: [...state.accounts, account],
     })),
   }
 ));
