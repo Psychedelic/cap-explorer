@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import TransactionsTable, { FetchPageDataHandler } from '@components/Tables/TransactionsTable';
 import {
   BookmarkColumnModes,

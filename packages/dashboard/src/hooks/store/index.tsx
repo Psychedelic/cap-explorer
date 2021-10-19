@@ -39,8 +39,8 @@ interface TransactionsStore {
 const ITEMS_PER_PAGE = 64;
 
 export const useTransactionStore: UseStore<TransactionsStore> = create((set) => ({
-  pageData: [...new Set([])],
-  transactionEvents: [...new Set([])],
+  pageData: [],
+  transactionEvents: [],
   totalTransactions: 0,
   totalPages: 0,
   fetch: async ({
