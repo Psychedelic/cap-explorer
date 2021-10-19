@@ -94,3 +94,4 @@ export const AccountLink = ({
     {trim ? trimAccount(account) : account}
   </PrimaryLink>
 );
+

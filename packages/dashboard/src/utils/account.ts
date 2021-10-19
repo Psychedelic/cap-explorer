@@ -57,7 +57,7 @@ export const parseUserRootBucketsResponse = ({
 }: {
   contracts?: Principal[],
 }): AccountData[] | [] => {
-  if (!contracts || !Array.isArray(contracts)) return [];
+  if (!contracts || !Array.isArray(contracts) || !contracts.length) return [];
 
   return contracts
     .map((principal: Principal) => ({

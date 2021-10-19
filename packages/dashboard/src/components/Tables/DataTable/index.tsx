@@ -15,10 +15,11 @@ import {
 } from 'react-table';
 import ContainerBox from '@components/ContainerBox';
 import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
-import { TransactionTypes } from '@components/Tables/TransactionsTable';
+import { TransactionTypes, FetchPageDataHandler } from '@components/Tables/TransactionsTable';
 import TableDropDownSelect from '@components/TableDropdownSelect';
 import Icon from '@components/Icon';
 import { useWindowResize } from '@hooks/windowResize';
+import { PAGE_SIZE } from '@hooks/store';
 import Loading from '@components/Loading';
 
 const RowWrapper = styled('div', {
@@ -308,6 +309,8 @@ interface DataTableProps<T extends object> {
   formatters?: FormatterTypes,
   columnOrder: string[],
   isLoading: boolean,
+  pageCount: number,
+  fetchPageDataHandler: FetchPageDataHandler,
 }
 
 interface HeaderGroupExtented {
@@ -339,14 +342,14 @@ const formatterCallbackHandler = <T extends {}>(
   return callback(baseValue);
 };
 
-export const PAGE_SIZE = 10;
-
 const DataTable = <T extends {}>({
   columns,
   data,
   formatters = {},
   columnOrder,
   isLoading,
+  pageCount,
+  fetchPageDataHandler,
 }: DataTableProps<T>) => {
   const [showIconHintScrollX, setShowIconHintScrollX] = useState(true);
   const memoizedColumns = useMemo(() => columns, [columns]);
@@ -357,8 +360,13 @@ const DataTable = <T extends {}>({
     columns: memoizedColumns,
     data: memoizedData,
     initialState: {
+      pageIndex: 0,
+      // TODO: When required, control page size dynamically
       pageSize: PAGE_SIZE,
     },
+    // TODO: handle fetch, provide own pageCount
+    manualPagination: true,
+    pageCount,
   },
   usePagination,
   useColumnOrder);
@@ -401,6 +409,22 @@ const DataTable = <T extends {}>({
   }, [refDOMScrollXContainer?.current]);
 
   const currentPageIndex = pageIndex + 1;
+
+  // TODO: on control page size, compute request
+  useEffect(() => {
+    if (typeof fetchPageDataHandler !== 'function') return;
+
+    try {
+      fetchPageDataHandler({
+        pageIndex,
+      });
+
+
+    } catch (err) {
+      // TODO: What to do on failure? Handle gracefully
+      console.warn(`Oops! Failed to fetch the page ${pageIndex} data`);
+    };
+  }, [pageIndex]);
 
   return (
     <>
@@ -481,6 +505,9 @@ const DataTable = <T extends {}>({
                 </div>
                 <IconHintScrollX show={showIconHintScrollX} />
               </ScrollXContainer>
+              {/*
+                TODO: hide arrows on total page 1
+              */}
               <Pagination data-pagination>
                 <button
                   type="button"

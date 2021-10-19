@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AccountData } from '@components/Tables/AccountsTable';
 import { cap } from '@psychedelic/cap-js';
 import { parseUserRootBucketsResponse } from '@utils/account';
+import { managementCanisterPrincipal } from '@utils/ic-management-api';
 
 export default () => {
   const [accountsData, setAccountsData] = useState<AccountData[]>([]);
@@ -9,11 +10,11 @@ export default () => {
   useEffect(() => {
     const getAllTokenContracts = async () => {
       const response = await cap.get_user_root_buckets({
-        user: "aaaaa-aa",
+        user: managementCanisterPrincipal.toText(),
         witness: false,
       });
 
-      if (!response || !Array.isArray(response?.contracts)) {
+      if (!response || !Array.isArray(response?.contracts) || !response?.contracts.length) {
         // TODO: What to do if no response? Handle gracefully
 
         return;

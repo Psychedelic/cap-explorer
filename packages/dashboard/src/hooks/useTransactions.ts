@@ -1,16 +1,38 @@
 import { useEffect, useState } from 'react';
-import { Data } from '@components/Tables/TransactionsTable';
+import { Principal } from "@dfinity/principal";
+import {
+  cap,
+  GetTransactionsResponseBorrowed as TransactionsResponse,
+  Event as TransactionEvent,
+} from '@psychedelic/cap-js';
+import {
+  useParams
+} from "react-router-dom";
+import { parseGetTransactionsResponse } from '@utils/transactions';
 
 export default () => {
-  const [transactionsData, setTransactionsData] = useState<Data[]>([]);
+  const [transactionsData, setTransactionsData] = useState<TransactionEvent[]>([]);
+  let { id: tokenId } = useParams() as { id: string };
 
   useEffect(() => {
-    import('@utils/mocks/transactionsTableMockData').then((module) => {
-      // Mock short delay for loading state tests...
-      setTimeout(() => {
-        setTransactionsData((module.data as Data[]));
-      }, 400);
-    });
+    const getTransactionsHandler = async () => {
+      const response: TransactionsResponse = await cap.get_transactions({
+        tokenId: Principal.fromText(tokenId),
+        witness: false,
+      });
+
+      if (!response || !Array.isArray(response?.data) || !response?.data.length) {
+        // TODO: What to do if no response? Handle gracefully
+
+        return;
+      }
+
+      setTransactionsData(
+        parseGetTransactionsResponse(response),
+      );
+    };
+
+    getTransactionsHandler();
   }, []);
 
   return transactionsData;

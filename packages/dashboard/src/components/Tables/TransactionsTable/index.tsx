@@ -12,6 +12,7 @@ import { isTableDataReady } from '@utils/tables';
 import ValueCell from '@components/Tables/ValueCell';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
+import { trimAccount } from '@utils/account';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -67,6 +68,12 @@ interface Column {
   filters?: (keyof typeof TransactionTypes)[],
 }
 
+export type FetchPageDataHandler = ({
+  pageIndex,
+}: {
+  pageIndex: number,
+}) => void;
+
 const DEFAULT_BASE_STATE = TransactionTypes.all;
 
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
@@ -118,10 +125,14 @@ const columns: Column[] = [
 const TransactionsTable = ({
   data = [],
   id,
+  pageCount,
+  fetchPageDataHandler,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: Data[],
   id: TableId,
+  pageCount: number,
+  fetchPageDataHandler: FetchPageDataHandler,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(isTableDataReady(data));
   const [currentData, setCurrentData] = useState<Data[]>(data);
@@ -151,24 +162,9 @@ const TransactionsTable = ({
 
   const formatters = useMemo(() => ({
     body: {
-      caller: (cellValue: string) => (
-        <AccountLink
-          account={cellValue}
-          trim
-        />
-      ),
-      from: (cellValue: string) => (
-        <AccountLink
-          account={cellValue}
-          trim
-        />
-      ),
-      to: (cellValue: string) => (
-        <AccountLink
-          account={cellValue}
-          trim
-        />
-      ),
+      caller: (cellValue: string) => trimAccount(cellValue),
+      from: (cellValue: string) => trimAccount(cellValue),
+      to: (cellValue: string) => trimAccount(cellValue),
       fee: (cellValue: string) => <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />,
       amount: (cellValue: string) => formatPriceForChart({ value: cellValue, abbreviation: 'USD' }),
       time: (cellValue: string) => dateRelative(cellValue),
@@ -192,6 +188,8 @@ const TransactionsTable = ({
         formatters={formatters}
         columnOrder={DEFAULT_COLUMN_ORDER}
         isLoading={isLoading}
+        pageCount={pageCount}
+        fetchPageDataHandler={fetchPageDataHandler}
       />
     </Container>
   );

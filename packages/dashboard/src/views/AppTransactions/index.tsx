@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import TransactionsTable from '@components/Tables/TransactionsTable';
+import TransactionsTable, { FetchPageDataHandler } from '@components/Tables/TransactionsTable';
 import {
   BookmarkColumnModes,
 } from '@components/BookmarkPanel';
@@ -7,12 +7,18 @@ import SearchInput from '@components/SearchInput';
 // import OverallValues from '@components/OverallValues';
 import Title from '@components/Title';
 import Page, { PageRow } from '@components/Page';
-import { useAccountStore } from '@hooks/store';
-import useTransactions from '@hooks/useTransactions';
+import {
+  useAccountStore,
+  useTransactionStore,
+} from '@hooks/store';
 import {
   useParams
 } from "react-router-dom";
 import { trimAccount } from '@utils/account';
+import {
+  Event as TransactionEvent,
+} from '@psychedelic/cap-js';
+import { scrollTop } from '@utils/window';
 
 const AppTransactions = ({
   bookmarkColumnMode,
@@ -20,28 +26,58 @@ const AppTransactions = ({
   bookmarkColumnMode: BookmarkColumnModes,
 }) => {
   const { add } = useAccountStore((state) => state);
-  const transactionsData = useTransactions();
-  let { id } = useParams() as { id: string };
+  const {
+    pageData,
+    fetch,
+    // transactionEvents,
+    // totalTransactions,
+    totalPages,
+  } = useTransactionStore((state) => state);
+  const transactions: TransactionEvent[] = pageData ?? [];
+
+  let { id: tokenId } = useParams() as { id: string };
+
+  // TODO: on fetch by token id and page nr, cache/memoize
+  const fetchPageDataHandler: FetchPageDataHandler = async ({
+    pageIndex,
+  }) => {
+    await fetch({
+      tokenId,
+      page: pageIndex,
+      witness: false,
+    });
+
+    scrollTop();
+  }
 
   useEffect(() => {
-    if (!transactionsData || !transactionsData.length) return;
-    transactionsData.forEach((item) => add(item.from));
-  }, [transactionsData]);
+    fetch({
+      tokenId,
+      witness: false,
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!transactions || !transactions.length) return;
+    transactions.forEach((item) => add(item.from));
+  }, [transactions]);
 
   return (
     <Page
       pageId="app-transactions-page"
     >
       <PageRow>
-        <Title size="xl">{`Application transactions for ${trimAccount(id)}`}</Title>
+        <Title size="xl">{`Application transactions for ${trimAccount(tokenId)}`}</Title>
       </PageRow>
       <PageRow>
         <SearchInput />
       </PageRow>
       <PageRow>
         <TransactionsTable
-          data={transactionsData}
+          data={transactions}
           id="app-transactions-page"
+          pageCount={totalPages}
+          fetchPageDataHandler={fetchPageDataHandler}
         />
       </PageRow>
     </Page>
