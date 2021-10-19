@@ -32,6 +32,7 @@ const AppTransactions = ({
     // transactionEvents,
     // totalTransactions,
     totalPages,
+    reset,
   } = useTransactionStore((state) => state);
   const transactions: TransactionEvent[] = pageData ?? [];
 
@@ -55,6 +56,9 @@ const AppTransactions = ({
       tokenId,
       witness: false,
     });
+
+    // On unmount, reset the transaction state
+    return () => reset();
   }, []);
 
   useEffect(() => {

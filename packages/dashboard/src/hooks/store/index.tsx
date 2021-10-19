@@ -34,6 +34,7 @@ interface TransactionsStore {
   totalTransactions: number,
   totalPages: number,
   fetch: (params: TransactionsFetchParams) => void,
+  reset: () => void,
 }
 
 export const PAGE_SIZE = 64;
@@ -63,7 +64,7 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
     // TODO: If a user request a page that is not the most recent
     // then the total transactions calculation will fail...
     const totalTransactions = PAGE_SIZE * response.page + response.data.length;
-    const totalPages = totalTransactions / PAGE_SIZE;
+    const totalPages = totalTransactions > PAGE_SIZE ? totalTransactions / PAGE_SIZE : 1;
     const parsedTransactionEvents = parseGetTransactionsResponse(response);
     const pageData = parsedTransactionEvents;
 
@@ -80,4 +81,10 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
       totalPages: Math.max(state.totalPages, totalPages),
     }));
   },
+  reset: () => set((state: TransactionsStore) => ({
+    pageData: [],
+    transactionEvents: [],
+    totalTransactions: 0,
+    totalPages: 0,
+  })),
 }));
