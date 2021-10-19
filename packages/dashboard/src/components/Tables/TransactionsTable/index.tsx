@@ -68,6 +68,12 @@ interface Column {
   filters?: (keyof typeof TransactionTypes)[],
 }
 
+export type FetchPageDataHandler = ({
+  pageIndex,
+}: {
+  pageIndex: number,
+}) => void;
+
 const DEFAULT_BASE_STATE = TransactionTypes.all;
 
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
@@ -126,11 +132,7 @@ const TransactionsTable = ({
   data?: Data[],
   id: TableId,
   pageCount: number,
-  fetchPageDataHandler: ({
-    pageIndex,
-  }: {
-    pageIndex: number,
-  }) => void,
+  fetchPageDataHandler: FetchPageDataHandler,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(isTableDataReady(data));
   const [currentData, setCurrentData] = useState<Data[]>(data);

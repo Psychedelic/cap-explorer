@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import TransactionsTable from '@components/Tables/TransactionsTable';
+import TransactionsTable, { FetchPageDataHandler } from '@components/Tables/TransactionsTable';
 import {
   BookmarkColumnModes,
 } from '@components/BookmarkPanel';
@@ -37,10 +37,8 @@ const AppTransactions = ({
   let { id: tokenId } = useParams() as { id: string };
 
   // TODO: on fetch by token id and page nr, cache/memoize
-  const fetchPageDataHandler = ({
+  const fetchPageDataHandler: FetchPageDataHandler = ({
     pageIndex,
-  }: {
-    pageIndex: number,
   }) => {
     try {
       (() => fetch({
