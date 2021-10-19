@@ -132,6 +132,8 @@ yarn cap:generate-mocks 16
 
 The process handles the creation of `Root bucket Canister` for the `Router Canister` and inserting a transaction, which while sounding trivial is a long process at time of writing.
 
+💡 If you'd like to add more token contracts, call the `cap:generate-mocks` again.
+
 ## 💍 Tests
 
 Run unit-tests for the `Dashboard UI` by:
