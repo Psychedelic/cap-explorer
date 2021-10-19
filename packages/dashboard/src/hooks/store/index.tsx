@@ -36,7 +36,7 @@ interface TransactionsStore {
   fetch: (params: TransactionsFetchParams) => void,
 }
 
-const ITEMS_PER_PAGE = 64;
+export const PAGE_SIZE = 64;
 
 export const useTransactionStore: UseStore<TransactionsStore> = create((set) => ({
   pageData: [],
@@ -62,8 +62,8 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
 
     // TODO: If a user request a page that is not the most recent
     // then the total transactions calculation will fail...
-    const totalTransactions = ITEMS_PER_PAGE * response.page + response.data.length;
-    const totalPages = totalTransactions / ITEMS_PER_PAGE;
+    const totalTransactions = PAGE_SIZE * response.page + response.data.length;
+    const totalPages = totalTransactions / PAGE_SIZE;
     const parsedTransactionEvents = parseGetTransactionsResponse(response);
     const pageData = parsedTransactionEvents;
 

@@ -19,6 +19,7 @@ import { TransactionTypes, FetchPageDataHandler } from '@components/Tables/Trans
 import TableDropDownSelect from '@components/TableDropdownSelect';
 import Icon from '@components/Icon';
 import { useWindowResize } from '@hooks/windowResize';
+import { PAGE_SIZE } from '@hooks/store';
 import Loading from '@components/Loading';
 
 const RowWrapper = styled('div', {
@@ -341,8 +342,6 @@ const formatterCallbackHandler = <T extends {}>(
   return callback(baseValue);
 };
 
-export const PAGE_SIZE = 64;
-
 const DataTable = <T extends {}>({
   columns,
   data,
@@ -419,6 +418,8 @@ const DataTable = <T extends {}>({
       fetchPageDataHandler({
         pageIndex,
       });
+
+
     } catch (err) {
       // TODO: What to do on failure? Handle gracefully
       console.warn(`Oops! Failed to fetch the page ${pageIndex} data`);
