@@ -26,14 +26,33 @@ const AppTransactions = ({
 }) => {
   const { add } = useAccountStore((state) => state);
   const {
+    pageData,
     fetch,
-    transactionEvents,
-    totalTransactions,
+    // transactionEvents,
+    // totalTransactions,
     totalPages,
   } = useTransactionStore((state) => state);
-  const transactions: TransactionEvent[] = transactionEvents[0] ?? [];
+  const transactions: TransactionEvent[] = pageData ?? [];
 
   let { id: tokenId } = useParams() as { id: string };
+
+  // TODO: on fetch by token id and page nr, cache/memoize
+  const fetchPageDataHandler = ({
+    pageIndex,
+  }: {
+    pageIndex: number,
+  }) => {
+    try {
+      (() => fetch({
+        tokenId,
+        page: pageIndex,
+        witness: false,
+      }))();
+    } catch (err) {
+      // TODO: What to do on failure? Handle gracefully
+      console.warn(`Oops! Failed to fetch the page ${pageIndex} data for ${tokenId}`);
+    };
+  };
 
   useEffect(() => {
     fetch({
@@ -46,9 +65,6 @@ const AppTransactions = ({
     if (!transactions || !transactions.length) return;
     transactions.forEach((item) => add(item.from));
   }, [transactions]);
-
-  console.log('[debug] AppTransactions: totalTransactions: ', totalTransactions);
-  console.log('[debug] AppTransactions: totalPages: ', totalPages);
 
   return (
     <Page
@@ -65,6 +81,7 @@ const AppTransactions = ({
           data={transactions}
           id="app-transactions-page"
           pageCount={totalPages}
+          fetchPageDataHandler={fetchPageDataHandler}
         />
       </PageRow>
     </Page>

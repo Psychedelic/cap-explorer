@@ -29,6 +29,7 @@ interface TransactionsFetchParams {
 }
 
 interface TransactionsStore {
+  pageData: TransactionEvent[] | [],
   transactionEvents: TransactionEvent[] | [],
   totalTransactions: number,
   totalPages: number,
@@ -38,6 +39,7 @@ interface TransactionsStore {
 const ITEMS_PER_PAGE = 64;
 
 export const useTransactionStore: UseStore<TransactionsStore> = create((set) => ({
+  pageData: [...new Set([])],
   transactionEvents: [...new Set([])],
   totalTransactions: 0,
   totalPages: 0,
@@ -58,17 +60,24 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
       return;
     }
 
+    // TODO: If a user request a page that is not the most recent
+    // then the total transactions calculation will fail...
     const totalTransactions = ITEMS_PER_PAGE * response.page + response.data.length;
     const totalPages = totalTransactions / ITEMS_PER_PAGE;
     const parsedTransactionEvents = parseGetTransactionsResponse(response);
+    const pageData = parsedTransactionEvents;
 
     set((state: TransactionsStore) => ({
+      pageData,
       transactionEvents: [
         ...state.transactionEvents,
         parsedTransactionEvents,
       ],
+      // TODO: For totalTransactions/Pages Check TODO above,
+      // as total transactions at time of writing
+      // can only be computed on first page:None request...
       totalTransactions,
-      totalPages,
+      totalPages: Math.max(state.totalPages, totalPages),
     }));
   },
 }));

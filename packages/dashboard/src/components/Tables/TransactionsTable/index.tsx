@@ -120,11 +120,17 @@ const TransactionsTable = ({
   data = [],
   id,
   pageCount,
+  fetchPageDataHandler,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: Data[],
   id: TableId,
   pageCount: number,
+  fetchPageDataHandler: ({
+    pageIndex,
+  }: {
+    pageIndex: number,
+  }) => void,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(isTableDataReady(data));
   const [currentData, setCurrentData] = useState<Data[]>(data);
@@ -168,8 +174,6 @@ const TransactionsTable = ({
     setIsLoading(isTableDataReady(data));
   }, [data]);
 
-  console.log('[debug] transactionsTable: currentData: ', currentData);
-
   return (
     <Container
       data-id={id}
@@ -183,6 +187,7 @@ const TransactionsTable = ({
         columnOrder={DEFAULT_COLUMN_ORDER}
         isLoading={isLoading}
         pageCount={pageCount}
+        fetchPageDataHandler={fetchPageDataHandler}
       />
     </Container>
   );

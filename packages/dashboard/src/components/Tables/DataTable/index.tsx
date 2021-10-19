@@ -309,6 +309,11 @@ interface DataTableProps<T extends object> {
   columnOrder: string[],
   isLoading: boolean,
   pageCount: number,
+  fetchPageDataHandler: ({
+    pageIndex,
+  }: {
+    pageIndex: number,
+  }) => void,
 }
 
 interface HeaderGroupExtented {
@@ -340,7 +345,7 @@ const formatterCallbackHandler = <T extends {}>(
   return callback(baseValue);
 };
 
-export const PAGE_SIZE = 50;
+export const PAGE_SIZE = 64;
 
 const DataTable = <T extends {}>({
   columns,
@@ -349,6 +354,7 @@ const DataTable = <T extends {}>({
   columnOrder,
   isLoading,
   pageCount,
+  fetchPageDataHandler,
 }: DataTableProps<T>) => {
   const [showIconHintScrollX, setShowIconHintScrollX] = useState(true);
   const memoizedColumns = useMemo(() => columns, [columns]);
@@ -360,6 +366,7 @@ const DataTable = <T extends {}>({
     data: memoizedData,
     initialState: {
       pageIndex: 0,
+      // TODO: When required, control page size dynamically
       pageSize: PAGE_SIZE,
     },
     // TODO: handle fetch, provide own pageCount
@@ -408,10 +415,14 @@ const DataTable = <T extends {}>({
 
   const currentPageIndex = pageIndex + 1;
 
-  // TODO: on page index change, fetch the data
-  // useEffect(() => {
-  //   fetchData && fetchData({ pageIndex, pageSize })
-  // }, [fetchData, pageIndex, pageSize]);
+  // TODO: on control page size, compute request
+  useEffect(() => {
+    if (typeof fetchPageDataHandler !== 'function') return;
+
+    fetchPageDataHandler({
+      pageIndex,
+    });
+  }, [pageIndex]);
 
   return (
     <>
