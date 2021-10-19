@@ -15,7 +15,7 @@ import {
 } from 'react-table';
 import ContainerBox from '@components/ContainerBox';
 import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
-import { TransactionTypes } from '@components/Tables/TransactionsTable';
+import { TransactionTypes, FetchPageDataHandler } from '@components/Tables/TransactionsTable';
 import TableDropDownSelect from '@components/TableDropdownSelect';
 import Icon from '@components/Icon';
 import { useWindowResize } from '@hooks/windowResize';
@@ -309,11 +309,7 @@ interface DataTableProps<T extends object> {
   columnOrder: string[],
   isLoading: boolean,
   pageCount: number,
-  fetchPageDataHandler: ({
-    pageIndex,
-  }: {
-    pageIndex: number,
-  }) => void,
+  fetchPageDataHandler: FetchPageDataHandler,
 }
 
 interface HeaderGroupExtented {
@@ -508,6 +504,9 @@ const DataTable = <T extends {}>({
                 </div>
                 <IconHintScrollX show={showIconHintScrollX} />
               </ScrollXContainer>
+              {/*
+                TODO: hide arrows on total page 1
+              */}
               <Pagination data-pagination>
                 <button
                   type="button"
