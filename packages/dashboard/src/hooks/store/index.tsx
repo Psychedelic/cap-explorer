@@ -30,11 +30,17 @@ interface TransactionsFetchParams {
 
 interface TransactionsStore {
   transactionEvents: TransactionEvent[] | [],
+  totalTransactions: number,
+  totalPages: number,
   fetch: (params: TransactionsFetchParams) => void,
 }
 
+const ITEMS_PER_PAGE = 64;
+
 export const useTransactionStore: UseStore<TransactionsStore> = create((set) => ({
   transactionEvents: [...new Set([])],
+  totalTransactions: 0,
+  totalPages: 0,
   fetch: async ({
     tokenId,
     page,
@@ -52,6 +58,8 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
       return;
     }
 
+    const totalTransactions = ITEMS_PER_PAGE * response.page + response.data.length;
+    const totalPages = totalTransactions / ITEMS_PER_PAGE;
     const parsedTransactionEvents = parseGetTransactionsResponse(response);
 
     set((state: TransactionsStore) => ({
@@ -59,6 +67,8 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
         ...state.transactionEvents,
         parsedTransactionEvents,
       ],
+      totalTransactions,
+      totalPages,
     }));
   },
 }));

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import TransactionsTable from '@components/Tables/TransactionsTable';
 import {
   BookmarkColumnModes,
@@ -25,7 +25,12 @@ const AppTransactions = ({
   bookmarkColumnMode: BookmarkColumnModes,
 }) => {
   const { add } = useAccountStore((state) => state);
-  const {fetch, transactionEvents } = useTransactionStore((state) => state);
+  const {
+    fetch,
+    transactionEvents,
+    totalTransactions,
+    totalPages,
+  } = useTransactionStore((state) => state);
   const transactions: TransactionEvent[] = transactionEvents[0] ?? [];
 
   let { id: tokenId } = useParams() as { id: string };
@@ -41,6 +46,9 @@ const AppTransactions = ({
     if (!transactions || !transactions.length) return;
     transactions.forEach((item) => add(item.from));
   }, [transactions]);
+
+  console.log('[debug] AppTransactions: totalTransactions: ', totalTransactions);
+  console.log('[debug] AppTransactions: totalPages: ', totalPages);
 
   return (
     <Page
