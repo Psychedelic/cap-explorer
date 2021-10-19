@@ -2,11 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { styled } from '@stitched';
 import DataTable, { FormatterTypes, TableId } from '@components/Tables/DataTable';
 import Title from '@components/Title';
-import { dateRelative } from '@utils/date';
-import { formattedTransactionNumber } from '@utils/formatters';
 import { isTableDataReady } from '@utils/tables';
 import { AccountLink } from '@components/Link';
-import ValueCell from '@components/Tables/ValueCell';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -34,8 +31,6 @@ const Container = styled('div', {
 
 export interface AccountData {
   canister: string,
-  transactions?: number,
-  age?: string,
 }
 
 interface Column {
@@ -45,22 +40,12 @@ interface Column {
 
 export const DEFAULT_COLUMN_ORDER: (keyof AccountData)[] = [
   'canister',
-  'transactions',
-  'age',
 ];
 
 const columns: Column[] = [
   {
     Header: 'Canister',
     accessor: 'canister',
-  },
-  {
-    Header: 'Transactions',
-    accessor: 'transactions',
-  },
-  {
-    Header: 'Age',
-    accessor: 'age',
   },
 ];
 
@@ -77,8 +62,6 @@ const AccountsTable = ({
   const formatters = useMemo(() => ({
     body: {
       canister: (cellValue: string) => <AccountLink account={cellValue} trim={false} />,
-      transactions: (cellValue: string) => cellValue && formattedTransactionNumber(parseFloat(cellValue)) || 'n/a',
-      age: (cellValue: string) => cellValue && dateRelative(cellValue) || 'n/a',
     },
   } as FormatterTypes), []);
 
