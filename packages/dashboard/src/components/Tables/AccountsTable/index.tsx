@@ -98,6 +98,9 @@ const AccountsTable = ({
         formatters={formatters}
         columnOrder={DEFAULT_COLUMN_ORDER}
         isLoading={isLoading}
+        // TODO: Accounts table page count and fetch handling
+        pageCount={1}
+        fetchPageDataHandler={() => null}
       />
     </Container>
   );
