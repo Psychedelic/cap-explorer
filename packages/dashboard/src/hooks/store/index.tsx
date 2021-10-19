@@ -5,7 +5,7 @@ import {
   Event as TransactionEvent,
   GetUserRootBucketsResponse as ContractsResponse,
 } from '@psychedelic/cap-js';
-import { getCapInstance } from '@utils/cap'; 
+import { getCapRouterInstance, getCapRootInstance } from '@utils/cap'; 
 import { Principal } from "@dfinity/principal";
 import { parseGetTransactionsResponse } from '@utils/transactions';
 import { parseUserRootBucketsResponse } from '@utils/account';
@@ -29,20 +29,22 @@ export const useAccountStore: UseStore<AccountStore> = create((set) => ({
   totalPages: 0,
   fetch: async () => {
     // TODO: re-use instance, move initialisation to app context or something
-    const cap = await getCapInstance({
+    const capRouter = await getCapRouterInstance({
       canisterId: config.canisterId,
       host: config.host,
     });
 
-    if (!cap) {
+    if (!capRouter) {
       console.warn('Oops! CAP instance is required to fetch data');
 
       return;
     }
 
+    console.log('[debug] capRouter', capRouter);
+
     // Note: at time of writing the `get_user_root_buckets`
     // has no support for paginated response
-    const response = await cap.routerActor.get_user_root_buckets({
+    const response = await capRouter.actor.get_user_root_buckets({
       user: managementCanisterPrincipal,
       witness: false,
     });
@@ -98,19 +100,22 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
     witness = false,
   }: TransactionsFetchParams) => {
     // TODO: re-use instance, move initialisation to app context or something
-    const cap = await getCapInstance({
+    const capRoot = await getCapRootInstance({
       canisterId: tokenId,
       host: config.host,
     });
 
-    if (!cap) {
+    if (!capRoot) {
       console.warn('Oops! CAP instance is required to fetch data');
 
       return;
     }
 
-    const response: TransactionsResponse = await cap.get_transactions({
-      page,
+    console.log('[debug] capRoot: ', capRoot);
+    console.log('[debug] capRoot.actor: ', capRoot.actor);
+
+    const response: TransactionsResponse = await capRoot.actor.get_transactions({
+      page: page ? [page] : [],
       witness,
     });
 

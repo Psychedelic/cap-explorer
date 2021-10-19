@@ -1,15 +1,22 @@
-import { Cap, Hosts } from '@psychedelic/cap-js';
+import {
+  CapRouter,
+  CapRoot,
+  CapBase,
+  Hosts,
+} from '@psychedelic/cap-js';
 
 export default {};
 
-export const getCapInstance = async ({
+const getCapInstanceHandler = async <T extends { init: (arg: { host: string; canisterId: string; }) => any }>({
   canisterId,
   host,
+  baseClass,
 }: {
   canisterId: string,
   host: string,
+  baseClass: T,
 }) => {
-  const cap = await Cap.init({
+  const cap = await baseClass.init({
     host,
     canisterId,
   });
@@ -23,3 +30,27 @@ export const getCapInstance = async ({
 
   return cap;
 };
+
+export const getCapRouterInstance = async ({
+  canisterId,
+  host,
+}: {
+  canisterId: string,
+  host: string,
+}) => getCapInstanceHandler({
+  host,
+  canisterId,
+  baseClass: CapRouter,
+});
+
+export const getCapRootInstance = async ({
+  canisterId,
+  host,
+}: {
+  canisterId: string,
+  host: string,
+}) => getCapInstanceHandler({
+  host,
+  canisterId,
+  baseClass: CapRoot,
+});
