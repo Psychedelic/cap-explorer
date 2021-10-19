@@ -64,6 +64,7 @@ const AppTransactions = ({
         <TransactionsTable
           data={transactions}
           id="app-transactions-page"
+          pageCount={totalPages}
         />
       </PageRow>
     </Page>

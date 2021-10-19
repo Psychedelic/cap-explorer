@@ -119,10 +119,12 @@ const columns: Column[] = [
 const TransactionsTable = ({
   data = [],
   id,
+  pageCount,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: Data[],
   id: TableId,
+  pageCount: number,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(isTableDataReady(data));
   const [currentData, setCurrentData] = useState<Data[]>(data);
@@ -180,6 +182,7 @@ const TransactionsTable = ({
         formatters={formatters}
         columnOrder={DEFAULT_COLUMN_ORDER}
         isLoading={isLoading}
+        pageCount={pageCount}
       />
     </Container>
   );

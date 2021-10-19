@@ -308,6 +308,7 @@ interface DataTableProps<T extends object> {
   formatters?: FormatterTypes,
   columnOrder: string[],
   isLoading: boolean,
+  pageCount: number,
 }
 
 interface HeaderGroupExtented {
@@ -347,6 +348,7 @@ const DataTable = <T extends {}>({
   formatters = {},
   columnOrder,
   isLoading,
+  pageCount,
 }: DataTableProps<T>) => {
   const [showIconHintScrollX, setShowIconHintScrollX] = useState(true);
   const memoizedColumns = useMemo(() => columns, [columns]);
@@ -357,8 +359,12 @@ const DataTable = <T extends {}>({
     columns: memoizedColumns,
     data: memoizedData,
     initialState: {
+      pageIndex: 0,
       pageSize: PAGE_SIZE,
     },
+    // TODO: handle fetch, provide own pageCount
+    manualPagination: true,
+    pageCount,
   },
   usePagination,
   useColumnOrder);
@@ -401,6 +407,11 @@ const DataTable = <T extends {}>({
   }, [refDOMScrollXContainer?.current]);
 
   const currentPageIndex = pageIndex + 1;
+
+  // TODO: on page index change, fetch the data
+  // useEffect(() => {
+  //   fetchData && fetchData({ pageIndex, pageSize })
+  // }, [fetchData, pageIndex, pageSize]);
 
   return (
     <>
