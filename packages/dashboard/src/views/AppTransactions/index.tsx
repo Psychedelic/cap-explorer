@@ -18,6 +18,7 @@ import { trimAccount } from '@utils/account';
 import {
   Event as TransactionEvent,
 } from '@psychedelic/cap-js';
+import { scrollTop } from '@utils/window';
 
 const AppTransactions = ({
   bookmarkColumnMode,
@@ -37,13 +38,17 @@ const AppTransactions = ({
   let { id: tokenId } = useParams() as { id: string };
 
   // TODO: on fetch by token id and page nr, cache/memoize
-  const fetchPageDataHandler: FetchPageDataHandler = ({
+  const fetchPageDataHandler: FetchPageDataHandler = async ({
     pageIndex,
-  }) => fetch({
-    tokenId,
-    page: pageIndex,
-    witness: false,
-  });
+  }) => {
+    await fetch({
+      tokenId,
+      page: pageIndex,
+      witness: false,
+    });
+
+    scrollTop();
+  }
 
   useEffect(() => {
     fetch({
