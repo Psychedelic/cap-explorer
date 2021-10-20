@@ -4,11 +4,33 @@ const TerserPlugin = require('terser-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const webpack = require('webpack');
 
+if (!process.env.NODE_ENV) throw Error('Oops! Missing the NODE_ENV environment variable.');
+
 const DEFAULT_DEVELOPMENT_ENVIRONMENT = 'development';
+const IS_PROD = process.env.NODE_ENV === 'production';
+const IS_STG = process.env.NODE_ENV === 'staging';
+const IS_DEV = [DEFAULT_DEVELOPMENT_ENVIRONMENT, 'test'].includes(process.env.NODE_ENV);
 const OPT_MAX_ASSET_SIZE = 500000;
 
-const isProd = process.env.NODE_ENV === 'production';
+// The IC History router id should be passed as an env variable
+// in any remote, production or staging environment setup
+let IC_HISTORY_ROUTER_ID = process.env.IC_HISTORY_ROUTER_ID;
 
+// Override the IC History Router
+// on the development environments
+if (IS_DEV) {
+  const canisters = require('../../cap/.dfx/local/canister_ids.json');
+
+  IC_HISTORY_ROUTER_ID = canisters['ic-history-router'].local;
+}
+
+// The IC History router id is required
+// when not available the build process is interrupted
+if (!IC_HISTORY_ROUTER_ID) {
+  throw Error('Oops! Missing the IC_HISTORY_ROUTER environment variable');
+};
+
+// Configuration base settings
 let config = {
   entry: './src/index.tsx',
   module: {
@@ -49,6 +71,7 @@ let config = {
     new webpack.EnvironmentPlugin({
       // TODO: should use process.env.NODE_ENV
       NODE_ENV: process.env.NODE_ENV || DEFAULT_DEVELOPMENT_ENVIRONMENT,
+      IC_HISTORY_ROUTER_ID,
     }),
   ],
   output: {
@@ -58,7 +81,8 @@ let config = {
   },
 };
 
-if (isProd) {
+// Configuration settings for Prod environments
+if (IS_PROD || IS_STG) {
   config = {
     ...config,
     mode: 'production',
@@ -110,7 +134,10 @@ if (isProd) {
       }),
     ],
   };
-} else {
+}
+
+// Configuration settings for Dev environments
+if (IS_DEV) {
   config = {
     ...config,
     mode: 'development',
@@ -149,5 +176,17 @@ if (isProd) {
     },
   };
 }
+
+const settingVars = {
+  IC_HISTORY_ROUTER_ID,
+  IS_PROD,
+  IS_STG,
+  IS_DEV,
+  OPT_MAX_ASSET_SIZE,
+};
+
+console.warn('🤖 Webpack settings');
+
+Object.keys(settingVars).forEach((name) => console.warn(`${name} is ${settingVars[name]}`))
 
 module.exports = config;
