@@ -8,9 +8,6 @@ const OPT_MAX_ASSET_SIZE = 500000;
 
 const isProd = process.env.NODE_ENV === 'production';
 
-// eslint-disable-next-line no-new
-new webpack.EnvironmentPlugin(['NODE_ENV']);
-
 let config = {
   entry: './src/index.tsx',
   module: {
@@ -47,6 +44,9 @@ let config = {
     new webpack.ProvidePlugin({
       Buffer: [require.resolve('buffer/'), 'Buffer'],
       process: 'process/browser',
+    }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'development',
     }),
   ],
   output: {
@@ -128,20 +128,14 @@ if (isProd) {
     },
     devtool: 'inline-source-map',
     devServer: {
-      contentBase: path.join(__dirname, 'public'),
       historyApiFallback: true,
       port: 8080,
       open: true,
       hot: true,
-      compress: true,
-      overlay: true,
-      clientLogLevel: 'debug',
-      proxy: {
-        '/api': {
-          target: 'http://localhost/TODO',
-          changeOrigin: true,
-          secure: false,
-        },
+      client: {
+        overlay: true,
+        logging: 'verbose',
+        progress: true,
       },
     },
     optimization: {
