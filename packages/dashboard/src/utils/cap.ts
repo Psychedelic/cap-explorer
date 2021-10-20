@@ -1,8 +1,6 @@
 import {
   CapRouter,
   CapRoot,
-  CapBase,
-  Hosts,
 } from '@psychedelic/cap-js';
 
 export default {};
