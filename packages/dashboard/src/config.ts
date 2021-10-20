@@ -1,5 +1,5 @@
 import { Hosts } from '@psychedelic/cap-js';
-import { networks } from '../../../dfx.json';
+import dfxJson from '../../../dfx.json';
 
 // TODO: enable the process env NODE_ENV
 // if (!process.env?.NODE_ENV) throw Error('Oops! Missing the NODE_ENV environment variable.');
@@ -28,13 +28,13 @@ const config: Config = {
   },
   development: {
     canisterId: LOCAL_CANISTER_ID,
-    host: networks.local.bind,
+    host: dfxJson.networks.local.bind,
   },
   // Used by jest on React functional tests
   // e.g. the `test:dashboard`
   test: {
     canisterId: LOCAL_CANISTER_ID,
-    host: networks.local.bind,
+    host: dfxJson.networks.local.bind,
   },
 };
 
