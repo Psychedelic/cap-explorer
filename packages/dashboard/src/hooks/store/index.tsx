@@ -40,11 +40,11 @@ export const useAccountStore: UseStore<AccountStore> = create((set) => ({
       return;
     }
 
-    console.log('[debug] capRouter', capRouter);
-
     // Note: at time of writing the `get_user_root_buckets`
     // has no support for paginated response
-    const response = await capRouter.actor.get_user_root_buckets({
+    // TODO: seems best to call the methods from the Actor directly
+    // there's no need for the method wrappers
+    const response = await capRouter.get_user_root_buckets({
       user: managementCanisterPrincipal,
       witness: false,
     });
@@ -111,11 +111,12 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
       return;
     }
 
-    console.log('[debug] capRoot: ', capRoot);
-    console.log('[debug] capRoot.actor: ', capRoot.actor);
-
-    const response: TransactionsResponse = await capRoot.actor.get_transactions({
-      page: page ? [page] : [],
+    // TODO: seems best to call the methods from the Actor directly
+    // there's no need for the method wrappers
+    // the only "inconvinence" here is that page would have to pass [] on none
+    // e.g. capRoot.actor.get_transactions({ page: [], witness: false });
+    const response: TransactionsResponse = await capRoot.get_transactions({
+      page,
       witness,
     });
 
