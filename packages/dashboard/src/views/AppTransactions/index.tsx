@@ -17,16 +17,10 @@ import {
 } from '@psychedelic/cap-js';
 import { scrollTop } from '@utils/window';
 
-const AppTransactions = ({
-  bookmarkColumnMode,
-}: {
-  bookmarkColumnMode: BookmarkColumnModes,
-}) => {
+const AppTransactions = () => {
   const {
     pageData,
     fetch,
-    // transactionEvents,
-    // totalTransactions,
     totalPages,
     reset,
   } = useTransactionStore((state) => state);
