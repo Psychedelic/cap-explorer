@@ -13,7 +13,7 @@ import { managementCanisterPrincipal } from '@utils/ic-management-api';
 import { AccountData } from '@components/Tables/AccountsTable';
 import config from '../../config';
 
-interface AccountStore {
+export interface AccountStore {
   accounts: ContractsResponse | {},
   pageData: AccountData[],
   totalContracts: number,
@@ -78,7 +78,7 @@ interface TransactionsFetchParams {
   witness: boolean,
 }
 
-interface TransactionsStore {
+export interface TransactionsStore {
   pageData: TransactionEvent[] | [],
   transactionEvents: TransactionEvent[] | [],
   totalTransactions: number,

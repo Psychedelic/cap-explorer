@@ -18,6 +18,9 @@ import loadable from '@loadable/component';
 import Loading from '@components/Loading';
 import { RouteNames } from '@utils/routes';
 import { createBookmarkExpandHandler } from '@utils/account';
+import {
+  useAccountStore,
+} from '@hooks/store';
 
 export type BookmarkExpandHandler = (args?: BookmarkExpandHandlerOverrides) => void;
 
@@ -46,27 +49,32 @@ const Routes = ({
   bookmarkColumnMode: BookmarkColumnModes,
   bookmarkExpandHandler: BookmarkExpandHandler,
   loading: boolean,
-}) => (
-  <Layout
-    bookmarkColumnMode={bookmarkColumnMode}
-    bookmarkExpandHandler={bookmarkExpandHandler}
-    loading={loading}
-    showBookmarkCol={false}
-  >
-    <Switch>
-      <Route path={RouteNames.AppTransactions}>
-        <LazyAppTransactions
-          bookmarkColumnMode={bookmarkColumnMode}
-        />
-      </Route>
-      <Route path={RouteNames.Home}>
-        <LazyOverview
-          bookmarkColumnMode={bookmarkColumnMode}
-        />
-      </Route>
-    </Switch>
-  </Layout>
-);
+}) => {
+  // Instance for the application lifetime
+  const accountStore = useAccountStore((state) => state);
+
+  return (
+    <Layout
+      bookmarkColumnMode={bookmarkColumnMode}
+      bookmarkExpandHandler={bookmarkExpandHandler}
+      loading={loading}
+      showBookmarkCol={false}
+    >
+      <Switch>
+        <Route path={RouteNames.AppTransactions}>
+          <LazyAppTransactions
+            bookmarkColumnMode={bookmarkColumnMode}
+          />
+        </Route>
+        <Route path={RouteNames.Home}>
+          <LazyOverview
+            accountStore={accountStore}
+          />
+        </Route>
+      </Switch>
+    </Layout>
+  );
+}
 
 const App = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);

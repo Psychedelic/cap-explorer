@@ -3,15 +3,19 @@ import AccountsTable from '@components/Tables/AccountsTable';
 import Title from '@components/Title';
 import Page, { PageRow } from '@components/Page';
 import {
-  useAccountStore,
+  AccountStore,
 } from '@hooks/store';
 
-const Overview = () => {
+const Overview = ({
+  accountStore
+}: {
+  accountStore: AccountStore,
+}) => {
   const {
     pageData,
     fetch,
     reset,
-  } = useAccountStore((state) => state);
+  } = accountStore;
 
   useEffect(() => {
     // TODO: cache/memoizing fetch call
