@@ -4,47 +4,43 @@ import {
   GetTransactionsResponseBorrowed as TransactionsResponse,
   Event as TransactionEvent,
   GetUserRootBucketsResponse as ContractsResponse,
+  CapRouter,
 } from '@psychedelic/cap-js';
-import { getCapRouterInstance, getCapRootInstance } from '@utils/cap'; 
-import { Principal } from "@dfinity/principal";
+import { getCapRootInstance } from '@utils/cap'; 
 import { parseGetTransactionsResponse } from '@utils/transactions';
 import { parseUserRootBucketsResponse } from '@utils/account';
 import { managementCanisterPrincipal } from '@utils/ic-management-api';
 import { AccountData } from '@components/Tables/AccountsTable';
 import config from '../../config';
 
+export type Store = UseStore<AccountStore>;
+
 export interface AccountStore {
   accounts: ContractsResponse | {},
   pageData: AccountData[],
   totalContracts: number,
   totalPages: number,
-  fetch: () => void,
+  fetch: ({ capRouterInstance }: { capRouterInstance: CapRouter } ) => void,
   reset: () => void,
 }
 
-export const useAccountStore: UseStore<AccountStore> = create((set) => ({
+export type UseAccountStore = () => Promise<UseStore<AccountStore>>;
+
+export const useAccountStore = create<AccountStore>((set) => ({
   accounts: {},
   pageData: [],
   totalContracts: 0,
   totalPages: 0,
-  fetch: async () => {
-    // TODO: re-use instance, move initialisation to app context or something
-    const capRouter = await getCapRouterInstance({
-      canisterId: config.canisterId,
-      host: config.host,
-    });
-
-    if (!capRouter) {
-      console.warn('Oops! CAP instance is required to fetch data');
-
-      return;
-    }
-
+  fetch: async ({
+    // CapRouter has App lifetime, as such
+    // should be passed from App top-level
+    capRouterInstance,
+  }) => {
     // Note: at time of writing the `get_user_root_buckets`
     // has no support for paginated response
     // TODO: seems best to call the methods from the Actor directly
     // there's no need for the method wrappers
-    const response = await capRouter.get_user_root_buckets({
+    const response = await capRouterInstance.get_user_root_buckets({
       user: managementCanisterPrincipal,
       witness: false,
     });
@@ -89,7 +85,7 @@ export interface TransactionsStore {
 
 export const PAGE_SIZE = 64;
 
-export const useTransactionStore: UseStore<TransactionsStore> = create((set) => ({
+export const useTransactionStore = create<TransactionsStore>((set) => ({
   pageData: [],
   transactionEvents: [],
   totalTransactions: 0,

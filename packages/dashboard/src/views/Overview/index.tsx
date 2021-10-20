@@ -5,11 +5,14 @@ import Page, { PageRow } from '@components/Page';
 import {
   AccountStore,
 } from '@hooks/store';
+import { CapRouter } from '@psychedelic/cap-js';
 
 const Overview = ({
-  accountStore
+  accountStore,
+  capRouterInstance,
 }: {
   accountStore: AccountStore,
+  capRouterInstance: CapRouter | undefined,
 }) => {
   const {
     pageData,
@@ -18,11 +21,15 @@ const Overview = ({
   } = accountStore;
 
   useEffect(() => {
+    if (!capRouterInstance) return;
+    
     // TODO: cache/memoizing fetch call
-    fetch();
+    fetch({
+      capRouterInstance,
+    });
 
     return () => reset();
-  }, []);
+  }, [capRouterInstance]);
 
   return (
     <Page

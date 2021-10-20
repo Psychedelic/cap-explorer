@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useState,
+  SetStateAction,
 } from 'react';
 import {
   BookmarkColumnModes,
@@ -18,9 +19,10 @@ import loadable from '@loadable/component';
 import Loading from '@components/Loading';
 import { RouteNames } from '@utils/routes';
 import { createBookmarkExpandHandler } from '@utils/account';
-import {
-  useAccountStore,
-} from '@hooks/store';
+import { useAccountStore } from '@hooks/store';
+import { CapRouter } from '@psychedelic/cap-js';
+import { getCapRouterInstance } from '@utils/cap'; 
+import config from './config';
 
 export type BookmarkExpandHandler = (args?: BookmarkExpandHandlerOverrides) => void;
 
@@ -50,8 +52,21 @@ const Routes = ({
   bookmarkExpandHandler: BookmarkExpandHandler,
   loading: boolean,
 }) => {
-  // Instance for the application lifetime
-  const accountStore = useAccountStore((state) => state);
+  const [capRouterInstance, setCapRouterInstance] = useState<CapRouter | undefined>();
+  const accountStore = useAccountStore();
+
+  useEffect(() => {
+    // On App launch, initialises CapRouter instance
+    // as it can be reused during App lifetime
+    (async () => {
+      const capRouterInstance = await getCapRouterInstance({
+        canisterId: config.canisterId,
+        host: config.host,
+      });
+
+      setCapRouterInstance(capRouterInstance);
+    })();
+  }, []);
 
   return (
     <Layout
@@ -69,6 +84,7 @@ const Routes = ({
         <Route path={RouteNames.Home}>
           <LazyOverview
             accountStore={accountStore}
+            capRouterInstance={capRouterInstance}
           />
         </Route>
       </Switch>
