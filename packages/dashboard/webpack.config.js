@@ -4,6 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const webpack = require('webpack');
 
+const DEFAULT_DEVELOPMENT_ENVIRONMENT = 'development';
 const OPT_MAX_ASSET_SIZE = 500000;
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -46,7 +47,8 @@ let config = {
       process: 'process/browser',
     }),
     new webpack.EnvironmentPlugin({
-      NODE_ENV: 'development',
+      // TODO: should use process.env.NODE_ENV
+      NODE_ENV: process.env.NODE_ENV || DEFAULT_DEVELOPMENT_ENVIRONMENT,
     }),
   ],
   output: {
@@ -134,8 +136,7 @@ if (isProd) {
       hot: true,
       client: {
         overlay: true,
-        logging: 'verbose',
-        progress: true,
+        logging: 'info',
       },
     },
     optimization: {
