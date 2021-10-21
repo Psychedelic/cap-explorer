@@ -5,6 +5,7 @@ import {
   Event as TransactionEvent,
   GetUserRootBucketsResponse as ContractsResponse,
   CapRouter,
+  CapRoot,
 } from '@psychedelic/cap-js';
 import { getCapRootInstance } from '@utils/cap'; 
 import { parseGetTransactionsResponse } from '@utils/transactions';
@@ -95,14 +96,16 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     page,
     witness = false,
   }: TransactionsFetchParams) => {
-    // TODO: re-use instance, move initialisation to app context or something
-    const capRoot = await getCapRootInstance({
-      canisterId: tokenId,
-      host: config.host,
-    });
+    let capRoot: CapRoot;
 
-    if (!capRoot) {
-      console.warn('Oops! CAP instance is required to fetch data');
+    try {
+      capRoot = await getCapRootInstance({
+        canisterId: tokenId,
+        host: config.host,
+      });
+    } catch (err) {
+      console.warn('Oops! CAP instance initialisation failed with', err);
+      // TODO: What to do if cap root initialisation fails? Handle gracefully
 
       return;
     }
