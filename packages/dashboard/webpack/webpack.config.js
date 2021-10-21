@@ -4,15 +4,35 @@ const TerserPlugin = require('terser-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const webpack = require('webpack');
 
+if (!process.env.NODE_ENV) throw Error('Oops! Missing the NODE_ENV environment variable.');
+
+const DEFAULT_DEVELOPMENT_ENVIRONMENT = 'development';
+const IS_PROD = process.env.NODE_ENV === 'production';
+const IS_STG = process.env.NODE_ENV === 'staging';
+const IS_DEV = [DEFAULT_DEVELOPMENT_ENVIRONMENT, 'test'].includes(process.env.NODE_ENV);
 const OPT_MAX_ASSET_SIZE = 500000;
 
-const isProd = process.env.NODE_ENV === 'production';
+// The IC History router id should be passed as an env variable
+// in any remote, production or staging environment setup
+let IC_HISTORY_ROUTER_ID = process.env.IC_HISTORY_ROUTER_ID;
 
-// eslint-disable-next-line no-new
-new webpack.EnvironmentPlugin(['NODE_ENV']);
+// Override the IC History Router
+// on the development environments
+if (IS_DEV) {
+  const canisters = require('../../../cap/.dfx/local/canister_ids.json');
 
+  IC_HISTORY_ROUTER_ID = canisters['ic-history-router'].local;
+}
+
+// The IC History router id is required
+// when not available the build process is interrupted
+if (!IC_HISTORY_ROUTER_ID) {
+  throw Error('Oops! Missing the IC_HISTORY_ROUTER environment variable');
+};
+
+// Configuration base settings
 let config = {
-  entry: './src/index.tsx',
+  entry: path.resolve(__dirname, '../', 'src/index.tsx'),
   module: {
     rules: [
       {
@@ -38,9 +58,9 @@ let config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: path.resolve(__dirname, '../', 'src/index.html'),
       filename: 'index.html',
-      favicon: './src/images/favicon.ico',
+      favicon: path.resolve(__dirname, '../', 'src/images/favicon.ico'),
     }),
     // DFX slight bug with Buffer in upgrading to 0.7.1
     // this might change, remove after...
@@ -48,15 +68,21 @@ let config = {
       Buffer: [require.resolve('buffer/'), 'Buffer'],
       process: 'process/browser',
     }),
+    new webpack.EnvironmentPlugin({
+      // TODO: should use process.env.NODE_ENV
+      NODE_ENV: process.env.NODE_ENV || DEFAULT_DEVELOPMENT_ENVIRONMENT,
+      IC_HISTORY_ROUTER_ID,
+    }),
   ],
   output: {
     filename: '[name].[fullhash].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../', 'dist'),
     clean: true,
   },
 };
 
-if (isProd) {
+// Configuration settings for Prod environments
+if (IS_PROD || IS_STG) {
   config = {
     ...config,
     mode: 'production',
@@ -108,7 +134,10 @@ if (isProd) {
       }),
     ],
   };
-} else {
+}
+
+// Configuration settings for Dev environments
+if (IS_DEV) {
   config = {
     ...config,
     mode: 'development',
@@ -128,20 +157,13 @@ if (isProd) {
     },
     devtool: 'inline-source-map',
     devServer: {
-      contentBase: path.join(__dirname, 'public'),
       historyApiFallback: true,
       port: 8080,
       open: true,
       hot: true,
-      compress: true,
-      overlay: true,
-      clientLogLevel: 'debug',
-      proxy: {
-        '/api': {
-          target: 'http://localhost/TODO',
-          changeOrigin: true,
-          secure: false,
-        },
+      client: {
+        overlay: true,
+        logging: 'info',
       },
     },
     optimization: {
@@ -154,5 +176,17 @@ if (isProd) {
     },
   };
 }
+
+const settingVars = {
+  IC_HISTORY_ROUTER_ID,
+  IS_PROD,
+  IS_STG,
+  IS_DEV,
+  OPT_MAX_ASSET_SIZE,
+};
+
+console.warn(`🤖 Webpack settings under environment ${process.env.NODE_ENV}`);
+
+Object.keys(settingVars).forEach((name) => console.warn(`${name} is ${settingVars[name]}`))
 
 module.exports = config;

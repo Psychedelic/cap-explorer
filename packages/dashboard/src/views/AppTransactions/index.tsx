@@ -30,6 +30,7 @@ const AppTransactions = ({
     totalPages,
     reset,
   } = useTransactionStore((state) => state);
+
   const transactions: TransactionEvent[] = pageData ?? [];
 
   let { id: tokenId } = useParams() as { id: string };

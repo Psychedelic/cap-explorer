@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Principal } from "@dfinity/principal";
 import {
-  cap,
   GetTransactionsResponseBorrowed as TransactionsResponse,
   Event as TransactionEvent,
 } from '@psychedelic/cap-js';

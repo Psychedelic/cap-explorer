@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useState,
+  SetStateAction,
 } from 'react';
 import {
   BookmarkColumnModes,
@@ -18,6 +19,10 @@ import loadable from '@loadable/component';
 import Loading from '@components/Loading';
 import { RouteNames } from '@utils/routes';
 import { createBookmarkExpandHandler } from '@utils/account';
+import { useAccountStore } from '@hooks/store';
+import { CapRouter } from '@psychedelic/cap-js';
+import { getCapRouterInstance } from '@utils/cap'; 
+import config from './config';
 
 export type BookmarkExpandHandler = (args?: BookmarkExpandHandlerOverrides) => void;
 
@@ -46,27 +51,46 @@ const Routes = ({
   bookmarkColumnMode: BookmarkColumnModes,
   bookmarkExpandHandler: BookmarkExpandHandler,
   loading: boolean,
-}) => (
-  <Layout
-    bookmarkColumnMode={bookmarkColumnMode}
-    bookmarkExpandHandler={bookmarkExpandHandler}
-    loading={loading}
-    showBookmarkCol={false}
-  >
-    <Switch>
-      <Route path={RouteNames.AppTransactions}>
-        <LazyAppTransactions
-          bookmarkColumnMode={bookmarkColumnMode}
-        />
-      </Route>
-      <Route path={RouteNames.Home}>
-        <LazyOverview
-          bookmarkColumnMode={bookmarkColumnMode}
-        />
-      </Route>
-    </Switch>
-  </Layout>
-);
+}) => {
+  const [capRouterInstance, setCapRouterInstance] = useState<CapRouter | undefined>();
+  const accountStore = useAccountStore();
+
+  useEffect(() => {
+    // On App launch, initialises CapRouter instance
+    // as it can be reused during App lifetime
+    (async () => {
+      const capRouterInstance = await getCapRouterInstance({
+        canisterId: config.canisterId,
+        host: config.host,
+      });
+
+      setCapRouterInstance(capRouterInstance);
+    })();
+  }, []);
+
+  return (
+    <Layout
+      bookmarkColumnMode={bookmarkColumnMode}
+      bookmarkExpandHandler={bookmarkExpandHandler}
+      loading={loading}
+      showBookmarkCol={false}
+    >
+      <Switch>
+        <Route path={RouteNames.AppTransactions}>
+          <LazyAppTransactions
+            bookmarkColumnMode={bookmarkColumnMode}
+          />
+        </Route>
+        <Route path={RouteNames.Home}>
+          <LazyOverview
+            accountStore={accountStore}
+            capRouterInstance={capRouterInstance}
+          />
+        </Route>
+      </Switch>
+    </Layout>
+  );
+}
 
 const App = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);

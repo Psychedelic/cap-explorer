@@ -1,36 +1,48 @@
 /* eslint-disable import/prefer-default-export */
 import create, { UseStore } from 'zustand';
 import {
-  cap,
   GetTransactionsResponseBorrowed as TransactionsResponse,
   Event as TransactionEvent,
   GetUserRootBucketsResponse as ContractsResponse,
+  CapRouter,
+  CapRoot,
 } from '@psychedelic/cap-js';
-import { Principal } from "@dfinity/principal";
+import { getCapRootInstance } from '@utils/cap'; 
 import { parseGetTransactionsResponse } from '@utils/transactions';
 import { parseUserRootBucketsResponse } from '@utils/account';
 import { managementCanisterPrincipal } from '@utils/ic-management-api';
 import { AccountData } from '@components/Tables/AccountsTable';
+import config from '../../config';
 
-interface AccountStore {
+export type Store = UseStore<AccountStore>;
+
+export interface AccountStore {
   accounts: ContractsResponse | {},
   pageData: AccountData[],
   totalContracts: number,
   totalPages: number,
-  fetch: () => void,
+  fetch: ({ capRouterInstance }: { capRouterInstance: CapRouter } ) => void,
   reset: () => void,
 }
 
-export const useAccountStore: UseStore<AccountStore> = create((set) => ({
+export type UseAccountStore = () => Promise<UseStore<AccountStore>>;
+
+export const useAccountStore = create<AccountStore>((set) => ({
   accounts: {},
   pageData: [],
   totalContracts: 0,
   totalPages: 0,
-  fetch: async () => {
+  fetch: async ({
+    // CapRouter has App lifetime, as such
+    // should be passed from App top-level
+    capRouterInstance,
+  }) => {
     // Note: at time of writing the `get_user_root_buckets`
     // has no support for paginated response
-    const response = await cap.get_user_root_buckets({
-      user: managementCanisterPrincipal.toText(),
+    // TODO: seems best to call the methods from the Actor directly
+    // there's no need for the method wrappers
+    const response = await capRouterInstance.get_user_root_buckets({
+      user: managementCanisterPrincipal,
       witness: false,
     });
 
@@ -63,7 +75,7 @@ interface TransactionsFetchParams {
   witness: boolean,
 }
 
-interface TransactionsStore {
+export interface TransactionsStore {
   pageData: TransactionEvent[] | [],
   transactionEvents: TransactionEvent[] | [],
   totalTransactions: number,
@@ -74,7 +86,7 @@ interface TransactionsStore {
 
 export const PAGE_SIZE = 64;
 
-export const useTransactionStore: UseStore<TransactionsStore> = create((set) => ({
+export const useTransactionStore = create<TransactionsStore>((set) => ({
   pageData: [],
   transactionEvents: [],
   totalTransactions: 0,
@@ -84,9 +96,26 @@ export const useTransactionStore: UseStore<TransactionsStore> = create((set) => 
     page,
     witness = false,
   }: TransactionsFetchParams) => {
-    const response: TransactionsResponse = await cap.get_transactions({
+    let capRoot: CapRoot;
+
+    try {
+      capRoot = await getCapRootInstance({
+        canisterId: tokenId,
+        host: config.host,
+      });
+    } catch (err) {
+      console.warn('Oops! CAP instance initialisation failed with', err);
+      // TODO: What to do if cap root initialisation fails? Handle gracefully
+
+      return;
+    }
+
+    // TODO: seems best to call the methods from the Actor directly
+    // there's no need for the method wrappers
+    // the only "inconvinence" here is that page would have to pass [] on none
+    // e.g. capRoot.actor.get_transactions({ page: [], witness: false });
+    const response: TransactionsResponse = await capRoot.get_transactions({
       page,
-      tokenId: Principal.fromText(tokenId),
       witness,
     });
 
