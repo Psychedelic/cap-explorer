@@ -19,7 +19,7 @@ let IC_HISTORY_ROUTER_ID = process.env.IC_HISTORY_ROUTER_ID;
 // Override the IC History Router
 // on the development environments
 if (IS_DEV) {
-  const canisters = require('../../cap/.dfx/local/canister_ids.json');
+  const canisters = require('../../../cap/.dfx/local/canister_ids.json');
 
   IC_HISTORY_ROUTER_ID = canisters['ic-history-router'].local;
 }
@@ -32,7 +32,7 @@ if (!IC_HISTORY_ROUTER_ID) {
 
 // Configuration base settings
 let config = {
-  entry: './src/index.tsx',
+  entry: path.resolve(__dirname, '../', 'src/index.tsx'),
   module: {
     rules: [
       {
@@ -58,9 +58,9 @@ let config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: path.resolve(__dirname, '../', 'src/index.html'),
       filename: 'index.html',
-      favicon: './src/images/favicon.ico',
+      favicon: path.resolve(__dirname, '../', 'src/images/favicon.ico'),
     }),
     // DFX slight bug with Buffer in upgrading to 0.7.1
     // this might change, remove after...
@@ -76,7 +76,7 @@ let config = {
   ],
   output: {
     filename: '[name].[fullhash].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../', 'dist'),
     clean: true,
   },
 };
