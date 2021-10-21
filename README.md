@@ -17,6 +17,7 @@ Learn more about [Cap](https://github.com/Psychedelic/cap) by reading the origin
   - [The CAP Service](#the-cap-service)
     - [Version control](#cap-service-version-control)
     - [Mock data generator](#cap-service-mock-data-generator)
+- [Build the distribution app](#build-the-distribution-app)
 - [Tests](#tests)
 - [Contribution guideline](#contribution-guideline)
 
@@ -140,6 +141,39 @@ Run unit-tests for the `Dashboard UI` by:
 
 ```sh
 yarn test:dashboard-unit
+```
+
+## 👷‍♂️ Build the distribution app
+
+The distribution version of the Application, which is client facing, you need to consider the environment it'll be targetting.
+
+Here're the available environments:
+
+- Local, you'd like to test locally
+- Staging, to host it remotely and make calls to a mainnet canister used for tests
+- Production, to host it remotely and make calls to the mainnet production canister
+
+Assuming that you have run the application startup guide, you'd run:
+
+```sh
+yarn build:local
+```
+
+Similarily, in a Cloud environment you'd have to setup a few environment variables, such as:
+
+- NODE_ENV, the target environment (staging or production)
+- IC_HISTORY_ROUTER_ID, the mainnet canister id (for staging or production)
+
+In the Cloud runner, after installing all the dependencies, you'd run:
+
+```sh
+yarn build:staging
+```
+
+We've used `staging` environment as an example, where `production` is also available.
+
+```sh
+yarn build:production
 ```
 
 ## 🙏 Contribution guideline
