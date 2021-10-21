@@ -185,7 +185,7 @@ const settingVars = {
   OPT_MAX_ASSET_SIZE,
 };
 
-console.warn('🤖 Webpack settings');
+console.warn(`🤖 Webpack settings under environment ${process.env.NODE_ENV}`);
 
 Object.keys(settingVars).forEach((name) => console.warn(`${name} is ${settingVars[name]}`))
 

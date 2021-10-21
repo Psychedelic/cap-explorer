@@ -9,8 +9,8 @@
   "private": true,
   "repository": "https://github.com/psychedelic/cap-explorer",
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack serve -c ./webpack/webpack.config.js --mode development",
-    "build": "cross-env NODE_ENV=production webpack -c ./webpack/webpack.config.js --mode=production",
+    "start": "webpack serve -c ./webpack/webpack.config.js --node-env development --mode development",
+    "build": "webpack -c ./webpack/webpack.config.js --node-env production --mode=production",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test:unit": "jest --config jest.config.js"
   },
@@ -34,7 +34,6 @@
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "axios": "^0.21.1",
-    "cross-env": "^7.0.3",
     "css-loader": "^5.2.4",
     "esbuild": "^0.11.16",
     "esbuild-loader": "^2.12.0",
