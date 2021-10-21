@@ -4,6 +4,7 @@ import {
   Config,
   Enviroments,
   isValidEnvironment,
+  isValidPrincipalFromTextId,
 } from '@utils/config';
 
 if (!process.env.NODE_ENV) throw Error('Oops! Missing the NODE_ENV environment variable.');
@@ -14,30 +15,36 @@ if (!isValidEnvironment(process.env.NODE_ENV)) {
   throw Error(`Oops! Unknown NODE_ENV environment variable (${process.env.NODE_ENV})`);
 }
 
+// Safe-guard, should be a valid principal text id
+// otherwise throw exception
+if (!isValidPrincipalFromTextId(process.env.IC_HISTORY_ROUTER_ID)) {
+  throw Error(`Oops! Missing the IC_HISTORY_ROUTER_ID envirinment variable (${process.env.IC_HISTORY_ROUTER_ID})`)
+}
+
 const env = process.env.NODE_ENV as Enviroments;
 
-// TODO: Get these canister id from the NODE_ENV environment var
+// Get these canister id from the NODE_ENV environment var
 // this is set has IC_HISTORY_ROUTER_ID
-const MAINNET_CANISTER_ID = 'rrkah-fqaaa-aaaaa-aaaaq-cai';
-const LOCAL_CANISTER_ID = 'rrkah-fqaaa-aaaaa-aaaaq-cai';
+// the IC_HISTORY_ROUTER_ID is previously validated, so safely set as string
+const canisterId = process.env.IC_HISTORY_ROUTER_ID as string;
 
 const config: Config = {
   production: {
-    canisterId: MAINNET_CANISTER_ID,
+    canisterId,
     host: Hosts.mainnet,
   },
   staging: {
-    canisterId: MAINNET_CANISTER_ID,
+    canisterId,
     host: Hosts.mainnet,
   },
   development: {
-    canisterId: LOCAL_CANISTER_ID,
+    canisterId,
     host: dfxJson.networks.local.bind,
   },
   // Used by jest on React functional tests
   // e.g. the `test:dashboard`
   test: {
-    canisterId: LOCAL_CANISTER_ID,
+    canisterId,
     host: dfxJson.networks.local.bind,
   },
 };
