@@ -61,6 +61,7 @@
   },
   "dependencies": {
     "@dfinity/agent": "^0.8.6",
+    "@dfinity/identity": "^0.10.1",
     "@dfinity/principal": "^0.10.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/pro-regular-svg-icons": "^5.15.3",
