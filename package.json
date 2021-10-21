@@ -29,7 +29,7 @@
     "cap:generate-mocks": ".scripts/generate-cap-mocks.sh"
   },
   "engines": {
-    "node": ">=16.9.0",
-    "npm": ">=7.21.0"
+    "node": ">=16",
+    "npm": ">=7"
   }
 }
