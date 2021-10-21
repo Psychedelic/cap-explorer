@@ -2,7 +2,7 @@ import { Principal } from "@dfinity/principal";
 
 export default {};
 
-export enum Enviroments {
+export enum Environments {
   production = 'production',
   staging = 'staging',
   development = 'development',
@@ -10,13 +10,13 @@ export enum Enviroments {
 };
 
 export type Config = {
-  [key in Enviroments]: {
+  [key in Environments]: {
     canisterId: string,
     host: string,
   }
 };
 
-export const isValidEnvironment = (env: any) => Object.values(Enviroments).includes(env);
+export const isValidEnvironment = (env: any) => Object.values(Environments).includes(env);
 // The Id can be anything, thus set as any and should be validated
 export const isValidPrincipalFromTextId = (id: any) => {
   if (typeof id !== 'string') return false;

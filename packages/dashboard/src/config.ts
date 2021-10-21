@@ -2,7 +2,7 @@ import { Hosts } from '@psychedelic/cap-js';
 import dfxJson from '../../../dfx.json';
 import {
   Config,
-  Enviroments,
+  Environments,
   isValidEnvironment,
   isValidPrincipalFromTextId,
 } from '@utils/config';
@@ -20,8 +20,6 @@ if (!isValidEnvironment(process.env.NODE_ENV)) {
 if (!isValidPrincipalFromTextId(process.env.IC_HISTORY_ROUTER_ID)) {
   throw Error(`Oops! Missing the IC_HISTORY_ROUTER_ID envirinment variable (${process.env.IC_HISTORY_ROUTER_ID})`)
 }
-
-const env = process.env.NODE_ENV as Enviroments;
 
 // Get these canister id from the NODE_ENV environment var
 // this is set has IC_HISTORY_ROUTER_ID
@@ -49,5 +47,5 @@ const config: Config = {
   },
 };
 
-// export default config[process.env.NODE_ENV as Enviroments];
-export default config[env];
+// The NODE_ENV has been previously validated as Environments
+export default config[process.env.NODE_ENV as Environments];

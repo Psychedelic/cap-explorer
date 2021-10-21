@@ -1,5 +1,5 @@
 import { 
-  Enviroments,
+  Environments,
   isValidEnvironment,
   isValidPrincipalFromTextId,
 } from './config';
@@ -8,22 +8,22 @@ describe('utils/config', () => {
   describe('isValidEnvironment', () => {
     describe('on valid environment variable', () => {
       it('should be truthy (production)', () => {
-        const isValid = isValidEnvironment(Enviroments.production)
+        const isValid = isValidEnvironment(Environments.production)
         expect(isValid).toBeTruthy();
       });
 
       it('should be truthy (staging)', () => {
-        const isValid = isValidEnvironment(Enviroments.staging)
+        const isValid = isValidEnvironment(Environments.staging)
         expect(isValid).toBeTruthy();
       });
 
       it('should be truthy (development)', () => {
-        const isValid = isValidEnvironment(Enviroments.development)
+        const isValid = isValidEnvironment(Environments.development)
         expect(isValid).toBeTruthy();
       });
 
       it('should be truthy (test)', () => {
-        const isValid = isValidEnvironment(Enviroments.test)
+        const isValid = isValidEnvironment(Environments.test)
         expect(isValid).toBeTruthy();
       });
     });
