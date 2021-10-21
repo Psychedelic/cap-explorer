@@ -28,6 +28,8 @@ const Template: Story<any> = () => (
     data={data}
     columnOrder={DEFAULT_COLUMN_ORDER}
     isLoading={false}
+    pageCount={1}
+    fetchPageDataHandler={() => null}
   />
 );
 
