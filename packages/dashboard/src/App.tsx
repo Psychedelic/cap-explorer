@@ -77,9 +77,7 @@ const Routes = ({
     >
       <Switch>
         <Route path={RouteNames.AppTransactions}>
-          <LazyAppTransactions
-            bookmarkColumnMode={bookmarkColumnMode}
-          />
+          <LazyAppTransactions />
         </Route>
         <Route path={RouteNames.Home}>
           <LazyOverview
@@ -94,14 +92,6 @@ const Routes = ({
 
 const App = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [
-    bookmarkColumnMode,
-    setBookmarkColumnMode,
-  ] = useState<BookmarkColumnModes>(BookmarkColumnModes.collapsed);
-  const bookmarkExpandHandler = useCallback(createBookmarkExpandHandler({
-    bookmarkColumnMode,
-    setBookmarkColumnMode,
-  }), [bookmarkColumnMode, setBookmarkColumnMode]);
 
   // Mocks async initial request
   useEffect(() => {
@@ -111,8 +101,8 @@ const App = () => {
   return (
     <Router>
       <Routes
-        bookmarkColumnMode={bookmarkColumnMode}
-        bookmarkExpandHandler={bookmarkExpandHandler}
+        bookmarkColumnMode={BookmarkColumnModes.collapsed}
+        bookmarkExpandHandler={() => null}
         loading={isLoading}
       />
     </Router>
