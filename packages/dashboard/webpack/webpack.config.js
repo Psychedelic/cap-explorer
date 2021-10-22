@@ -10,7 +10,7 @@ const DEFAULT_DEVELOPMENT_ENVIRONMENT = 'development';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_STG = process.env.NODE_ENV === 'staging';
 const IS_DEV = [DEFAULT_DEVELOPMENT_ENVIRONMENT, 'test'].includes(process.env.NODE_ENV);
-const OPT_MAX_ASSET_SIZE = 500000;
+const OPT_MAX_ASSET_SIZE = 800000;
 
 // The IC History router id should be passed as an env variable
 // in any remote, production or staging environment setup
@@ -68,11 +68,11 @@ let config = {
       Buffer: [require.resolve('buffer/'), 'Buffer'],
       process: 'process/browser',
     }),
-    new webpack.EnvironmentPlugin({
-      IC_HISTORY_ROUTER_ID,
-      NODE_ENV: process.env.NODE_ENV || DEFAULT_DEVELOPMENT_ENVIRONMENT,
-      MOCKUP: process.env.MOCKUP || false,
-    }),
+    new webpack.EnvironmentPlugin([
+      'IC_HISTORY_ROUTER_ID',
+      'NODE_ENV',
+      'MOCKUP',
+    ]),
   ],
   output: {
     filename: '[name].[fullhash].js',
