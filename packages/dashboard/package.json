@@ -11,7 +11,7 @@
   "scripts": {
     "start": "webpack serve -c ./webpack/webpack.config.js --node-env development --mode development",
     "build:production": "webpack -c ./webpack/webpack.config.js --node-env production --mode=production",
-    "build:staging": "webpack -c ./webpack/webpack.config.js --node-env production --mode=production",
+    "build:staging": "webpack -c ./webpack/webpack.config.js --node-env staging --mode=production",
     "build:local": "webpack -c ./webpack/webpack.config.js --node-env development --mode=development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test:unit": "jest --config jest.config.js"
