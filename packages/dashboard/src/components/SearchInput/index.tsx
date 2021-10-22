@@ -128,7 +128,9 @@ const SearchInput = () => {
     domElement: refDOM?.current,
   });
   const onInputHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const matches = accounts.filter((val) => val.indexOf(e.currentTarget.value) === 0);
+    if (Array.isArray(accounts)) return;
+
+    const matches = accounts.filter((val: any) => val.indexOf(e.currentTarget.value) === 0);
 
     setSuggestions(matches);
     setUserInput(e.currentTarget.value);

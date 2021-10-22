@@ -23,3 +23,13 @@ is_dfx_alive() {
     exit 1
   fi;
 }
+
+verifyDependency() {
+  for var in "$@"; do
+    if [[ ! ${!var+set} ]]; then
+      echo "🤡 Oops! Missing the $var environment variable..."
+
+      exit 1
+    fi;
+  done;
+}

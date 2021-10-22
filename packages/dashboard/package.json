@@ -10,7 +10,9 @@
   "repository": "https://github.com/psychedelic/cap-explorer",
   "scripts": {
     "start": "webpack serve -c ./webpack/webpack.config.js --node-env development --mode development",
-    "build": "webpack -c ./webpack/webpack.config.js --node-env production --mode=production",
+    "build:production": "webpack -c ./webpack/webpack.config.js --node-env production --mode=production",
+    "build:staging": "webpack -c ./webpack/webpack.config.js --node-env production --mode=production",
+    "build:local": "webpack -c ./webpack/webpack.config.js --node-env development --mode=development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test:unit": "jest --config jest.config.js"
   },
@@ -58,7 +60,10 @@
     "webpack-dev-server": "^4.3.1"
   },
   "dependencies": {
-    "@dfinity/agent": "^0.8.6",
+    "@dfinity/agent": "^0.10.1",
+    "@dfinity/candid": "^0.10.1",
+    "@dfinity/principal": "^0.10.1",
+    "@dfinity/identity": "^0.10.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/pro-regular-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
