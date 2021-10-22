@@ -37,6 +37,25 @@ export const useAccountStore = create<AccountStore>((set) => ({
     // should be passed from App top-level
     capRouterInstance,
   }) => {
+    // Shall use mockup data?
+    if (process.env.MOCKUP) {
+      import('../../utils/mocks/accountsMockData').then((module) => {
+        const pageData =  module.generateData();
+
+        // Mock short delay for loading state tests...
+        setTimeout(() => {
+          set((state: AccountStore) => ({
+            accounts: {},
+            pageData,
+            totalContracts: pageData.length,
+            totalPages: 1,
+          }));
+        }, 400);
+      });
+
+      return;
+    }
+
     // Note: at time of writing the `get_user_root_buckets`
     // has no support for paginated response
     // TODO: seems best to call the methods from the Actor directly
@@ -96,6 +115,33 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     page,
     witness = false,
   }: TransactionsFetchParams) => {
+    // Shall use mockup data?
+    if (process.env.MOCKUP) {
+      import('../../utils/mocks/transactionsTableMockData').then((module) => {
+        const pageData =  module.generateData();
+        const totalTransactions = PAGE_SIZE * 1 + pageData.length;
+        const totalPages = Math.ceil(totalTransactions > PAGE_SIZE ? totalTransactions / PAGE_SIZE : 1);
+        
+        // Mock short delay for loading state tests...
+        setTimeout(() => {
+          set((state: TransactionsStore) => ({
+            pageData,
+            transactionEvents: [
+              ...state.transactionEvents,
+              pageData,
+            ],
+            // TODO: For totalTransactions/Pages Check TODO above,
+            // as total transactions at time of writing
+            // can only be computed on first page:None request...
+            totalTransactions,
+            totalPages,
+          }));
+        }, 400);
+      });
+
+      return;
+    }
+
     let capRoot: CapRoot;
 
     try {

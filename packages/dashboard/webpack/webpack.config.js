@@ -69,9 +69,9 @@ let config = {
       process: 'process/browser',
     }),
     new webpack.EnvironmentPlugin({
-      // TODO: should use process.env.NODE_ENV
-      NODE_ENV: process.env.NODE_ENV || DEFAULT_DEVELOPMENT_ENVIRONMENT,
       IC_HISTORY_ROUTER_ID,
+      NODE_ENV: process.env.NODE_ENV || DEFAULT_DEVELOPMENT_ENVIRONMENT,
+      MOCKUP: process.env.MOCKUP || false,
     }),
   ],
   output: {
