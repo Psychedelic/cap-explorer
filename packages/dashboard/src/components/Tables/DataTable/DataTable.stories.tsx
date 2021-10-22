@@ -3,7 +3,7 @@ import { Story, Meta } from '@storybook/react';
 import { Column } from 'react-table';
 import DataTable, { HeaderItem } from '.';
 import { DEFAULT_COLUMN_ORDER } from '../TransactionsTable';
-import { columns, data } from '../../../utils/mocks/transactionsTableMockData';
+import { columns, generateData } from '../../../utils/mocks/transactionsTableMockData';
 
 export default {
   title: 'DataTable',
@@ -21,6 +21,7 @@ export default {
 } as Meta;
 
 const Columns = (columns as Column<HeaderItem>[]);
+const data = generateData();
 
 const Template: Story<any> = () => (
   <DataTable

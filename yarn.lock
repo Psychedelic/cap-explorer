@@ -1140,19 +1140,6 @@
     js-sha256 "0.9.0"
     simple-cbor "^0.4.1"
 
-"@dfinity/agent@^0.8.6":
-  version "0.8.9"
-  resolved "https://registry.yarnpkg.com/@dfinity/agent/-/agent-0.8.9.tgz#bfe7796aeefe03926556d6a3b6eb6c02a6da0193"
-  integrity sha512-4D2ohuoR7ukfmHYMKADALh26/bf3OdZm4z2CLEn0BPTWdnHRv/T2KIFzo/jpuvL3U8KEgr6WxFCxlufuhXjZDQ==
-  dependencies:
-    base64-arraybuffer "^0.2.0"
-    bignumber.js "^9.0.0"
-    borc "^2.1.1"
-    buffer "^5.4.3"
-    buffer-pipe "0.0.4"
-    js-sha256 "0.9.0"
-    simple-cbor "^0.4.1"
-
 "@dfinity/candid@^0.10.1":
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/@dfinity/candid/-/candid-0.10.1.tgz#f93d7cdc3856a6d527f31c7112a0537ef70ba315"
@@ -5084,13 +5071,6 @@ buffer-indexof@^1.0.0:
   resolved "https://registry.yarnpkg.com/buffer-indexof/-/buffer-indexof-1.1.1.tgz#52fabcc6a606d1a00302802648ef68f639da268c"
   integrity sha512-4/rOEg86jivtPTeOUUT61jJO1Ya1TrR/OkqCSZDyq84WJh3LuuiphBYJN+fm5xufIk4XAFcEwte/8WzC8If/1g==
 
-buffer-pipe@0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/buffer-pipe/-/buffer-pipe-0.0.4.tgz#e7f2ea95beb60fb692fc1dd1c878e894397a974d"
-  integrity sha512-8cHio1V6wgX+LIX6+af4tCn0+Ljl2vQd9JZdZ8vDJZdDf8x5p2DneKaq1dWxSswJG+sK4Inok9aqoqILG5kQVQ==
-  dependencies:
-    safe-buffer "^5.1.2"
-
 buffer-xor@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/buffer-xor/-/buffer-xor-1.0.3.tgz#26e61ed1422fb70dd42e6e36729ed51d855fe8d9"
@@ -5105,7 +5085,7 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.4.3, buffer@^5.5.0:
+buffer@^5.5.0:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.7.1.tgz#ba62e7c13133053582197160851a8f648e99eed0"
   integrity sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==
@@ -6149,6 +6129,11 @@ dateformat@^3.0.0:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
+
+dayjs-random@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/dayjs-random/-/dayjs-random-1.0.0.tgz#8858fd0f9d58392cbb09e080558f3b2d180b3185"
+  integrity sha512-k4OvrZvBLoNKVsUUEybr00/lygqXVPTYu3T5VkOEcqgBM2kahKUNpw7r0X1Ua5PCPNyJGVdjmFBY0lNHMklb7g==
 
 dayjs@^1.10.4:
   version "1.10.7"
@@ -14842,7 +14827,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.2.4, typescript@^4.4.3:
+typescript@^4.2.4, typescript@^4.4.3, typescript@^4.4.4:
   version "4.4.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
   integrity sha512-DqGhF5IKoBl8WNf8C1gu8q0xZSInh9j1kJJMqT3a94w1JzVaBU4EXOSMrz9yDqMT0xt3selp83fuFMQ0uzv6qA==
