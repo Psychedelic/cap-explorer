@@ -18,6 +18,7 @@ Learn more about [Cap](https://github.com/Psychedelic/cap) by reading the origin
     - [Version control](#cap-service-version-control)
     - [Mock data generator](#cap-service-mock-data-generator)
 - [Build the distribution app](#build-the-distribution-app)
+- [Configure NPM for Github Package Registry](#configure-npm-for-github-package-registry)
 - [Tests](#tests)
 - [Contribution guideline](#contribution-guideline)
 
@@ -27,6 +28,7 @@ Learn more about [Cap](https://github.com/Psychedelic/cap) by reading the origin
 - Yarn or NPM
 - The [Plug extension](#plug-extension)
 - The [DFX SDK](https://smartcontracts.org/) to run the CLI
+- Configure NPM for [Github Package Registry](https://github.com/features/packages)
 
 ## 🤔 Getting started
 
@@ -175,6 +177,44 @@ We've used `staging` environment as an example, where `production` is also avail
 ```sh
 yarn build:production
 ```
+
+Bear in mind that the [Psychedelic](https://github.com/psychedelic) keeps packages in the Github Registry, so you need to make sure you have setup a `Personal Access Token` to read from Github registry.
+
+## Configure NPM for Github Package Registry
+
+You'll need to have @Psychedelic Github Package Registry setup, if you haven't done for other projects find out how here.
+
+
+To pull and install from [@Psychedelic](https://github.com/psychedelic) via the NPM CLI, you'll need:
+
+- A personal access token (you can create a personal acess token [here](https://github.com/settings/tokens))
+- The personal access token with the correct scopes, **repositories**, **org repositories** and **read:packages** to be granted access to the [GitHub Package Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages).
+
+- Authentication via `npm login`, using your Github email for the **username** and the **personal access token** as your **password**:
+
+Once you have those ready, run:
+
+```sh
+npm login --registry=https://npm.pkg.github.com --scope=@Psychedelic
+```
+
+> **Note:** You only need to configure this once to install the package!
+    On npm login provide your Github email as your username and the Personal access token as the password.
+
+You can also setup your npm global settings to fetch from the Github registry everytime it finds a **@Psychdelic** package:
+
+```sh
+npm set //npm.pkg.github.com/:_authToken "$PAT"
+```
+
+⚠️ Alternatively, a token could be passed to the `.npmrc` as `//npm.pkg.github.com/:_authToken=xxxxxx` but we'd like to keep it clean, tokenless. Here's an example where the `PAT` is an environment variable:
+
+```sh
+@psychedelic:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${PAT}
+```
+
+Whichever option is best for you, you'll then be able to install packages from `@psychedelic`, such as the `@psychedelic/cap-js`.
 
 ## 🙏 Contribution guideline
 
