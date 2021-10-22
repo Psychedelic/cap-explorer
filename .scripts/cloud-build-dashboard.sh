@@ -7,6 +7,9 @@ verifyDependency PAT
 npm install -g lerna
 npm set //npm.pkg.github.com/:_authToken "$PAT"
 
+lerna run build --scope=@psychedelic/cap-js
+lerna run build --scope=@psychedelic/generate-random-principal
+
 lerna bootstrap
 
 if [[ "$NODE_ENV" == "production" ]]; then
