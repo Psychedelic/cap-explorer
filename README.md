@@ -9,7 +9,7 @@ Cap Explorer is the client interface for [Cap](https://github.com/Psychedelic/ca
 
 Learn more about [Cap](https://github.com/Psychedelic/cap) by reading the original spec [here](https://github.com/Psychedelic/cap/blob/main/spec.md).
 
-## Table of Contents 
+## 📒 Table of Contents 
 
 - [Requirements](#requirements)
 - [Getting Started](#getting-started)
@@ -178,9 +178,15 @@ We've used `staging` environment as an example, where `production` is also avail
 yarn build:production
 ```
 
-Bear in mind that the [Psychedelic](https://github.com/psychedelic) keeps packages in the Github Registry, so you need to make sure you have setup a `Personal Access Token` to read from Github registry.
+Bear in mind that the [Psychedelic](https://github.com/psychedelic) keeps packages in the Github Registry, so you need to make sure you have setup a `Personal Access Token` to read from Github registry. If you haven't setup, or you're required to build the cloud for staging, production then find the instructions [here](#configure-npm-for-github-package-registry)
 
-## Configure NPM for Github Package Registry
+## 🔫  Staging
+
+The Staging url can be found [here](https://blue-bar-1426.on.fleek.co/) and should be in sync with the lastest succesfull build and deploy in the HEAD of [develop branch](https://github.com/Psychedelic/cap-explorer/commits/develop).
+
+[https://blue-bar-1426.on.fleek.co/](https://blue-bar-1426.on.fleek.co/)
+
+## 👻 Configure NPM for Github Package Registry
 
 You'll need to have @Psychedelic Github Package Registry setup, if you haven't done for other projects find out how here.
 
