@@ -183,7 +183,7 @@ const settingVars = {
   IS_STG,
   IS_DEV,
   OPT_MAX_ASSET_SIZE,
-  MOCKUP,
+  MOCKUP: process.env.MOCKUP,
 };
 
 console.warn(`🤖 Webpack settings under environment ${process.env.NODE_ENV}`);

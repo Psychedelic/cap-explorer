@@ -14,5 +14,5 @@ if [[ "$NODE_ENV" == "production" ]]; then
 elif [[ "$NODE_ENV" == "staging" ]]; then
   yarn build:staging
 else
-  echo "Oops! Missing NODE_ENV environment variable"
+  echo "Oops! Missing or unknown NODE_ENV environment variable"
 fi
