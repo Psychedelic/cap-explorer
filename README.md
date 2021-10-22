@@ -165,6 +165,7 @@ Similarily, in a Cloud environment you'd have to setup a few environment variabl
 
 - NODE_ENV, the target environment (staging or production)
 - IC_HISTORY_ROUTER_ID, the mainnet canister id (for staging or production)
+- MOCKUP, if present the data to present will be fake (dynamically generated in the client-side, this can be useful for staging or testing environment)
 
 In the Cloud runner, after installing all the dependencies, you'd run:
 
