@@ -10,7 +10,7 @@ const DEFAULT_DEVELOPMENT_ENVIRONMENT = 'development';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_STG = process.env.NODE_ENV === 'staging';
 const IS_DEV = [DEFAULT_DEVELOPMENT_ENVIRONMENT, 'test'].includes(process.env.NODE_ENV);
-const OPT_MAX_ASSET_SIZE = 800000;
+const OPT_MAX_ASSET_SIZE = 750000;
 
 // The IC History router id should be passed as an env variable
 // in any remote, production or staging environment setup
@@ -97,6 +97,7 @@ if (IS_PROD || IS_STG) {
       ],
     },
     optimization: {
+      nodeEnv: false, 
       minimize: true,
       minimizer: [
         new TerserPlugin({
@@ -167,6 +168,7 @@ if (IS_DEV) {
       },
     },
     optimization: {
+      nodeEnv: false,
       minimize: false,
     },
     performance: {
