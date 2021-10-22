@@ -4,11 +4,16 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Psychedelic/cap-explorer.git"
+  },
+  "keywords": [],
   "scripts": {
     "build": "tsc -b tsconfig.json"
   },
   "author": "Helder Oliveira",
-  "license": "ISC",
   "dependencies": {
     "@dfinity/identity": "^0.10.1",
     "@dfinity/principal": "^0.10.1"
