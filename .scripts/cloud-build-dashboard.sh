@@ -10,6 +10,8 @@ npm set //npm.pkg.github.com/:_authToken "$PAT"
 
 lerna bootstrap
 
+yarn cap:init
+
 lerna run build --scope=@psychedelic/cap-js
 lerna run build --scope=@psychedelic/generate-random-principal
 
