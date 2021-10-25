@@ -39,7 +39,7 @@ export const useAccountStore = create<AccountStore>((set) => ({
   }) => {
     // Shall use mockup data?
     if (process.env.MOCKUP) {
-      import('../../utils/mocks/accountsMockData').then((module) => {
+      import('@utils/mocks/accountsMockData').then((module) => {
         const pageData =  module.generateData();
 
         // Mock short delay for loading state tests...
@@ -117,7 +117,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
   }: TransactionsFetchParams) => {
     // Shall use mockup data?
     if (process.env.MOCKUP) {
-      import('../../utils/mocks/transactionsTableMockData').then((module) => {
+      import('@utils/mocks/transactionsTableMockData').then((module) => {
         const pageData =  module.generateData();
         const totalTransactions = PAGE_SIZE * 1 + pageData.length;
         const totalPages = Math.ceil(totalTransactions > PAGE_SIZE ? totalTransactions / PAGE_SIZE : 1);
