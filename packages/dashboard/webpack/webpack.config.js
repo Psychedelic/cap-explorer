@@ -14,19 +14,24 @@ const OPT_MAX_ASSET_SIZE = 750000;
 
 // The IC History router id should be passed as an env variable
 // in any remote, production or staging environment setup
-let IC_HISTORY_ROUTER_ID = process.env.IC_HISTORY_ROUTER_ID;
+// e.g process.env.IC_HISTORY_ROUTER_ID = 'aaaaa-aa';
+
+// The MOCKUP env variable is used to force mock data
+// e.g. on staging at time of writing the Service is
+// not yet available in the mainnet
+process.env.MOCKUP = process.env.MOCKUP ?? false;
 
 // Override the IC History Router
 // on the development environments
 if (IS_DEV) {
   const canisters = require('../../../cap/.dfx/local/canister_ids.json');
 
-  IC_HISTORY_ROUTER_ID = canisters['ic-history-router'].local;
+  process.env.IC_HISTORY_ROUTER_ID = canisters['ic-history-router'].local;
 }
 
 // The IC History router id is required
 // when not available the build process is interrupted
-if (!IC_HISTORY_ROUTER_ID) {
+if (!process.env.IC_HISTORY_ROUTER_ID) {
   throw Error('Oops! Missing the IC_HISTORY_ROUTER environment variable');
 };
 
@@ -180,7 +185,7 @@ if (IS_DEV) {
 }
 
 const settingVars = {
-  IC_HISTORY_ROUTER_ID,
+  IC_HISTORY_ROUTER_ID: process.env.IC_HISTORY_ROUTER_ID,
   IS_PROD,
   IS_STG,
   IS_DEV,
