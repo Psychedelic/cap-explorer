@@ -8,8 +8,6 @@ npm install -g lerna
 
 npm set //npm.pkg.github.com/:_authToken "$PAT"
 
-git submodule update --init --recursive
-
 lerna bootstrap
 
 lerna run build --scope=@psychedelic/cap-js
