@@ -169,7 +169,9 @@ const CapLogo = styled('img', {
   height: 26,
 
   '@lg': {
-    height: 34,
+    height: 50,
+    position: 'relative',
+    left: '-8px',
   },
 });
 
