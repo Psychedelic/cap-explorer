@@ -18,7 +18,7 @@ if (!isValidEnvironment(process.env.NODE_ENV)) {
 // Safe-guard, should be a valid principal text id
 // otherwise throw exception
 if (!isValidPrincipalFromTextId(process.env.IC_HISTORY_ROUTER_ID)) {
-  throw Error(`Oops! Missing the IC_HISTORY_ROUTER_ID envirinment variable (${process.env.IC_HISTORY_ROUTER_ID})`)
+  throw Error(`Oops! Missing the IC_HISTORY_ROUTER_ID environment variable (${process.env.IC_HISTORY_ROUTER_ID})`)
 }
 
 // Get these canister id from the NODE_ENV environment var

@@ -10,23 +10,28 @@ const DEFAULT_DEVELOPMENT_ENVIRONMENT = 'development';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_STG = process.env.NODE_ENV === 'staging';
 const IS_DEV = [DEFAULT_DEVELOPMENT_ENVIRONMENT, 'test'].includes(process.env.NODE_ENV);
-const OPT_MAX_ASSET_SIZE = 500000;
+const OPT_MAX_ASSET_SIZE = 750000;
 
 // The IC History router id should be passed as an env variable
 // in any remote, production or staging environment setup
-let IC_HISTORY_ROUTER_ID = process.env.IC_HISTORY_ROUTER_ID;
+// e.g process.env.IC_HISTORY_ROUTER_ID = 'aaaaa-aa';
+
+// The MOCKUP env variable is used to force mock data
+// e.g. on staging at time of writing the Service is
+// not yet available in the mainnet
+process.env.MOCKUP = process.env.MOCKUP ?? false;
 
 // Override the IC History Router
 // on the development environments
 if (IS_DEV) {
   const canisters = require('../../../cap/.dfx/local/canister_ids.json');
 
-  IC_HISTORY_ROUTER_ID = canisters['ic-history-router'].local;
+  process.env.IC_HISTORY_ROUTER_ID = canisters['ic-history-router'].local;
 }
 
 // The IC History router id is required
 // when not available the build process is interrupted
-if (!IC_HISTORY_ROUTER_ID) {
+if (!process.env.IC_HISTORY_ROUTER_ID) {
   throw Error('Oops! Missing the IC_HISTORY_ROUTER environment variable');
 };
 
@@ -68,11 +73,11 @@ let config = {
       Buffer: [require.resolve('buffer/'), 'Buffer'],
       process: 'process/browser',
     }),
-    new webpack.EnvironmentPlugin({
-      // TODO: should use process.env.NODE_ENV
-      NODE_ENV: process.env.NODE_ENV || DEFAULT_DEVELOPMENT_ENVIRONMENT,
-      IC_HISTORY_ROUTER_ID,
-    }),
+    new webpack.EnvironmentPlugin([
+      'IC_HISTORY_ROUTER_ID',
+      'NODE_ENV',
+      'MOCKUP',
+    ]),
   ],
   output: {
     filename: '[name].[fullhash].js',
@@ -97,6 +102,7 @@ if (IS_PROD || IS_STG) {
       ],
     },
     optimization: {
+      nodeEnv: false, 
       minimize: true,
       minimizer: [
         new TerserPlugin({
@@ -167,6 +173,7 @@ if (IS_DEV) {
       },
     },
     optimization: {
+      nodeEnv: false,
       minimize: false,
     },
     performance: {
@@ -178,11 +185,12 @@ if (IS_DEV) {
 }
 
 const settingVars = {
-  IC_HISTORY_ROUTER_ID,
+  IC_HISTORY_ROUTER_ID: process.env.IC_HISTORY_ROUTER_ID,
   IS_PROD,
   IS_STG,
   IS_DEV,
   OPT_MAX_ASSET_SIZE,
+  MOCKUP: process.env.MOCKUP,
 };
 
 console.warn(`🤖 Webpack settings under environment ${process.env.NODE_ENV}`);
