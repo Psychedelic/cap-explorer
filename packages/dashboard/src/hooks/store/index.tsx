@@ -14,11 +14,13 @@ import { managementCanisterPrincipal } from '@utils/ic-management-api';
 import { AccountData } from '@components/Tables/AccountsTable';
 import config from '../../config';
 import { shouldUseMockup } from '../../utils/mocks';
+import { trimEnd } from 'lodash';
 
 export type Store = UseStore<AccountStore>;
 
 export interface AccountStore {
   accounts: ContractsResponse | {},
+  isLoading: boolean,
   pageData: AccountData[],
   totalContracts: number,
   totalPages: number,
@@ -33,6 +35,7 @@ const USE_MOCKUP = shouldUseMockup();
 
 export const useAccountStore = create<AccountStore>((set) => ({
   accounts: {},
+  isLoading: false,
   pageData: [],
   totalContracts: 0,
   totalPages: 0,
@@ -41,6 +44,11 @@ export const useAccountStore = create<AccountStore>((set) => ({
     // should be passed from App top-level
     capRouterInstance,
   }) => {
+    set((state: AccountStore) => ({
+      ...state,
+      isLoading: true,
+    }));
+
     // Shall use mockup data?
     if (USE_MOCKUP) {
       import('@utils/mocks/accountsMockData').then((module) => {
@@ -52,6 +60,7 @@ export const useAccountStore = create<AccountStore>((set) => ({
             pageData,
             totalContracts: pageData.length,
             totalPages: 1,
+            isLoading: false,
           }));
         }, 400);
       });
@@ -71,6 +80,12 @@ export const useAccountStore = create<AccountStore>((set) => ({
     if (!response || !Array.isArray(response?.contracts) || !response?.contracts.length) {
       // TODO: What to do if no response? Handle gracefully
 
+      // Loading stops
+      set((state: AccountStore) => ({
+        ...state,
+        isLoading: false,
+      }));
+
       return;
     }
 
@@ -78,6 +93,7 @@ export const useAccountStore = create<AccountStore>((set) => ({
 
     set((state: AccountStore) => ({
       accounts: response,
+      isLoading: false,
       pageData,
       totalContracts: pageData.length,
       totalPages: 1,
@@ -98,6 +114,7 @@ interface TransactionsFetchParams {
 }
 
 export interface TransactionsStore {
+  isLoading: boolean,
   pageData: TransactionEvent[] | [],
   transactionEvents: TransactionEvent[] | [],
   totalTransactions: number,
@@ -110,6 +127,7 @@ export const PAGE_SIZE = 64;
 
 export const useTransactionStore = create<TransactionsStore>((set) => ({
   pageData: [],
+  isLoading: false,
   transactionEvents: [],
   totalTransactions: 0,
   totalPages: 0,
@@ -118,6 +136,11 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     page,
     witness = false,
   }: TransactionsFetchParams) => {
+    set((state: TransactionsStore) => ({
+      ...state,
+      isLoading: true,
+    }));
+
     // Shall use mockup data?
     if (USE_MOCKUP) {
       import('@utils/mocks/transactionsTableMockData').then((module) => {
@@ -128,6 +151,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
         // Mock short delay for loading state tests...
         setTimeout(() => {
           set((state: TransactionsStore) => ({
+            isLoading: false,
             pageData,
             transactionEvents: [
               ...state.transactionEvents,
@@ -156,6 +180,11 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       console.warn('Oops! CAP instance initialisation failed with', err);
       // TODO: What to do if cap root initialisation fails? Handle gracefully
 
+      set((state: TransactionsStore) => ({
+        ...state,
+        isLoading: false,
+      }));
+
       return;
     }
 
@@ -171,6 +200,11 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     if (!response || !Array.isArray(response?.data) || !response?.data.length) {
       // TODO: What to do if no response? Handle gracefully
 
+      set((state: TransactionsStore) => ({
+        ...state,
+        isLoading: false,
+      }));
+
       return;
     }
 
@@ -181,6 +215,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     const pageData = parseGetTransactionsResponse(response);
 
     set((state: TransactionsStore) => ({
+      isLoading: false,
       pageData,
       transactionEvents: [
         ...state.transactionEvents,

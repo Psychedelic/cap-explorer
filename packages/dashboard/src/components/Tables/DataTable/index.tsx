@@ -185,6 +185,12 @@ const IconHintScrollXContainer = styled('span', {
   },
 });
 
+const EmptyTable = styled('span', {
+  padding: '30px 0px 0px',
+  display: 'inline-block',
+  color: '$midGrey',
+});
+
 const IconHintScrollX = ({
   show,
 }: {
@@ -473,7 +479,8 @@ const DataTable = <T extends {}>({
                     }
                   </RowWrapper>
                   {
-                    page.map((row) => {
+                    page.length > 0
+                    ? page.map((row) => {
                       prepareRow(row);
 
                       return (
@@ -501,6 +508,7 @@ const DataTable = <T extends {}>({
                         </RowWrapper>
                       );
                     })
+                    : <EmptyTable>No results found!</EmptyTable>
                   }
                 </div>
                 <IconHintScrollX show={showIconHintScrollX} />

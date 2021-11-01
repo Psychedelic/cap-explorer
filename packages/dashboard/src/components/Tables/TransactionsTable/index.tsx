@@ -127,14 +127,15 @@ const TransactionsTable = ({
   id,
   pageCount,
   fetchPageDataHandler,
+  isLoading = false,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: Data[],
   id: TableId,
   pageCount: number,
   fetchPageDataHandler: FetchPageDataHandler,
+  isLoading: boolean,
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(isTableDataReady(data));
   const [currentData, setCurrentData] = useState<Data[]>(data);
 
   const onSelectionHandler = useCallback((selected: TransactionTypes) => {
@@ -173,7 +174,6 @@ const TransactionsTable = ({
 
   useEffect(() => {
     setCurrentData(data);
-    setIsLoading(isTableDataReady(data));
   }, [data]);
 
   return (
