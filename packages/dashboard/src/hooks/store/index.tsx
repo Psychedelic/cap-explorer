@@ -13,6 +13,7 @@ import { parseUserRootBucketsResponse } from '@utils/account';
 import { managementCanisterPrincipal } from '@utils/ic-management-api';
 import { AccountData } from '@components/Tables/AccountsTable';
 import config from '../../config';
+import { shouldUseMockup } from '../../utils/mocks';
 
 export type Store = UseStore<AccountStore>;
 
@@ -27,6 +28,9 @@ export interface AccountStore {
 
 export type UseAccountStore = () => Promise<UseStore<AccountStore>>;
 
+// Shall use mockup data?
+const USE_MOCKUP = shouldUseMockup();
+
 export const useAccountStore = create<AccountStore>((set) => ({
   accounts: {},
   pageData: [],
@@ -38,10 +42,9 @@ export const useAccountStore = create<AccountStore>((set) => ({
     capRouterInstance,
   }) => {
     // Shall use mockup data?
-    if (process.env.MOCKUP) {
+    if (USE_MOCKUP) {
       import('@utils/mocks/accountsMockData').then((module) => {
         const pageData =  module.generateData();
-
         // Mock short delay for loading state tests...
         setTimeout(() => {
           set((state: AccountStore) => ({
@@ -72,6 +75,8 @@ export const useAccountStore = create<AccountStore>((set) => ({
     }
 
     const pageData = parseUserRootBucketsResponse(response);
+
+    console.log('[debug] pageData: ', pageData);
 
     set((state: AccountStore) => ({
       accounts: response,
@@ -116,7 +121,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     witness = false,
   }: TransactionsFetchParams) => {
     // Shall use mockup data?
-    if (process.env.MOCKUP) {
+    if (USE_MOCKUP) {
       import('@utils/mocks/transactionsTableMockData').then((module) => {
         const pageData =  module.generateData();
         const totalTransactions = PAGE_SIZE * 1 + pageData.length;
