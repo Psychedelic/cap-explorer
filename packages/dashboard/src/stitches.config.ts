@@ -25,6 +25,7 @@ export const {
       yellowBrand: '#F9DA3E',
       greyBrand: '#E3E4EB',
       primaryBlue: '#2172e5',
+      purple: '#CA86FF',
     },
     space: {
       sideBarMargin: '24px',
