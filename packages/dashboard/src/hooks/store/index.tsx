@@ -76,8 +76,6 @@ export const useAccountStore = create<AccountStore>((set) => ({
 
     const pageData = parseUserRootBucketsResponse(response);
 
-    console.log('[debug] pageData: ', pageData);
-
     set((state: AccountStore) => ({
       accounts: response,
       pageData,
