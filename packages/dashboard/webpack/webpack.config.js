@@ -32,7 +32,7 @@ if (IS_DEV) {
 // The IC History router id is required
 // when not available the build process is interrupted
 if (!process.env.IC_HISTORY_ROUTER_ID) {
-  throw Error('Oops! Missing the IC_HISTORY_ROUTER environment variable');
+  throw Error('Oops! Missing the IC_HISTORY_ROUTER_ID environment variable');
 };
 
 // Configuration base settings
