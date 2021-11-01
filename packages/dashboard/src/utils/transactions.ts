@@ -1,4 +1,7 @@
-import { Event as TransactionEvent } from '@psychedelic/cap-js';
+import {
+  Event as TransactionEvent,
+  DetailValue,
+} from '@psychedelic/cap-js';
 
 export default {};
 
@@ -38,6 +41,17 @@ const toOperationTerm = (operation: Record<string, string>) => {
   return term;
 };
 
+export const findDescriptionFieldByName = (name: 'to' | 'from', details: DetailValue) => {  
+  let pid = '';
+
+  try {
+    const result = details.find((v: any) => v[0] === name);
+    pid = result[1].Principal.toText();
+  } catch (err) {}
+
+  return pid;
+}
+
 export const parseGetTransactionsResponse = ({
   data,
 }: {
@@ -47,10 +61,10 @@ export const parseGetTransactionsResponse = ({
 
   return data.map(v => ({
     ...v,
-    to: v.to.toText(),
-    from: v?.from?.pop()?.toText() as string,
+    to: findDescriptionFieldByName('to', v.details),
+    from: findDescriptionFieldByName('from', v.details),
     caller: v.caller.toText(),
     operation: toOperationTerm(v.operation),
-    time: toTransactionTime(v.time),
+    time: toTransactionTime(v.time),    
   }));
 }
