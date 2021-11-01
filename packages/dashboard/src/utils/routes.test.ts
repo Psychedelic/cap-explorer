@@ -14,11 +14,11 @@ describe('Routes', () => {
       process.env = ENV;
     });
 
-    describe('on argument Home', () => {
+    describe('on argument Overview', () => {
       test('computes valid route', () => {
         (process.env.E2E_TEST_RUNNER as unknown as boolean) = false;
 
-        const route = getRouteByName('Home');
+        const route = getRouteByName('Overview');
         const expected = '/';
         expect(route).toBe(expected);
       });
@@ -26,7 +26,7 @@ describe('Routes', () => {
       test('computes valid route (CI)', () => {
         (process.env.E2E_TEST_RUNNER as unknown as boolean) = true;
 
-        const route = getRouteByName('Home');
+        const route = getRouteByName('Overview');
         const expected = `/?${qsE2ETestRunner}`;
         expect(route).toBe(expected);
       });
