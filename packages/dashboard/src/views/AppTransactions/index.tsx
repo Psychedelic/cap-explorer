@@ -19,6 +19,7 @@ import { scrollTop } from '@utils/window';
 
 const AppTransactions = () => {
   const {
+    isLoading,
     pageData,
     fetch,
     totalPages,
@@ -63,6 +64,7 @@ const AppTransactions = () => {
         <TransactionsTable
           data={transactions}
           id="app-transactions-page"
+          isLoading={isLoading}
           pageCount={totalPages}
           fetchPageDataHandler={fetchPageDataHandler}
         />

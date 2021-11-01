@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { styled } from '@stitched';
 import DataTable, { FormatterTypes, TableId } from '@components/Tables/DataTable';
 import Title from '@components/Title';
-import { isTableDataReady } from '@utils/tables';
 import { AccountLink } from '@components/Link';
 
 const Container = styled('div', {
@@ -52,22 +51,19 @@ const columns: Column[] = [
 const AccountsTable = ({
   data = [],
   id,
+  isLoading = false,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: AccountData[],
   id: TableId,
+  isLoading: boolean,
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(isTableDataReady(data));
 
   const formatters = useMemo(() => ({
     body: {
       canister: (cellValue: string) => <AccountLink account={cellValue} trim={false} />,
     },
   } as FormatterTypes), []);
-
-  useEffect(() => {
-    setIsLoading(isTableDataReady(data));
-  }, [data]);
 
   return (
     <Container

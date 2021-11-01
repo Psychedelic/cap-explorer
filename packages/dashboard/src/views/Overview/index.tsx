@@ -15,6 +15,7 @@ const Overview = ({
   capRouterInstance: CapRouter | undefined,
 }) => {
   const {
+    isLoading,
     pageData,
     fetch,
     reset,
@@ -42,6 +43,7 @@ const Overview = ({
         <AccountsTable
           data={pageData}
           id="overview-page-transactions"
+          isLoading={isLoading}
         />
       </PageRow>
     </Page>
