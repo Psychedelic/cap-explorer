@@ -79,7 +79,7 @@ const Routes = ({
         <Route path={RouteNames.AppTransactions}>
           <LazyAppTransactions />
         </Route>
-        <Route path={RouteNames.Home}>
+        <Route path={RouteNames.Overview}>
           <LazyOverview
             accountStore={accountStore}
             capRouterInstance={capRouterInstance}

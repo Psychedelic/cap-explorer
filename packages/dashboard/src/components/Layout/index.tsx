@@ -92,7 +92,7 @@ const SidebarContainer = styled('div', {
     height: 34,
 
     '& img:first-child': {
-      marginBottom: '36px',
+      marginBottom: '33px',
     },
   },
 });
@@ -169,9 +169,9 @@ const CapLogo = styled('img', {
   height: 26,
 
   '@lg': {
-    height: 50,
+    height: 40,
     position: 'relative',
-    left: '-8px',
+    left: '-4px',
   },
 });
 
