@@ -4,7 +4,7 @@ import { styled } from '@stitched';
 import Icon, { IconType } from '@components/Icon';
 import { RouteNames, getRouteByName } from '@utils/routes';
 
-export type MenuItemName = 'Home';
+export type MenuItemName = 'Overview';
 
 interface MenuItem {
   name: MenuItemName,
@@ -14,10 +14,10 @@ interface MenuItem {
 }
 
 const MenuItems: MenuItem[] = [{
-  name: 'Home',
-  path: (getRouteByName('Home') as RouteNames),
+  name: 'Overview',
+  path: (getRouteByName('Overview') as RouteNames),
   icon: 'HomeAlt',
-  title: 'Home',
+  title: 'Overview',
 }];
 
 const Container = styled('nav', {

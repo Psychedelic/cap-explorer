@@ -4,7 +4,7 @@ import { isE2ETestRunner, qsE2ETestRunner } from './e2e';
 const getTestQuery = () => (isE2ETestRunner() ? `?${qsE2ETestRunner}` : '');
 
 export enum RouteNames {
-  Home = '/',
+  Overview = '/',
   AppTransactions = '/app-transactions/:id',
 }
 

@@ -92,7 +92,7 @@ const SidebarContainer = styled('div', {
     height: 34,
 
     '& img:first-child': {
-      marginBottom: '36px',
+      marginBottom: '33px',
     },
   },
 });
