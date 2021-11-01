@@ -12,8 +12,7 @@ const Container = styled('span', {
     transition: 'opacity 0.2s',
 
     '&:hover': {
-      opacity: 0.8,
-      color: '$primaryBlue',
+      color: '$purple',
     },
   },
 
@@ -21,10 +20,10 @@ const Container = styled('span', {
     tableLink: {
       true: {
         a: {
-          color: '$primaryBlue',
+          color: '$defaultTxtColour',
 
           '&:hover': {
-            color: '$defaultTxtColour',
+            color: '$purple',
           },
         },
       },
