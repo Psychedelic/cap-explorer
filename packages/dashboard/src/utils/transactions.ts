@@ -2,6 +2,8 @@ import {
   Event as TransactionEvent,
   DetailValue,
 } from '@psychedelic/cap-js';
+import { prettifyCapTransactions } from '@psychedelic/cap-js/src/utils'
+import { Principal } from '@dfinity/principal';
 
 export default {};
 
@@ -31,25 +33,12 @@ export const toTransactionTime = (time: bigint) => {
   return formated;
 }
 
-const toOperationTerm = (operation: Record<string, string>) => {
-  let term = 'n/a';
-
-  try {
-    term = Object.keys(operation)[0]
-  } catch (err) {};
-
-  return term;
-};
-
-export const findDescriptionFieldByName = (name: 'to' | 'from', details: DetailValue) => {  
-  let pid = '';
-
-  try {
-    const result = details.find((v: any) => v[0] === name);
-    pid = result[1].Principal.toText();
-  } catch (err) {}
-
-  return pid;
+type TransactionDetails = {
+  fee: bigint;
+  from: Principal;
+  to: Principal;
+  amount: bigint;
+  memo: bigint;
 }
 
 export const parseGetTransactionsResponse = ({
@@ -59,12 +48,21 @@ export const parseGetTransactionsResponse = ({
 }): Transaction[] | [] => {
   if (!data || !Array.isArray(data) || !data.length) return [];
 
-  return data.map(v => ({
-    ...v,
-    to: findDescriptionFieldByName('to', v.details),
-    from: findDescriptionFieldByName('from', v.details),
-    caller: v.caller.toText(),
-    operation: toOperationTerm(v.operation),
-    time: toTransactionTime(v.time),    
-  }));
+  return data.map(v => {
+    const { details } = prettifyCapTransactions(v);
+
+    // TODO: validate details
+
+    return {
+      ...v,
+      to: (details as unknown as TransactionDetails)?.to?.toText(),
+      from: (details as unknown as TransactionDetails)?.from?.toText(),
+      fee: (details as unknown as TransactionDetails)?.fee,
+      amount: (details as unknown as TransactionDetails)?.amount,
+      memo: (details as unknown as TransactionDetails)?.memo,
+      caller: v.caller.toText(),
+      operation: v.operation,
+      time: toTransactionTime(v.time),
+    }
+  });
 }
