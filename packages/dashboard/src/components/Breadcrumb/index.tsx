@@ -47,8 +47,7 @@ const Breadcrumb = ({ id }: BreadcrumbProps) => {
     <Container
       data-id="breadcrumb"
     >
-      <span>Overview</span>
-      {/* TODO: Use DabJS to get token contract name */}
+      <span>Accounts</span>
       <span>{isSmallerThanBreakpointLG ? trimAccount(id) : id }</span>
     </Container>
   );
