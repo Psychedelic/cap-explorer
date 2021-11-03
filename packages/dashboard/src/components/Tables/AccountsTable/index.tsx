@@ -107,8 +107,6 @@ const AccountsTable = ({
     <Container
       data-id={id}
     >
-      <Title size="ml">Token Contracts</Title>
-
       <DataTable
         columns={columns}
         data={data}
