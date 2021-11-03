@@ -2,7 +2,9 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { styled } from '@stitched';
 import DataTable, { FormatterTypes, TableId } from '@components/Tables/DataTable';
 import Title from '@components/Title';
-import { AccountLink } from '@components/Link';
+import { AccountLink, NamedLink } from '@components/Link';
+import { getDabMetadata, CanisterMetadata } from '@utils/dab';
+import IdentityDab from '@components/IdentityDab';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -54,6 +56,36 @@ const columns: Column[] = [
   },
 ];
 
+const AccountDab = ({
+  canisterId,
+}: {
+  canisterId: string,
+}) => {
+  const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
+
+  // Dab metadata handler
+  useEffect(() => {
+    const getDabMetadataHandler = async () => {
+      const metadata = await getDabMetadata({
+        canisterId,
+      });
+
+      if (!metadata) return;
+
+      // TODO: Update name column, otherwise fallback
+      setIdentityInDab({
+        ...metadata,
+      });
+    };
+
+    getDabMetadataHandler();
+  }, []);
+
+  return identityInDab
+          ? <IdentityDab name={identityInDab?.name} image={identityInDab?.logo_url} />
+          : <NamedLink account={canisterId} name='Unknown to DAB' />
+};
+
 const AccountsTable = ({
   data = [],
   id,
@@ -64,10 +96,10 @@ const AccountsTable = ({
   id: TableId,
   isLoading: boolean,
 }) => {
-
   const formatters = useMemo(() => ({
     body: {
       canister: (cellValue: string) => <AccountLink account={cellValue} trim={false} />,
+      name: (cellValue: string) => <AccountDab canisterId={cellValue} />,
     },
   } as FormatterTypes), []);
 
