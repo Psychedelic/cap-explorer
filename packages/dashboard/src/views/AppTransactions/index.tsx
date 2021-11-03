@@ -17,7 +17,7 @@ import {
 } from '@psychedelic/cap-js';
 import { scrollTop } from '@utils/window';
 import Identity from '@components/Identity';
-import { styled, BREAKPOINT_LG } from '@stitched';
+import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
 
 const UserBar = styled('div', {
   display: 'flex',
@@ -28,7 +28,7 @@ const UserBar = styled('div', {
 
 const AppTransactions = () => {
   const isSmallerThanBreakpointLG = useWindowResize({
-    breakpoint: BREAKPOINT_LG,
+    breakpoint: BREAKPOINT_DATA_TABLE_L,
   });
   const {
     isLoading,
