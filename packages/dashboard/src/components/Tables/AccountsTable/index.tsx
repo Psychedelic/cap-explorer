@@ -11,8 +11,8 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '2fr 1fr 1fr',
-    gridTemplateAreas: '"canister transactions age"',
+    gridTemplateColumns: '1fr 1fr',
+    gridTemplateAreas: '"name canister"',
   },
 
   '& [data-cid]': {
@@ -30,6 +30,7 @@ const Container = styled('div', {
 
 export interface AccountData {
   canister: string,
+  name: string,
 }
 
 interface Column {
@@ -38,12 +39,17 @@ interface Column {
 }
 
 export const DEFAULT_COLUMN_ORDER: (keyof AccountData)[] = [
+  'name',
   'canister',
 ];
 
 const columns: Column[] = [
   {
-    Header: 'Canister',
+    Header: 'Name',
+    accessor: 'name',
+  },
+  {
+    Header: 'Canister ID',
     accessor: 'canister',
   },
 ];

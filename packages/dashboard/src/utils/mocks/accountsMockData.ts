@@ -3,6 +3,10 @@ import { AccountData } from '@components/Tables/AccountsTable';
 
 export const columns = [
   {
+    Header: 'Name',
+    accessor: 'name',
+  },
+  {
     Header: 'Canister',
     accessor: 'canister',
   },
@@ -16,6 +20,7 @@ export const generateData = (count: number = NUM_TO_GENERATE) => {
     const principal = generateRandomPrincipal();
     const accountData = {
       canister: principal.toText(),
+      name: 'CanisterX'
     };
 
     return accountData;

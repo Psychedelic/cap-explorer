@@ -62,7 +62,6 @@ export const parseUserRootBucketsResponse = ({
   return contracts
     .map((principal: Principal) => ({
       canister: principal.toText(),
-      transactions: undefined,
-      age: undefined,
+      name: 'n/a',
     }));
 }
