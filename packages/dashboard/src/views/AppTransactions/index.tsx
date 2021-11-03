@@ -3,9 +3,11 @@ import TransactionsTable, { FetchPageDataHandler } from '@components/Tables/Tran
 import Breadcrumb from '@components/Breadcrumb';
 import Title from '@components/Title';
 import Page, { PageRow } from '@components/Page';
+import IdentityCopy from '@components/IdentityCopy';
 import {
   useTransactionStore,
 } from '@hooks/store';
+import { useWindowResize } from '@hooks/windowResize';
 import {
   useParams
 } from "react-router-dom";
@@ -14,8 +16,20 @@ import {
   Event as TransactionEvent,
 } from '@psychedelic/cap-js';
 import { scrollTop } from '@utils/window';
+import Identity from '@components/Identity';
+import { styled, BREAKPOINT_LG } from '@stitched';
+
+const UserBar = styled('div', {
+  display: 'flex',
+  justifyContent: 'space-between',
+  height: '40px',
+  alignItems: 'center',
+});
 
 const AppTransactions = () => {
+  const isSmallerThanBreakpointLG = useWindowResize({
+    breakpoint: BREAKPOINT_LG,
+  });
   const {
     isLoading,
     pageData,
@@ -59,7 +73,18 @@ const AppTransactions = () => {
         <Breadcrumb id={tokenId} />
       </PageRow>
       <PageRow>
-        <Title size="xl">{`Transactions for ${trimAccount(tokenId)}`}</Title>
+        <UserBar
+          data-id="user-bar"
+        >
+          {/* TODO: use dabjs to get the img and name if available, possibly have a fallback */}
+          <Identity id={'Transactions'} />
+          <IdentityCopy account={
+            isSmallerThanBreakpointLG
+              ? trimAccount(tokenId)
+              : tokenId
+            }
+          />
+        </UserBar>
       </PageRow>
       <PageRow>
         <TransactionsTable
