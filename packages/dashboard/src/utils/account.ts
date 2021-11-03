@@ -62,6 +62,6 @@ export const parseUserRootBucketsResponse = ({
   return contracts
     .map((principal: Principal) => ({
       canister: principal.toText(),
-      name: 'n/a',
+      name: 'Unavailable',
     }));
 }
