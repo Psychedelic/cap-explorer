@@ -2,7 +2,6 @@ import {
   Event as TransactionEvent,
   DetailValue,
 } from '@psychedelic/cap-js';
-// TODO: there's a typo in prettify, await change in cap-js
 import { prettifyCapTransactions } from '@psychedelic/cap-js/src/utils'
 import { Principal } from '@dfinity/principal';
 
@@ -50,7 +49,6 @@ export const parseGetTransactionsResponse = ({
   if (!data || !Array.isArray(data) || !data.length) return [];
 
   return data.map(v => {
-    // TODO: there's a typo in prettify, await change in cap-js
     const { details } = prettifyCapTransactions(v);
 
     // TODO: validate details
