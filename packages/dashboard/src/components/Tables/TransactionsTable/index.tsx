@@ -7,8 +7,6 @@ import React, {
 import { styled } from '@stitched';
 import DataTable, { HeaderTabs, TableId } from '@components/Tables/DataTable';
 import Title from '@components/Title';
-import { AccountLink } from '@components/Link';
-import { isTableDataReady } from '@utils/tables';
 import ValueCell from '@components/Tables/ValueCell';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
@@ -28,6 +26,10 @@ const Container = styled('div', {
     '& [data-cid]': {
       justifySelf: 'left',
     },
+
+    '& [data-cid="fee"], & [data-cid="amount"]': {
+      justifySelf: 'right',
+    },
   },
 
   '& div': {
@@ -37,6 +39,10 @@ const Container = styled('div', {
   '& h1': {
     marginBottom: '20px',
   },
+});
+
+const Operation = styled('span', {
+  textTransform: 'capitalize',
 });
 
 export enum TransactionTypes {
@@ -163,12 +169,17 @@ const TransactionsTable = ({
 
   const formatters = useMemo(() => ({
     body: {
+      operation: (cellValue: string) => {
+        if (typeof cellValue !== 'string') return;
+        return <Operation>{cellValue.toLowerCase()}</Operation>
+      },
       caller: (cellValue: string) => trimAccount(cellValue),
       from: (cellValue: string) => trimAccount(cellValue),
       to: (cellValue: string) => trimAccount(cellValue),
       fee: (cellValue: string) => <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />,
       amount: (cellValue: string) => formatPriceForChart({ value: cellValue, abbreviation: 'USD' }),
       time: (cellValue: string) => dateRelative(cellValue),
+      memo: (cellValue: string) => Number(cellValue),
     },
   }), [headerGroupHandler]);
 
