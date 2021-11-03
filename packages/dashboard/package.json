@@ -70,6 +70,7 @@
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@loadable/component": "^5.14.1",
     "@psychedelic/cap-js": "^0.0.4",
+    "@psychedelic/dab-js": "^0.2.5",
     "@psychedelic/generate-random-principal": "^0.0.1",
     "@stitches/react": "^1.2.5",
     "@storybook/react": "^6.2.8",

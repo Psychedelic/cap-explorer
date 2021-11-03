@@ -18,6 +18,7 @@ import {
 import { scrollTop } from '@utils/window';
 import Identity from '@components/Identity';
 import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
+import { getDabMetadata } from '@utils/dab';
 
 const UserBar = styled('div', {
   display: 'flex',
@@ -63,6 +64,21 @@ const AppTransactions = () => {
 
     // On unmount, reset the transaction state
     return () => reset();
+  }, []);
+
+  // Dab metadata handler
+  useEffect(() => {
+    const getDabMetadataHandler = async () => {
+      const metadata = await getDabMetadata({
+        canisterId: tokenId,
+      });
+
+      if (!metadata) return;
+
+      // TODO: Update name column, otherwise fallback
+    };
+
+    getDabMetadataHandler();
   }, []);
 
   return (
