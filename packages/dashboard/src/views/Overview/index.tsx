@@ -38,7 +38,7 @@ const Overview = ({
       pageId="overview"
     >
       <PageRow>
-        <Title size="xl">CAP Explorer</Title>
+        <Title size="xl">Cap Explorer</Title>
       </PageRow>
       <PageRow>
         <OverallValues
