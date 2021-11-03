@@ -18,6 +18,7 @@ import { faHomeAlt } from '@fortawesome/pro-regular-svg-icons/faHomeAlt';
 import { faList } from '@fortawesome/pro-regular-svg-icons/faList';
 import { faSearch } from '@fortawesome/pro-regular-svg-icons/faSearch';
 import { faTimes } from '@fortawesome/pro-regular-svg-icons/faTimes';
+import { faClone } from '@fortawesome/pro-regular-svg-icons/faClone';
 
 export const IconNames = [
   'ArrowLeft',
@@ -25,6 +26,7 @@ export const IconNames = [
   'Bookmark',
   'Check',
   'ChevronRight',
+  'Clone',
   'HomeAlt',
   'List',
   'Search',
@@ -41,6 +43,8 @@ const getIcon = (icon: IconType) => {
       return faArrowRight;
     case 'Bookmark':
       return faBookmark;
+    case 'Clone':
+      return faClone;
     case 'Check':
       return faCheck;
     case 'ChevronRight':
