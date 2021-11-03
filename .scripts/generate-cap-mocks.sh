@@ -57,7 +57,7 @@ echo "💡 The Router canister id is $ROUTER_CANISTER_ID"
 echo "🤖 Creating root bucket canister..."
 echo ""
 
-CREATE_CANISTER_RESULT=$(dfx canister --wallet="$DFX_USER_WALLET" call "$IC_MANAGEMENT_CANISTER" create_canister "(record { cycles=(4_000_000_000_000:nat64); controller=(opt principal \"$DFX_USER_PRINCIPAL\") })")
+CREATE_CANISTER_RESULT=$(dfx canister --wallet="$DFX_USER_WALLET" call "$IC_MANAGEMENT_CANISTER" create_canister "(record { cycles=(5_000_000_000_000:nat64); controller=(opt principal \"$DFX_USER_PRINCIPAL\") })")
 
 if [ $? -ne 0 ]; then
   echo "🤡 Oops! Failed to create root bucket canister..."
@@ -117,32 +117,16 @@ echo ""
 
 PKG_GENERATE_RANDOM_PRINCIPAL="../packages/generate-random-principal"
 
+# Generated via Rust
+INSERT_RAW=4449444c066c03a78882820a71c2b9dbda0a018ba9a1b70b686d026c02007101036b09c7a7de0174d3dd820278b4b4860204b2e8d48f0105cdf1cbbe0371eea6f3be037f83cbf2f3087ffcea90ae09728eddfc9e0b686d036d7b0100087472616e73666572060466726f6d08010a0000000000000010010102746f0801090104000000000000010366656501fa00000000000000046d656d6f017b0000000000000006616d6f756e7401aa010000000000000474696d65010000000000000000010a00000000000000100101
+
 # Iterator over the request mock count (or default count)
 for i in $(seq "$MOCK_COUNT"); do
   RANDOM_PRINCIPAL_TXT_ID=$(node "$PKG_GENERATE_RANDOM_PRINCIPAL")
 
   echo "Inserting transaction nr $i with random id ($RANDOM_PRINCIPAL_TXT_ID) to the Root bucket"
 
-
-  if ! dfx canister call "$ROOT_CANISTER_ID" insert "(record {
-        status = variant { Completed };
-        operation = \"Approve\";
-        details = vec {
-          record {
-            \"to\";
-            variant {
-              Principal = principal \"$RANDOM_PRINCIPAL_TXT_ID\"
-            };
-          };
-          record {
-            \"from\";
-            variant {
-              Principal = principal \"$DFX_USER_PRINCIPAL\"
-            };
-          };
-        };
-        caller = principal \"$DFX_USER_PRINCIPAL\";
-      })"; then
+  if ! dfx canister call "$ROOT_CANISTER_ID" insert "$INSERT_RAW" --type=raw; then
     echo "🤡 Oops! Failed to Insert a transaction to the Root bucket..."
 
     exit 1
