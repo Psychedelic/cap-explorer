@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import TransactionsTable, { FetchPageDataHandler } from '@components/Tables/TransactionsTable';
-import {
-  BookmarkColumnModes,
-} from '@components/BookmarkPanel';
+import Breadcrumb from '@components/Breadcrumb';
 import Title from '@components/Title';
 import Page, { PageRow } from '@components/Page';
 import {
@@ -57,6 +55,9 @@ const AppTransactions = () => {
     <Page
       pageId="app-transactions-page"
     >
+      <PageRow>
+        <Breadcrumb id={tokenId} />
+      </PageRow>
       <PageRow>
         <Title size="xl">{`Transactions for ${trimAccount(tokenId)}`}</Title>
       </PageRow>
