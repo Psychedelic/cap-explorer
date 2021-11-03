@@ -32,16 +32,28 @@ const Overall = styled('div', {
   },
 });
 
-const OverallValues = () => (
+interface OverallValuesData {
+  name: string;
+  value: number;
+}
+
+const OverallValues = ({
+  data,
+}: {
+  data: OverallValuesData[],
+}) => (
   <Overall>
-    <div>
-      <span>Users</span>
-      <span>21,321</span>
-    </div>
-    <div>
-      <span>Transactions(24h)</span>
-      <span>209,201</span>
-    </div>
+    {
+      data.map(({
+        name,
+        value,
+      }) => (
+        <div key={name}>
+          <span>{name}</span>
+          <span>{value}</span>
+        </div>
+      ))
+    }
   </Overall>
 );
 

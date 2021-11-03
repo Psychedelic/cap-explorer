@@ -6,6 +6,7 @@ import {
   AccountStore,
 } from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
+import OverallValues from '@components/OverallValues';
 
 const Overview = ({
   accountStore,
@@ -37,7 +38,17 @@ const Overview = ({
       pageId="overview"
     >
       <PageRow>
-        <Title size="xl">CAP Explorer</Title>
+        <Title size="xl">Cap Explorer</Title>
+      </PageRow>
+      <PageRow>
+        <OverallValues
+          data={[
+            {
+              name: 'Total Contracts',
+              value: pageData.length,
+            },
+          ]}
+        />
       </PageRow>
       <PageRow>
         <AccountsTable

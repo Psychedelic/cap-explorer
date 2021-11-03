@@ -191,8 +191,6 @@ const TransactionsTable = ({
     <Container
       data-id={id}
     >
-      <Title size="ml">Transactions</Title>
-
       <DataTable
         columns={columns}
         data={currentData}

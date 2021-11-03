@@ -5,6 +5,7 @@ import Page, { PageRow } from '@components/Page';
 import IdentityCopy from '@components/IdentityCopy';
 import {
   useTransactionStore,
+  PAGE_SIZE,
 } from '@hooks/store';
 import { useWindowResize } from '@hooks/windowResize';
 import {
@@ -18,6 +19,7 @@ import { scrollTop } from '@utils/window';
 import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
+import OverallValues from '@components/OverallValues';
 
 const UserBar = styled('div', {
   display: 'flex',
@@ -39,8 +41,11 @@ const AppTransactions = () => {
     reset,
   } = useTransactionStore((state) => state);
 
+  const totalTransactions = pageData.length > PAGE_SIZE
+              ? pageData.length + (PAGE_SIZE * totalPages)
+              : pageData.length;
   const transactions: TransactionEvent[] = pageData ?? [];
-
+  
   let { id: tokenId } = useParams() as { id: string };
 
   // TODO: on fetch by token id and page nr, cache/memoize
@@ -107,6 +112,16 @@ const AppTransactions = () => {
             }
           />
         </UserBar>
+      </PageRow>
+      <PageRow>
+        <OverallValues
+          data={[
+            {
+              name: 'Total transactions',
+              value: totalTransactions,
+            },
+          ]}
+        />
       </PageRow>
       <PageRow>
         <TransactionsTable
