@@ -62,7 +62,10 @@ export const parseUserRootBucketsResponse = ({
   return contracts
     .map((principal: Principal) => ({
       canister: principal.toText(),
-      transactions: undefined,
-      age: undefined,
+      // TODO: there's a call to Dab that requires
+      // the canister id, so this should be handle a bit differently
+      // but for now pass the canister id and the call to dab
+      // is made in the scope of the datatable generation
+      name: principal.toText(),
     }));
 }
