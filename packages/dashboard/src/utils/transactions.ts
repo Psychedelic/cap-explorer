@@ -1,8 +1,7 @@
 import {
   Event as TransactionEvent,
-  DetailValue,
 } from '@psychedelic/cap-js';
-import { prettifyCapTransactions } from '@psychedelic/cap-js/src/utils'
+import { prettifyCapTransactions } from '@psychedelic/cap-js'
 import { Principal } from '@dfinity/principal';
 
 export default {};
