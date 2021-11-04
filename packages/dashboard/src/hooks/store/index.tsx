@@ -125,6 +125,8 @@ export interface TransactionsStore {
 
 export const PAGE_SIZE = 64;
 
+const MIN_PAGE_NUMBER = 1;
+
 export const useTransactionStore = create<TransactionsStore>((set) => ({
   pageData: [],
   isLoading: false,
@@ -203,6 +205,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       set((state: TransactionsStore) => ({
         ...state,
         isLoading: false,
+        totalPages: MIN_PAGE_NUMBER,
       }));
 
       return;
@@ -211,10 +214,13 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     // TODO: If a user request a page that is not the most recent
     // then the total transactions calculation will fail...
     const totalTransactions = PAGE_SIZE * response.page + response.data.length;
-    const totalPages = (() => {
+    const getTotalPages = (totalPages: number) => {
       const count = totalTransactions > PAGE_SIZE ? totalTransactions / PAGE_SIZE : 1;
-      return Math.ceil(count);
-    })();
+      // The initial request determinates the total nr of pages
+      // afterwards, we get the index we're in
+      // as such, we keep track and persist the initial number
+      return Math.max(MIN_PAGE_NUMBER, totalPages, Math.ceil(count));
+    };
     const pageData = parseGetTransactionsResponse(response);
 
     set((state: TransactionsStore) => ({
@@ -228,7 +234,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       // as total transactions at time of writing
       // can only be computed on first page:None request...
       totalTransactions,
-      totalPages,
+      totalPages: getTotalPages(state.totalPages),
     }));
   },
   reset: () => set((state: TransactionsStore) => ({
