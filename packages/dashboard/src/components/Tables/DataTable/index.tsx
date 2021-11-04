@@ -424,8 +424,6 @@ const DataTable = <T extends {}>({
       fetchPageDataHandler({
         pageIndex,
       });
-
-
     } catch (err) {
       // TODO: What to do on failure? Handle gracefully
       console.warn(`Oops! Failed to fetch the page ${pageIndex} data`);

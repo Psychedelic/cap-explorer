@@ -211,7 +211,10 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     // TODO: If a user request a page that is not the most recent
     // then the total transactions calculation will fail...
     const totalTransactions = PAGE_SIZE * response.page + response.data.length;
-    const totalPages = totalTransactions > PAGE_SIZE ? totalTransactions / PAGE_SIZE : 1;
+    const totalPages = (() => {
+      const count = totalTransactions > PAGE_SIZE ? totalTransactions / PAGE_SIZE : 1;
+      return Math.ceil(count);
+    })();
     const pageData = parseGetTransactionsResponse(response);
 
     set((state: TransactionsStore) => ({
@@ -225,7 +228,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       // as total transactions at time of writing
       // can only be computed on first page:None request...
       totalTransactions,
-      totalPages: Math.max(state.totalPages, totalPages),
+      totalPages,
     }));
   },
   reset: () => set((state: TransactionsStore) => ({

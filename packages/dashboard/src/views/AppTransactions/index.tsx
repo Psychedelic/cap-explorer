@@ -52,6 +52,10 @@ const AppTransactions = () => {
   const fetchPageDataHandler: FetchPageDataHandler = async ({
     pageIndex,
   }) => {
+    // Skip initial page because it's handled in the
+    // scope of this component useEffect on mount call
+    if (!pageIndex) return;
+
     await fetch({
       tokenId,
       page: pageIndex,

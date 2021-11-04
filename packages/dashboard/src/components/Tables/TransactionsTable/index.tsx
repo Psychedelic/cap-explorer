@@ -179,7 +179,10 @@ const TransactionsTable = ({
       fee: (cellValue: string) => <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />,
       amount: (cellValue: string) => formatPriceForChart({ value: cellValue, abbreviation: 'USD' }),
       time: (cellValue: string) => dateRelative(cellValue),
-      memo: (cellValue: string) => Number(cellValue),
+      memo: (cellValue: string) => {
+        if (!cellValue) return 'N/A';
+        return Number(cellValue)
+      },
     },
   }), [headerGroupHandler]);
 
