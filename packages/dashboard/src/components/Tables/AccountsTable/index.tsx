@@ -83,7 +83,7 @@ const AccountDab = ({
 
   return identityInDab
           ? <IdentityDab name={identityInDab?.name} image={identityInDab?.logo_url} />
-          : <NamedLink account={canisterId} name='Unknown to DAB' />
+          : <NamedLink url={'https://dab.ooo'} name='Unnamed' />
 };
 
 const AccountsTable = ({

@@ -174,12 +174,21 @@ const TransactionsTable = ({
         return <Operation>{cellValue.toLowerCase()}</Operation>
       },
       caller: (cellValue: string) => trimAccount(cellValue),
-      from: (cellValue: string) => trimAccount(cellValue),
-      to: (cellValue: string) => trimAccount(cellValue),
+      from: (cellValue: string) => {
+        if (!cellValue) return 'n/a';
+        return trimAccount(cellValue);
+      },
+      to: (cellValue: string) => {
+        if (!cellValue) return 'n/a';
+        return trimAccount(cellValue);
+      },
       fee: (cellValue: string) => <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />,
       amount: (cellValue: string) => formatPriceForChart({ value: cellValue, abbreviation: 'USD' }),
       time: (cellValue: string) => dateRelative(cellValue),
-      memo: (cellValue: string) => Number(cellValue),
+      memo: (cellValue: string) => {
+        if (!cellValue) return 'n/a';
+        return Number(cellValue)
+      },
     },
   }), [headerGroupHandler]);
 

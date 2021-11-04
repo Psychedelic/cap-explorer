@@ -95,16 +95,17 @@ export const AccountLink = ({
 );
 
 export const NamedLink = ({
-  account,
+  url,
   name,
+  target = '_blank',
 }: {
-  account: string,
+  url: string,
   name: string,
+  target?: string,
 }) => (
-  <PrimaryLink
-    to={getRouteByName('AppTransactions', { id: account })}
-    tableLink={true}
-  >
-    {name}
-  </PrimaryLink>
+  <Container tableLink={false}>
+    <a href={url} target={target}>
+      {name}
+    </a>
+  </Container>
 );
