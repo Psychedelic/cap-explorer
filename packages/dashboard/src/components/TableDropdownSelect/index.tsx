@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { styled } from '@stitched';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/pro-regular-svg-icons/faChevronDown';
 import { useOutsideHandler } from '@hooks/dom';
 import { TableId } from '@components/Tables/DataTable';
+import Fleekon from '@components/Fleekon';
 
 const Wrapper = styled('div', {
   zIndex: 20,
@@ -18,6 +17,10 @@ const Wrapper = styled('div', {
 
   '& > div': {
     backgroundColor: '$darkGrey',
+  },
+
+  '& .arrow-down': {
+    transform: 'rotate(-45deg)',
   },
 
   variants: {
@@ -129,10 +132,11 @@ const TableDropDownSelect = <T extends string>({
         data-dd-ctrlr
       >
         {selectedOption}
-        <FontAwesomeIcon
-          icon={faChevronDown}
-          size="sm"
-          title={title}
+        {/* TODO: style the arrow in table drop down mobile correctly */}
+        <Fleekon
+          icon="arrowRight"
+          className="arrow arrow-down"
+          size="13px"
         />
       </DropDownController>
 

@@ -6,11 +6,11 @@ import React, {
 } from 'react';
 import { styled } from '@stitched';
 import DataTable, { HeaderTabs, TableId } from '@components/Tables/DataTable';
-import Title from '@components/Title';
 import ValueCell from '@components/Tables/ValueCell';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
 import { trimAccount } from '@utils/account';
+import Fleekon, { IconNames } from '@components/Fleekon';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -41,9 +41,38 @@ const Container = styled('div', {
   },
 });
 
-const Operation = styled('span', {
+type OperationType = 'burn' | 'mint' | 'transfer' & Partial<IconNames>;
+
+const OperationCell = styled('span', {
   textTransform: 'capitalize',
+  display: 'flex',
+  alignItems: 'center',
+
+  '& > span:first-child': {
+    marginRight: '10px',
+  },
 });
+
+const Operation = ({
+  type
+}: {
+  type: OperationType,
+}) => {
+  const availableOperations = ['burn', 'mint', 'transfer'];
+
+  // On unknown operation types, shows text only
+  if (!availableOperations.includes(type)) return <span>{type}</span>;
+
+  return (
+    <OperationCell>
+      <Fleekon
+        icon={type}
+        className="icon-operation-type"
+      />
+      <span>{type}</span>
+    </OperationCell>
+  )
+};
 
 export enum TransactionTypes {
   all = 'all',
@@ -95,7 +124,7 @@ export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
 
 const columns: Column[] = [
   {
-    Header: 'Operation',
+    Header: 'Type',
     accessor: 'operation',
   },
   {
@@ -169,9 +198,9 @@ const TransactionsTable = ({
 
   const formatters = useMemo(() => ({
     body: {
-      operation: (cellValue: string) => {
+      operation: (cellValue: OperationType) => {
         if (typeof cellValue !== 'string') return;
-        return <Operation>{cellValue.toLowerCase()}</Operation>
+        return <Operation type={cellValue} />
       },
       caller: (cellValue: string) => trimAccount(cellValue),
       from: (cellValue: string) => {
