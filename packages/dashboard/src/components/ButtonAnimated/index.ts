@@ -7,8 +7,16 @@ export default styled('button', {
   border: 'none',
   cursor: 'pointer',
 
+  '& svg': {
+    transition: 'fill 0.3s',
+  },
+
   '&:hover': {
     transform: 'scale(1.08)',
+
+    '& svg': {
+      fill: '$purple !important',
+    },
   },
 
   variants: {
