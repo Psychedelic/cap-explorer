@@ -65,6 +65,7 @@
     "@dfinity/candid": "^0.10.1",
     "@dfinity/identity": "^0.10.1",
     "@dfinity/principal": "^0.10.1",
+    "@fleekhq/fleekon": "^0.0.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/pro-regular-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
