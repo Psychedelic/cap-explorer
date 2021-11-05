@@ -126,7 +126,7 @@ export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
 
 const columns: Column[] = [
   {
-    Header: 'Operation',
+    Header: 'Type',
     accessor: 'operation',
   },
   {
