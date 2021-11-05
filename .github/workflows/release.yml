@@ -1,0 +1,23 @@
+name: Release
+
+on:
+  push:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: "📤 Github Release"
+        uses: ridedott/release-me-action@master
+        with:
+          # Bump the node module version and commit the changed package files to the
+          # repository as part of the release process.
+          node-module: true
+          release-branches: '["main"]'
