@@ -223,6 +223,13 @@ npm set //npm.pkg.github.com/:_authToken "$PAT"
 
 Whichever option is best for you, you'll then be able to install packages from `@psychedelic`, such as the `@psychedelic/cap-js`.
 
+## 💄 Styling components
+
+Our stylesheets are created with [Stitches](https://stitches.dev/), a CSS-in-JS with best-in-class developer experience.
+
+Our icons are managed with [Icomoon Web App](https://icomoon.io/), that generates the icon fonts for us and placed in-componet by our font toolking [Fleekon](https://github.com/FleekHQ/fleekon).
+
+
 ## 🙏 Contribution guideline
 
 Create branches from the `main` branch and name it in accordance to **conventional commits** [here](https://www.conventionalcommits.org/en/v1.0.0/), or follow the examples bellow:
