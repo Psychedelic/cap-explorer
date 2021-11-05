@@ -21,6 +21,7 @@ import Icon from '@components/Icon';
 import { useWindowResize } from '@hooks/windowResize';
 import { PAGE_SIZE } from '@hooks/store';
 import Loading from '@components/Loading';
+import Fleekon from '@components/Fleekon';
 
 const RowWrapper = styled('div', {
   display: 'grid',
@@ -98,6 +99,15 @@ const Pagination = styled('div', {
         transform: 'translateX(-2px)',
       },
     },
+  },
+
+  '& .arrow': {
+    position: 'relative',
+    top: '1px',
+  },
+
+  '& .arrow-left': {
+    transform: 'rotate(180deg)',
   },
 });
 
@@ -521,10 +531,15 @@ const DataTable = <T extends {}>({
                   onClick={() => previousPage()}
                   disabled={!canPreviousPage}
                 >
-                  <Icon
+                  {/* <Icon
                     icon="ArrowLeft"
                     size="lg"
                     title="Previous page"
+                  /> */}
+                  <Fleekon
+                    icon="arrowRight"
+                    className="arrow arrow-left"
+                    size="13px"
                   />
                 </button>
                 <span data-page-index={currentPageIndex}>
@@ -536,10 +551,15 @@ const DataTable = <T extends {}>({
                   onClick={() => nextPage()}
                   disabled={!canNextPage}
                 >
-                  <Icon
+                  {/* <Icon
                     icon="ArrowRight"
                     size="lg"
                     title="Next page"
+                  /> */}
+                  <Fleekon
+                    icon="arrowRight"
+                    className="arrow arrow-right"
+                    size="13px"
                   />
                 </button>
               </Pagination>

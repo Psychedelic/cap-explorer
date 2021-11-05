@@ -1,7 +1,6 @@
 import React from 'react';
 import { styled, BREAKPOINT_LG } from '@stitched';
 import { useWindowResize } from '@hooks/windowResize';
-import imgBreadcrumbArrow from '@images/breadcrumb-arrow.svg';
 import { trimAccount } from '@utils/account';
 import Fleekon from '@components/Fleekon';
 
