@@ -1,8 +1,8 @@
 import React from 'react';
 import { styled, BREAKPOINT_LG } from '@stitched';
 import { useWindowResize } from '@hooks/windowResize';
-import imgBreadcrumbArrow from '@images/breadcrumb-arrow.svg';
 import { trimAccount } from '@utils/account';
+import Fleekon from '@components/Fleekon';
 
 const Container = styled('div', {
   fontFamily: 'Inter',
@@ -13,16 +13,12 @@ const Container = styled('div', {
     lineHeight: '$normal',
     fontSize: '$s',
 
-    '&::after': {
-      content: '" "',
-      background: `url(${imgBreadcrumbArrow})`,
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'contain',
+    '& .arrow': {
       width: '13px',
       height: '20px',
       display: 'inline-block',
       position: 'relative',
-      transform: 'translateY(7px)',
+      transform: 'translateY(2px)',
       margin: '0 10px',
     },
 
@@ -48,6 +44,11 @@ const Breadcrumb = ({ id }: BreadcrumbProps) => {
       data-id="breadcrumb"
     >
       <span>Overview</span>
+      <Fleekon
+        icon="arrowRight"
+        className="arrow"
+        size="13px"
+      />
       {/* TODO: Use DabJS to get token contract name */}
       <span>{isSmallerThanBreakpointLG ? trimAccount(id) : id }</span>
     </Container>

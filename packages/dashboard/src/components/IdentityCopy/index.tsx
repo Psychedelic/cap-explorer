@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { styled } from '@stitched';
-import { useBookmarkPersistedState } from '@hooks/bookmarks';
 import ButtonAnimated from '@components/ButtonAnimated';
-import Icon from '@components/Icon';
-import { trimAccount } from '@utils/account';
+import Fleekon from '@components/Fleekon';
 
 const Styled = styled(ButtonAnimated, {
   width: '45px',
@@ -35,7 +33,7 @@ const ICON_RESET_TIMEOUT = 5000;
 const ButtonBookmark = ({ account }: { account: string }) => {
   const [checkmark, setCheckmark] = useState<boolean>(false);
 
-  const currentIcon = checkmark ? 'Check' : 'Clone';
+  const currentIcon = checkmark ? 'check' : 'clone';
   const currentTitle = checkmark ? 'Principal Id is saved' : 'Save the Principal Id';
 
   // eslint-disable-next-line no-return-await
@@ -60,10 +58,10 @@ const ButtonBookmark = ({ account }: { account: string }) => {
     <Container>
       <Account>{account}</Account>
       <Styled onClick={() => copyToClipboardHandler(account)}>
-        <Icon
+        <Fleekon
           icon={currentIcon}
-          size="sm"
-          title={currentTitle}
+          className="icon-clone"
+          size="16px"
         />
       </Styled>
     </Container>
