@@ -36,8 +36,12 @@ const config: Config = {
     host: Hosts.mainnet,
   },
   development: {
-    canisterId,
-    host: dfxJson.networks.local.bind,
+    // canisterId,
+    // host: dfxJson.networks.local.bind,
+    // TODO: This is TEMP, remove it after on PR
+    // just done to point to staging mainnet
+    canisterId: 'lj532-6iaaa-aaaah-qcc7a-cai',
+    host: Hosts.mainnet,
   },
   // Used by jest on React functional tests
   // e.g. the `test:dashboard`

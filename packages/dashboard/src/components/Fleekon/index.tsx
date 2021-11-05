@@ -2,13 +2,15 @@ import React from 'react';
 import Fleekon from '@fleekhq/fleekon';
 import collection from './selection.json';
 
-export const Icons = {
+const Icons = {
   search: 'icon-search',
   house: 'icon-house',
   burn: 'icon-burn',
   mint: 'icon-mint',
   transfer: 'icon-transfer',
 };
+
+export type IconNames = keyof typeof Icons;
 
 const Icon = ({
   icon,
@@ -17,7 +19,7 @@ const Icon = ({
   className,
   onClick = () => null,
 }: {
-  icon: string & typeof Icons,
+  icon: IconNames,
   size?: string,
   color?: string,
   className: string,
@@ -29,7 +31,7 @@ const Icon = ({
   >
     <Fleekon
       collection={collection}
-      icon={icon}
+      icon={Icons[icon]}
       size={size}
       color={color}
       className={className}

@@ -1,22 +1,22 @@
 import React from 'react';
 import { RawLink } from '@components/Link';
 import { styled } from '@stitched';
-import Icon, { IconType } from '@components/Icon';
 import { RouteNames, getRouteByName } from '@utils/routes';
+import Fleekon, { IconNames } from '@components/Fleekon';
 
 export type MenuItemName = 'Overview';
 
 interface MenuItem {
   name: MenuItemName,
   path: RouteNames,
-  icon: IconType,
+  icon: IconNames,
   title: string,
 }
 
 const MenuItems: MenuItem[] = [{
   name: 'Overview',
   path: (getRouteByName('Overview') as RouteNames),
-  icon: 'HomeAlt',
+  icon: 'house',
   title: 'Overview',
 }];
 
@@ -61,6 +61,11 @@ const Container = styled('nav', {
       '&:last-child': {
         marginRight: 0,
       },
+
+      '& .icon-house': {
+        position: 'relative',
+        top: 2,
+      },
     },
   },
 
@@ -98,10 +103,10 @@ const MainMenu = () => (
               key={item.name}
               data-menu-item={item.name}
             >
-              <Icon
+              <Fleekon
                 icon={item.icon}
-                size="sm"
-                title={item.title}
+                className="icon-house"
+                size="18"
               />
               <RawLink
                 to={item.path}
