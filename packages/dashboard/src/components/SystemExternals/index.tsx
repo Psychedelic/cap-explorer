@@ -10,6 +10,14 @@ const ColumnExternalLinksContainer = styled('ul', {
     fontSize: '13px',
     fontWeight: 'normal',
     paddingBottom: '12px',
+
+    '& a': {
+      transition: 'color 0.3s',
+  
+      '&:hover': {
+        color: '$purple',
+      },
+    },
   },
 });
 

@@ -56,6 +56,14 @@ const ColWrapper = styled('div', {
   margin: 0,
   padding: 0,
 
+  '& a': {
+    transition: 'color 0.3s',
+
+    '&:hover': {
+      color: '$purple',
+    },
+  },
+
   '@lg': {
     width: '100%',
     padding: '0 10px',
