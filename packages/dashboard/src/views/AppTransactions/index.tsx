@@ -39,11 +39,8 @@ const AppTransactions = () => {
     fetch,
     totalPages,
     reset,
+    totalTransactions,
   } = useTransactionStore((state) => state);
-
-  const totalTransactions = pageData.length > PAGE_SIZE
-              ? pageData.length + (PAGE_SIZE * totalPages)
-              : pageData.length;
   const transactions: TransactionEvent[] = pageData ?? [];
   
   let { id: tokenId } = useParams() as { id: string };

@@ -214,6 +214,13 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     // TODO: If a user request a page that is not the most recent
     // then the total transactions calculation will fail...
     const totalTransactions = PAGE_SIZE * response.page + response.data.length;
+    
+    console.log('[debug]', {
+      responsePage: response.page,
+      responseDataLength: response.data.length,
+    });
+    console.log('[debug] totalTransactions ', totalTransactions);
+
     const getTotalPages = (totalPages: number) => {
       const count = totalTransactions > PAGE_SIZE ? totalTransactions / PAGE_SIZE : 1;
       // The initial request determinates the total nr of pages
