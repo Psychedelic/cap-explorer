@@ -17,7 +17,6 @@ import ContainerBox from '@components/ContainerBox';
 import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
 import { TransactionTypes, FetchPageDataHandler } from '@components/Tables/TransactionsTable';
 import TableDropDownSelect from '@components/TableDropdownSelect';
-import Icon from '@components/Icon';
 import { useWindowResize } from '@hooks/windowResize';
 import { PAGE_SIZE } from '@hooks/store';
 import Loading from '@components/Loading';
@@ -201,6 +200,7 @@ const EmptyTable = styled('span', {
   color: '$midGrey',
 });
 
+// TODO: check if the arrow hint is in use?
 const IconHintScrollX = ({
   show,
 }: {
@@ -209,10 +209,10 @@ const IconHintScrollX = ({
   <IconHintScrollXContainer
     show={show}
   >
-    <Icon
-      icon="ArrowRight"
-      size="lg"
-      title="Previous page"
+    <Fleekon
+      icon="arrowRight"
+      className="arrow arrow-top"
+      size="18px"
     />
   </IconHintScrollXContainer>
 );
