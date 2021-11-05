@@ -88,6 +88,11 @@ const Pagination = styled('div', {
   '& svg': {
     fontSize: '$s',
     color: '$defaultTxtColour',
+    transition: 'fill 0.3s',
+
+    '&:hover': {
+      fill: '$purple !important',
+    }
   },
 
   '& button': {
