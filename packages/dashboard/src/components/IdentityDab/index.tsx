@@ -1,5 +1,6 @@
 import React from 'react';
 import { styled } from '@stitched';
+import { NamedLink } from '@components/Link';
 
 const IdentityDabContainer = styled('div', {
   display: 'flex',
@@ -15,16 +16,30 @@ const IdentityDabContainer = styled('div', {
   },
 });
 
+const Unnamed = styled('span', {
+  fontWeight: 'bold',
+});
+
 export default ({
   image,
   name,
 }: {
-  image: string,
+  image?: string,
   name: string,
-}) => (
-  <IdentityDabContainer>
-    <img src={image} alt={`Logo for ${name}`} />
-    <span>{name}</span>
-  </IdentityDabContainer>
-);
+}) => {
+  if (!image) {
+    return (
+      <Unnamed>
+        <NamedLink url={'https://dab.ooo'} name='Unnamed' />
+      </Unnamed>
+    )
+  }
+
+  return (
+    <IdentityDabContainer>
+      <img src={image} alt={`Logo for ${name}`} />
+      <span>{name}</span>
+    </IdentityDabContainer>
+  );
+}
 
