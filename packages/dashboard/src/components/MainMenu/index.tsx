@@ -106,7 +106,6 @@ const MainMenu = () => (
               <Fleekon
                 icon={item.icon}
                 className="icon-house"
-                size="18"
               />
               <RawLink
                 to={item.path}
