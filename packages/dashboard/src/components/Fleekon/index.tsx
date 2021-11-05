@@ -3,6 +3,8 @@ import Fleekon from '@fleekhq/fleekon';
 import collection from './selection.json';
 
 const Icons = {
+  clone: 'icon-clone',
+  check: 'icon-check',
   search: 'icon-search',
   house: 'icon-house',
   burn: 'icon-burn',

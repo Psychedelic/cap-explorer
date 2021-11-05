@@ -6,13 +6,11 @@ import React, {
 } from 'react';
 import { styled } from '@stitched';
 import DataTable, { HeaderTabs, TableId } from '@components/Tables/DataTable';
-import Title from '@components/Title';
 import ValueCell from '@components/Tables/ValueCell';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
 import { trimAccount } from '@utils/account';
 import Fleekon, { IconNames } from '@components/Fleekon';
-import { IconNames } from '@components/Icon';
 
 const Container = styled('div', {
   fontSize: '$s',
