@@ -1,5 +1,5 @@
 <div align="center" style="padding-bottom: 20px;">
-  <img src="./.repo/images/cap-logo.svg" width="120" height="auto"/>
+  <img src="./.repo/images/cap-logo.png?202111051515" width="140px" height="auto"/>
 </div>
 
 # Cap Explorer
