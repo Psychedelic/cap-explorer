@@ -81,7 +81,12 @@ const Container = styled('nav', {
       transition: 'opacity 0.2s ease-in',
 
       '&:hover': {
-        opacity: 0.7,
+        '& > a': {
+          color: '$purple',
+        },
+        '& svg': {
+          fill: '$purple !important',
+        },
       },
 
       '& > a': {
