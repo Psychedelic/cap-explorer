@@ -51,7 +51,7 @@ const columns: Column[] = [
     accessor: 'name',
   },
   {
-    Header: 'Canister ID',
+    Header: 'Cap Root',
     accessor: 'canister',
   },
 ];
