@@ -10,6 +10,8 @@
   "repository": "https://github.com/psychedelic/cap-explorer",
   "scripts": {
     "start": "webpack serve -c ./webpack/webpack.config.js --node-env development --mode development",
+    "dev:development": "yarn start",
+    "dev:production": "IC_HISTORY_ROUTER_ID='lj532-6iaaa-aaaah-qcc7a-cai' MOCKUP=false webpack serve -c ./webpack/webpack.config.js --node-env production --mode production",
     "build:production": "webpack -c ./webpack/webpack.config.js --node-env production --mode=production",
     "build:staging": "webpack -c ./webpack/webpack.config.js --node-env staging --mode=production",
     "build:local": "webpack -c ./webpack/webpack.config.js --node-env development --mode=development",
@@ -67,7 +69,7 @@
     "@fleekhq/fleekon": "^0.0.4",
     "@loadable/component": "^5.14.1",
     "@psychedelic/cap-js": "^0.0.4",
-    "@psychedelic/dab-js": "^0.2.5",
+    "@psychedelic/dab-js": "^0.3.0",
     "@psychedelic/generate-random-principal": "^0.0.1",
     "@stitches/react": "^1.2.5",
     "@storybook/react": "^6.2.8",

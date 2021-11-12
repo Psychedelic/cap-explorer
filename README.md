@@ -45,10 +45,16 @@ lerna bootstrap
 To launch the main `Dashboard` UI development is quite simple:
 
 ```sh
-yarn dev:dashboard
+yarn dev:dashboard-dev
 ```
 
-Although, for local development the `CAP Service` is required, unless running in E2E environment, which skips the Service by providing mock data.
+Although, for local development the `CAP Service` is required, unless running in MOCKUP environment, which skips the Service by providing mock data.
+
+Optionally, you might want to dev with mainnet data:
+
+```sh
+yarn dev:dashboard-prod
+```
 
 ### The CAP Service
 
