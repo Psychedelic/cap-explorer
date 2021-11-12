@@ -4,23 +4,24 @@ import { AccountData } from '@components/Tables/AccountsTable';
 export const columns = [
   {
     Header: 'Name',
-    accessor: 'name',
+    accessor: 'rootCanisterId',
   },
   {
     Header: 'Canister',
-    accessor: 'canister',
+    accessor: 'contractId',
   },
 ];
 
 const NUM_TO_GENERATE = 10;
 
 export const generateData = (count: number = NUM_TO_GENERATE) => {
-
+  // TODO: contract id was introduced
+  // this needs to be refactored at some point
   const data: AccountData[] = [...new Array(count)].map(() => {
     const principal = generateRandomPrincipal();
     const accountData = {
-      canister: principal.toText(),
-      name: 'CanisterX'
+      contractId: principal.toText(),
+      rootCanisterId: 'CanisterX'
     };
 
     return accountData;

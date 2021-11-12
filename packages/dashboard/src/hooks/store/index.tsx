@@ -89,7 +89,15 @@ export const useAccountStore = create<AccountStore>((set) => ({
       return;
     }
 
-    const pageData = parseUserRootBucketsResponse(response);
+    // Get the Root, Token Contract pair
+    // via promise all for concurrency
+    // TODO: Change to actual implementation once CAP PR's ready
+    const { tokenContractsPairedRoots } = await import('@utils/mocks/tokenContractsCapRoots');
+
+    const pageData = parseUserRootBucketsResponse({
+      ...response,
+      tokenContractsPairedRoots,
+    });
 
     set((state: AccountStore) => ({
       accounts: response,

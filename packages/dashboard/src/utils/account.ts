@@ -5,6 +5,7 @@ import {
 } from '../components/BookmarkPanel';
 import { Principal } from "@dfinity/principal";
 import { AccountData } from '@components/Tables/AccountsTable';
+// import principal from './principal';
 
 export const hashTrimmer = (hash: string) => {
   const size = 6;
@@ -52,20 +53,47 @@ export const createBookmarkExpandHandler = ({
   return bookmarkExpandHandler;
 };
 
+type TokenContractsPairedRoots = Record<string, string>;
+
 export const parseUserRootBucketsResponse = ({
   contracts,
+  tokenContractsPairedRoots,
 }: {
   contracts?: Principal[],
+  tokenContractsPairedRoots: TokenContractsPairedRoots,
 }): AccountData[] | [] => {
   if (!contracts || !Array.isArray(contracts) || !contracts.length) return [];
 
   return contracts
-    .map((principal: Principal) => ({
-      canister: principal.toText(),
-      // TODO: there's a call to Dab that requires
-      // the canister id, so this should be handle a bit differently
-      // but for now pass the canister id and the call to dab
-      // is made in the scope of the datatable generation
-      name: principal.toText(),
-    }));
+    .filter(
+      (principal: Principal) =>  getTokenContractCanisterIdByRoot(
+        tokenContractsPairedRoots,
+        principal.toText(),
+      )
+    )
+    .map((principal: Principal) => {
+      const rootCanisterId = principal.toText();
+      const contractId = getTokenContractCanisterIdByRoot(
+        tokenContractsPairedRoots,
+        rootCanisterId,
+      ) as string;
+
+      return {
+        contractId,
+        rootCanisterId,
+      }
+    });
+}
+
+const getTokenContractCanisterIdByRoot = (
+  tokenContractsPairedRoots: TokenContractsPairedRoots,
+  rootCanisterId: string,
+) => {
+  if (!tokenContractsPairedRoots[rootCanisterId]) {
+    console.warn(`Oops! Token contract not found for root ${rootCanisterId}, omitted.` );
+
+    return false;
+  }
+
+  return tokenContractsPairedRoots[rootCanisterId];
 }

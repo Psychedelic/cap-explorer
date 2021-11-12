@@ -144,12 +144,18 @@ describe('Account', () => {
       });
 
       it('should parse the data', () => {
-        const parsed = parseUserRootBucketsResponse(response);
+        const parsed = parseUserRootBucketsResponse({
+          ...response,
+          tokenContractsPairedRoots: {},
+        });
         expect(parsed).toBeTruthy();
       });
 
       it('should parse the data to the expected object type', () => {
-        const parsed = parseUserRootBucketsResponse(response);
+        const parsed = parseUserRootBucketsResponse({
+          ...response,
+          tokenContractsPairedRoots: {},
+        });
         const expectedData = [{
           canister: identity.toText(),
           age: undefined,
@@ -172,7 +178,10 @@ describe('Account', () => {
         });
   
         it('should return empty list', () => {
-          const parsed = parseUserRootBucketsResponse(response);
+          const parsed = parseUserRootBucketsResponse({
+            ...response,
+            tokenContractsPairedRoots: {},
+          });
           const expectedData: any[] = [];
           expect(parsed).toStrictEqual(expectedData);
         });
@@ -192,7 +201,10 @@ describe('Account', () => {
         });
   
         it('should return empty list', () => {
-          const parsed = parseUserRootBucketsResponse(response);
+          const parsed = parseUserRootBucketsResponse({
+            ...response,
+            tokenContractsPairedRoots: {},
+          });
           const expectedData: any[] = [];
           expect(parsed).toStrictEqual(expectedData);
         });
