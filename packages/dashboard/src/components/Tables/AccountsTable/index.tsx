@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { styled } from '@stitched';
 import DataTable, { FormatterTypes, TableId } from '@components/Tables/DataTable';
 import Title from '@components/Title';
-import { AccountLink, NamedLink } from '@components/Link';
+import { AccountLink, NamedAccountLink } from '@components/Link';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 
@@ -32,7 +32,7 @@ const Container = styled('div', {
 
 export interface AccountData {
   contractId: string,
-  name: string,
+  rootCanisterId: string,
 }
 
 interface Column {
@@ -41,14 +41,14 @@ interface Column {
 }
 
 export const DEFAULT_COLUMN_ORDER: (keyof AccountData)[] = [
-  'name',
+  'rootCanisterId',
   'contractId',
 ];
 
 const columns: Column[] = [
   {
     Header: 'Name',
-    accessor: 'name',
+    accessor: 'rootCanisterId',
   },
   {
     Header: 'Token contract',
@@ -65,6 +65,9 @@ const AccountDab = ({
 
   // Dab metadata handler
   useEffect(() => {
+    // TODO: Should this move to the store?
+    // at the moment is called as a "nice-to-have",
+    // not as main business logic...
     const getDabMetadataHandler = async () => {
       const metadata = await getDabMetadata({
         canisterId,
@@ -83,7 +86,7 @@ const AccountDab = ({
 
   return identityInDab
           ? <IdentityDab name={identityInDab?.name} image={identityInDab?.logo_url} />
-          : <NamedLink url={'https://dab.ooo'} name='Unnamed' />
+          : <NamedAccountLink name='Unnamed' account={canisterId} />
 };
 
 const AccountsTable = ({
@@ -98,10 +101,16 @@ const AccountsTable = ({
 }) => {
   const formatters = useMemo(() => ({
     body: {
-      contractId: (cellValue: string) => <AccountLink account={cellValue} trim={false} />,
-      name: (cellValue: string) => <AccountDab canisterId={cellValue} />,
+      contractId: (cellValue: string) => {
+        const found = data.find((x) => x.contractId === cellValue);
+
+        if (!found?.rootCanisterId) return '';
+
+        return <NamedAccountLink name={cellValue} account={found.rootCanisterId} />;
+      },
+      rootCanisterId: (cellValue: string) => <AccountDab canisterId={cellValue} />,
     },
-  } as FormatterTypes), []);
+  } as FormatterTypes), [data]);
 
   return (
     <Container

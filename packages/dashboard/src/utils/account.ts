@@ -5,6 +5,7 @@ import {
 } from '../components/BookmarkPanel';
 import { Principal } from "@dfinity/principal";
 import { AccountData } from '@components/Tables/AccountsTable';
+// import principal from './principal';
 
 export const hashTrimmer = (hash: string) => {
   const size = 6;
@@ -63,27 +64,23 @@ export const parseUserRootBucketsResponse = ({
 }): AccountData[] | [] => {
   if (!contracts || !Array.isArray(contracts) || !contracts.length) return [];
 
-  console.log('[debug] tokenContractsPairedRoots ', tokenContractsPairedRoots)
-
   return contracts
-    .map((principal: Principal) => {
-      const contractId = getTokenContractCanisterIdByRoot(
+    .filter(
+      (principal: Principal) =>  getTokenContractCanisterIdByRoot(
         tokenContractsPairedRoots,
         principal.toText(),
       )
-      // TODO: this fall back is temporary used for dev only
-      // since c3hjx-caaaa-aaaah-qcera-cai is missing at time of writing
-      || principal.toText();
-
-      console.log('[debug] contractId', contractId);
+    )
+    .map((principal: Principal) => {
+      const rootCanisterId = principal.toText();
+      const contractId = getTokenContractCanisterIdByRoot(
+        tokenContractsPairedRoots,
+        rootCanisterId,
+      ) as string;
 
       return {
         contractId,
-        // TODO: there's a call to Dab that requires
-        // the canister id, so this should be handle a bit differently
-        // but for now pass the canister id and the call to dab
-        // is made in the scope of the datatable generation
-        name: principal.toText(),
+        rootCanisterId,
       }
     });
 }
@@ -93,10 +90,10 @@ const getTokenContractCanisterIdByRoot = (
   rootCanisterId: string,
 ) => {
   if (!tokenContractsPairedRoots[rootCanisterId]) {
-    console.warn(`Oops! Token contract not found for root ${rootCanisterId}` );
-  }
+    console.warn(`Oops! Token contract not found for root ${rootCanisterId}, omitted.` );
 
-  console.info('[debug] found ', tokenContractsPairedRoots[rootCanisterId])
+    return false;
+  }
 
   return tokenContractsPairedRoots[rootCanisterId];
 }

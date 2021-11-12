@@ -1,3 +1,5 @@
+// Key is Root, value is token contract
+// TODO: rename as rootsPairedTokenContract?
 export const tokenContractsPairedRoots = {
   'cvfe7-zqaaa-aaaah-qceqa-cai': 'qcg3w-tyaaa-aaaah-qakea-cai',
   'hj662-syaaa-aaaah-qcepq-cai': 'njgly-uaaaa-aaaah-qb6pa-cai',
