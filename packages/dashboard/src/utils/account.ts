@@ -52,20 +52,51 @@ export const createBookmarkExpandHandler = ({
   return bookmarkExpandHandler;
 };
 
+type TokenContractsPairedRoots = Record<string, string>;
+
 export const parseUserRootBucketsResponse = ({
   contracts,
+  tokenContractsPairedRoots,
 }: {
   contracts?: Principal[],
+  tokenContractsPairedRoots: TokenContractsPairedRoots,
 }): AccountData[] | [] => {
   if (!contracts || !Array.isArray(contracts) || !contracts.length) return [];
 
+  console.log('[debug] tokenContractsPairedRoots ', tokenContractsPairedRoots)
+
   return contracts
-    .map((principal: Principal) => ({
-      canister: principal.toText(),
-      // TODO: there's a call to Dab that requires
-      // the canister id, so this should be handle a bit differently
-      // but for now pass the canister id and the call to dab
-      // is made in the scope of the datatable generation
-      name: principal.toText(),
-    }));
+    .map((principal: Principal) => {
+      const contractId = getTokenContractCanisterIdByRoot(
+        tokenContractsPairedRoots,
+        principal.toText(),
+      )
+      // TODO: this fall back is temporary used for dev only
+      // since c3hjx-caaaa-aaaah-qcera-cai is missing at time of writing
+      || principal.toText();
+
+      console.log('[debug] contractId', contractId);
+
+      return {
+        contractId,
+        // TODO: there's a call to Dab that requires
+        // the canister id, so this should be handle a bit differently
+        // but for now pass the canister id and the call to dab
+        // is made in the scope of the datatable generation
+        name: principal.toText(),
+      }
+    });
+}
+
+const getTokenContractCanisterIdByRoot = (
+  tokenContractsPairedRoots: TokenContractsPairedRoots,
+  rootCanisterId: string,
+) => {
+  if (!tokenContractsPairedRoots[rootCanisterId]) {
+    console.warn(`Oops! Token contract not found for root ${rootCanisterId}` );
+  }
+
+  console.info('[debug] found ', tokenContractsPairedRoots[rootCanisterId])
+
+  return tokenContractsPairedRoots[rootCanisterId];
 }

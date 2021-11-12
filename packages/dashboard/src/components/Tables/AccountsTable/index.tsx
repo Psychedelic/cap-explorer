@@ -31,7 +31,7 @@ const Container = styled('div', {
 });
 
 export interface AccountData {
-  canister: string,
+  contractId: string,
   name: string,
 }
 
@@ -42,7 +42,7 @@ interface Column {
 
 export const DEFAULT_COLUMN_ORDER: (keyof AccountData)[] = [
   'name',
-  'canister',
+  'contractId',
 ];
 
 const columns: Column[] = [
@@ -51,8 +51,8 @@ const columns: Column[] = [
     accessor: 'name',
   },
   {
-    Header: 'Cap Root',
-    accessor: 'canister',
+    Header: 'Token contract',
+    accessor: 'contractId',
   },
 ];
 
@@ -98,7 +98,7 @@ const AccountsTable = ({
 }) => {
   const formatters = useMemo(() => ({
     body: {
-      canister: (cellValue: string) => <AccountLink account={cellValue} trim={false} />,
+      contractId: (cellValue: string) => <AccountLink account={cellValue} trim={false} />,
       name: (cellValue: string) => <AccountDab canisterId={cellValue} />,
     },
   } as FormatterTypes), []);
