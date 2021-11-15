@@ -17,10 +17,11 @@
     ]
   },
   "scripts": {
-    "build:production": "lerna run --scope dashboard build:production",
+    "build:production": "lerna run --stream --scope dashboard build:production",
     "build:staging": "lerna run --scope dashboard build:staging",
     "build:local": "lerna run --scope dashboard build:local",
-    "dev:dashboard": "lerna run --scope dashboard start",
+    "dev:dashboard-dev": "lerna run --stream --scope dashboard dev:development",
+    "dev:dashboard-prod": "lerna run --stream --scope dashboard dev:production",
     "test:dashboard-unit": "lerna run --scope dashboard test:unit",
     "cap:init": "git submodule update --init --recursive",
     "cap:update": "git submodule update --remote --merge",
