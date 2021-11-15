@@ -20,6 +20,7 @@ import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import OverallValues from '@components/OverallValues';
+import { getTokenContractCanisterIdByRoot } from '@utils/account';
 
 const UserBar = styled('div', {
   display: 'flex',
@@ -42,7 +43,7 @@ const AppTransactions = () => {
     totalTransactions,
   } = useTransactionStore((state) => state);
   const transactions: TransactionEvent[] = pageData ?? [];
-  
+
   let { id: tokenId } = useParams() as { id: string };
 
   // TODO: on fetch by token id and page nr, cache/memoize
@@ -75,8 +76,17 @@ const AppTransactions = () => {
   // Dab metadata handler
   useEffect(() => {
     const getDabMetadataHandler = async () => {
+      // TODO: Change to actual implementation once CAP PR's ready
+      const { tokenContractsPairedRoots } = await import('@utils/mocks/tokenContractsCapRoots');
+
+      const contractId = getTokenContractCanisterIdByRoot(
+        tokenContractsPairedRoots,
+        tokenId,
+      ) as string;
+
+      
       const metadata = await getDabMetadata({
-        canisterId: tokenId,
+        canisterId: contractId,
       });
 
       if (!metadata) return;
