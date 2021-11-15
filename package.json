@@ -17,7 +17,7 @@
     ]
   },
   "scripts": {
-    "build:production": "lerna run --scope dashboard build:production",
+    "build:production": "lerna run --stream --scope dashboard build:production",
     "build:staging": "lerna run --scope dashboard build:staging",
     "build:local": "lerna run --scope dashboard build:local",
     "dev:dashboard-dev": "lerna run --stream --scope dashboard dev:development",
@@ -32,5 +32,6 @@
   "engines": {
     "node": ">=16",
     "npm": ">=7"
-  }
+  },
+  "dependencies": {}
 }
