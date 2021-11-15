@@ -85,7 +85,7 @@ export const parseUserRootBucketsResponse = ({
     });
 }
 
-const getTokenContractCanisterIdByRoot = (
+export const getTokenContractCanisterIdByRoot = (
   tokenContractsPairedRoots: TokenContractsPairedRoots,
   rootCanisterId: string,
 ) => {

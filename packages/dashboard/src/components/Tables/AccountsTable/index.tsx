@@ -108,7 +108,13 @@ const AccountsTable = ({
 
         return <NamedAccountLink name={cellValue} account={found.rootCanisterId} />;
       },
-      rootCanisterId: (cellValue: string) => <AccountDab canisterId={cellValue} />,
+      rootCanisterId: (cellValue: string) => {
+        const found = data.find((x) => x.rootCanisterId === cellValue);
+
+        if (!found?.contractId) return '';
+
+        return <AccountDab canisterId={found.contractId} />
+      },
     },
   } as FormatterTypes), [data]);
 
