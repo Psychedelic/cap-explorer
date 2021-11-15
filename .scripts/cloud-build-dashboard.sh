@@ -17,7 +17,7 @@ lerna bootstrap
 # the generate random principal source code lives
 # in the cap-explorer project at the moment
 # so we are interested in building it before usage
-lerna run build --scope=@psychedelic/generate-random-principal
+lerna run build --stream --scope=@psychedelic/generate-random-principal
 
 if [[ "$NODE_ENV" == "production" ]]; then
   yarn build:production
