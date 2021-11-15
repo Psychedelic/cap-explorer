@@ -4,6 +4,7 @@ source "${BASH_SOURCE%/*}/utils.sh"
 
 verifyDependency PAT
 
+npm install -g typescript
 npm install -g lerna
 
 npm set //npm.pkg.github.com/:_authToken "$PAT"
