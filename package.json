@@ -33,7 +33,5 @@
     "node": ">=16",
     "npm": ">=7"
   },
-  "dependencies": {
-    "webpack-cli": "^4.9.1"
-  }
+  "dependencies": {}
 }

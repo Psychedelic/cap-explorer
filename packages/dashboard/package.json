@@ -83,6 +83,7 @@
     "react-table": "^7.7.0",
     "use-debounce": "^6.0.1",
     "use-persisted-state": "^0.3.3",
+    "webpack-cli": "^4.9.1",
     "zustand": "^3.5.1"
   },
   "engines": {
