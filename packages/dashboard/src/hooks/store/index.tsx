@@ -92,11 +92,7 @@ export const useAccountStore = create<AccountStore>((set) => ({
       return;
     }
 
-    // Get the Root, Token Contract pair
-    // via promise all for concurrency
-    // TODO: Change to actual implementation once CAP PR's ready
-    const { tokenContractsPairedRoots } = await import('@utils/mocks/tokenContractsCapRoots');
-
+    // Prepare the Root, Token Contract pair
     let promisedTokenContractsPairedRoots: Record<string, Promise<string | undefined>> = {};
 
     for await (const contract of response.contracts as Principal[]) {
@@ -114,8 +110,6 @@ export const useAccountStore = create<AccountStore>((set) => ({
 
           if (!tokenContractPrincipal) throw Error('Oops! Unexpected token contract id response');
 
-          console.log('[debug] tokenContractPrincipal.toText() ', tokenContractPrincipal.toText());
-
           return tokenContractPrincipal.toText();
         } catch (err) {
           console.warn('Oops! CAP instance initialisation failed with', err);
@@ -123,14 +117,10 @@ export const useAccountStore = create<AccountStore>((set) => ({
       })()
     }
 
-    console.log('[debug] promisedTokenContractsPairedRoots', promisedTokenContractsPairedRoots);
-
     const pageData = await parseUserRootBucketsResponse({
       ...response,
       promisedTokenContractsPairedRoots,
     });
-
-    console.log('[debug] pageData', pageData);
 
     set((state: AccountStore) => ({
       accounts: response,
