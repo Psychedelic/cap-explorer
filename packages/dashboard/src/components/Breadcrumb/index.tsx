@@ -3,6 +3,15 @@ import { styled, BREAKPOINT_LG } from '@stitched';
 import { useWindowResize } from '@hooks/windowResize';
 import { trimAccount } from '@utils/account';
 import Fleekon from '@components/Fleekon';
+import { RawLink } from '@components/Link';
+
+const Hover = styled('span', {
+  transition: 'color 0.2s',
+
+  '&:hover': {
+    color: '$purple',
+  },
+});
 
 const Container = styled('div', {
   fontFamily: 'Inter',
@@ -43,7 +52,9 @@ const Breadcrumb = ({ id }: BreadcrumbProps) => {
     <Container
       data-id="breadcrumb"
     >
-      <span>Overview</span>
+      <RawLink to='/'>
+        <Hover>Overview</Hover>
+      </RawLink>
       <Fleekon
         icon="arrowRight"
         className="arrow"
