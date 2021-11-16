@@ -63,5 +63,10 @@ export const parseGetTransactionsResponse = ({
       operation: v.operation,
       time: toTransactionTime(v.time),
     }
-  });
+  })
+  // Reverse the order
+  // because the natural order that the data is presented
+  // from the response, is at the very top
+  // showing the oldest transaction in the page
+  .reverse();
 }
