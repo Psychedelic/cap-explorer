@@ -1,5 +1,6 @@
 import React from 'react';
 import { styled } from '@stitched';
+import Loading from '@components/Loading';
 
 const Overall = styled('div', {
   fontSize: '$s',
@@ -32,6 +33,11 @@ const Overall = styled('div', {
   },
 });
 
+const LoadingContainer = styled('span', {
+  position: 'relative',
+  marginLeft: '10px',
+});
+
 interface OverallValuesData {
   name: string;
   value: number;
@@ -39,8 +45,10 @@ interface OverallValuesData {
 
 const OverallValues = ({
   data,
+  isLoading = true,
 }: {
   data: OverallValuesData[],
+  isLoading: boolean,
 }) => (
   <Overall>
     {
@@ -50,7 +58,13 @@ const OverallValues = ({
       }) => (
         <div key={name}>
           <span>{name}</span>
-          <span>{value}</span>
+          <span>
+            {
+              isLoading
+              ? <LoadingContainer><Loading size='s' alt='' /></LoadingContainer>
+              : value
+            }
+          </span>
         </div>
       ))
     }

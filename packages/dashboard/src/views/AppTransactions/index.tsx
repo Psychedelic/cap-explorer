@@ -166,6 +166,7 @@ const AppTransactions = ({
               value: totalTransactions,
             },
           ]}
+          isLoading={isLoading}
         />
       </PageRow>
       <PageRow>
