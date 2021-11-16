@@ -29,7 +29,7 @@
     "@dfinity/principal": "^0.10.1",
     "@fleekhq/fleekon": "^0.0.4",
     "@loadable/component": "^5.14.1",
-    "@psychedelic/cap-js": "^0.0.4",
+    "@psychedelic/cap-js": "^0.0.7",
     "@psychedelic/dab-js": "^0.3.0",
     "@psychedelic/generate-random-principal": "^0.0.1",
     "@stitches/react": "^1.2.5",
