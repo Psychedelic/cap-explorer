@@ -7,6 +7,7 @@ import {
   CapRouter,
   CapRoot,
 } from '@psychedelic/cap-js';
+import { Principal } from '@dfinity/principal';
 import { getCapRootInstance } from '@utils/cap'; 
 import { parseGetTransactionsResponse } from '@utils/transactions';
 import { parseUserRootBucketsResponse } from '@utils/account';
@@ -72,6 +73,8 @@ export const useAccountStore = create<AccountStore>((set) => ({
     // has no support for paginated response
     // TODO: seems best to call the methods from the Actor directly
     // there's no need for the method wrappers
+    // TODO: Cap-js type definitions are not showing at time of writing 
+    // and needs to be fixed
     const response = await capRouterInstance.get_user_root_buckets({
       user: managementCanisterPrincipal,
       witness: false,
@@ -93,6 +96,34 @@ export const useAccountStore = create<AccountStore>((set) => ({
     // via promise all for concurrency
     // TODO: Change to actual implementation once CAP PR's ready
     const { tokenContractsPairedRoots } = await import('@utils/mocks/tokenContractsCapRoots');
+
+    let promisedTokenContractsPairedRoots: Record<string, Promise<string | undefined>> = {};
+
+    for await (const contract of response.contracts as Principal[]) {
+      const canisterId = contract.toText();
+      let capRoot: CapRoot;
+    
+      promisedTokenContractsPairedRoots[canisterId] = (async () => {
+        try {
+          capRoot = await getCapRootInstance({
+            canisterId,
+            host: config.host,
+          });
+
+          const tokenContractPrincipal = await capRoot.contract_id();
+
+          if (!tokenContractPrincipal) throw Error('Oops! Unexpected token contract id response');
+
+          console.log('[debug] tokenContractPrincipal.toText() ', tokenContractPrincipal.toText());
+
+          return tokenContractPrincipal.toText();
+        } catch (err) {
+          console.warn('Oops! CAP instance initialisation failed with', err);
+        }
+      })()
+    }
+
+    console.log('[debug] promisedTokenContractsPairedRoots', promisedTokenContractsPairedRoots);
 
     const pageData = parseUserRootBucketsResponse({
       ...response,
