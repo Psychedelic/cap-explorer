@@ -14,6 +14,7 @@ import {
 } from "react-router-dom";
 import { trimAccount } from '@utils/account';
 import {
+  CapRouter,
   Event as TransactionEvent,
 } from '@psychedelic/cap-js';
 import { scrollTop } from '@utils/window';
@@ -21,6 +22,7 @@ import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import OverallValues from '@components/OverallValues';
+import { Principal } from '@dfinity/principal';
 
 const UserBar = styled('div', {
   display: 'flex',
@@ -29,20 +31,25 @@ const UserBar = styled('div', {
   alignItems: 'center',
 });
 
-const AppTransactions = () => {
+const AppTransactions = ({
+  capRouterInstance,
+}: {
+  capRouterInstance: CapRouter | undefined,
+}) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
   const isSmallerThanBreakpointLG = useWindowResize({
     breakpoint: BREAKPOINT_DATA_TABLE_L,
   });
   const {
-    isLoading,
     pageData,
     fetch,
     totalPages,
     reset,
     totalTransactions,
   } = useTransactionStore((state) => state);
-  const transactions: TransactionEvent[] = pageData ?? [];
+  const [rootCanisterId, setRootCanisterId] = useState<string>();
+  const [transactions, setTransactions] = useState<TransactionEvent>([]);
 
   let { id: tokenId } = useParams() as { id: string };
 
@@ -52,26 +59,60 @@ const AppTransactions = () => {
   }) => {
     // Skip initial page because it's handled in the
     // scope of this component useEffect on mount call
-    if (!pageIndex) return;
+    if (!pageIndex || !rootCanisterId) return;
 
     await fetch({
-      tokenId,
+      tokenId: rootCanisterId,
       page: pageIndex,
       witness: false,
     });
 
     scrollTop();
   }
+  
+  useEffect(() => {
+    if (!pageData) return;
+
+    setTransactions(pageData);
+  }, [pageData]);
 
   useEffect(() => {
+    if (!rootCanisterId) return;
+
     fetch({
-      tokenId,
+      tokenId: rootCanisterId,
       witness: false,
     });
 
     // On unmount, reset the transaction state
     return () => reset();
-  }, []);
+  }, [rootCanisterId]);
+
+  useEffect(() => {
+    if (!transactions.length) return;
+
+    setIsLoading(false);
+  }, [transactions]);
+
+  useEffect(() => {
+    (async () => {
+      if (!capRouterInstance) return;
+
+      const { canister } = await capRouterInstance.get_token_contract_root_bucket({
+        tokenId: Principal.fromText(tokenId),
+      });
+
+      const rootCanisterId = canister?.[0];
+
+      if (!rootCanisterId) {
+        console.warn(`Oops! Failed to retrieve the root bucket for token id ${tokenId}`);
+
+        return;
+      }
+
+      setRootCanisterId(rootCanisterId.toText());
+    })();
+  }, [pageData]);
 
   // Dab metadata handler
   useEffect(() => {
@@ -79,8 +120,6 @@ const AppTransactions = () => {
       const metadata = await getDabMetadata({
         canisterId: tokenId,
       });
-
-      console.log('[debug] metadata', metadata);
 
       if (!metadata) return;
 
@@ -130,13 +169,13 @@ const AppTransactions = () => {
         />
       </PageRow>
       <PageRow>
-        {/* <TransactionsTable
+        <TransactionsTable
           data={transactions}
           id="app-transactions-page"
           isLoading={isLoading}
           pageCount={totalPages}
           fetchPageDataHandler={fetchPageDataHandler}
-        /> */}
+        />
       </PageRow>
     </Page>
   );

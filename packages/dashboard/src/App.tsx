@@ -77,7 +77,9 @@ const Routes = ({
     >
       <Switch>
         <Route path={RouteNames.AppTransactions}>
-          <LazyAppTransactions />
+          <LazyAppTransactions
+            capRouterInstance={capRouterInstance}
+          />
         </Route>
         <Route path={RouteNames.Overview}>
           <LazyOverview
