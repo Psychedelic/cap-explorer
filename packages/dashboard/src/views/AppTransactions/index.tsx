@@ -49,7 +49,7 @@ const AppTransactions = ({
     totalTransactions,
   } = useTransactionStore((state) => state);
   const [rootCanisterId, setRootCanisterId] = useState<string>();
-  const [transactions, setTransactions] = useState<TransactionEvent>([]);
+  const [transactions, setTransactions] = useState<TransactionEvent>(undefined);
 
   let { id: tokenId } = useParams() as { id: string };
 
@@ -89,7 +89,7 @@ const AppTransactions = ({
   }, [rootCanisterId]);
 
   useEffect(() => {
-    if (!transactions.length) return;
+    if (!transactions) return;
 
     setIsLoading(false);
   }, [transactions]);

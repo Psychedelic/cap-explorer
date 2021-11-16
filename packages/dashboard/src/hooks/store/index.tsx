@@ -146,7 +146,7 @@ interface TransactionsFetchParams {
 
 export interface TransactionsStore {
   isLoading: boolean,
-  pageData: TransactionEvent[] | [],
+  pageData: TransactionEvent[] | undefined,
   transactionEvents: TransactionEvent[] | [],
   totalTransactions: number,
   totalPages: number,
@@ -159,7 +159,7 @@ export const PAGE_SIZE = 64;
 const MIN_PAGE_NUMBER = 1;
 
 export const useTransactionStore = create<TransactionsStore>((set) => ({
-  pageData: [],
+  pageData: undefined,
   isLoading: false,
   transactionEvents: [],
   totalTransactions: 0,
@@ -237,6 +237,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
         ...state,
         isLoading: false,
         totalPages: MIN_PAGE_NUMBER,
+        pageData: [],
       }));
 
       return;
@@ -269,7 +270,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     }));
   },
   reset: () => set((state: TransactionsStore) => ({
-    pageData: [],
+    pageData: undefined,
     transactionEvents: [],
     totalTransactions: 0,
     totalPages: 0,
