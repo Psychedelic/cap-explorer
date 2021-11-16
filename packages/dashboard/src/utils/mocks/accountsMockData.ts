@@ -4,7 +4,7 @@ import { AccountData } from '@components/Tables/AccountsTable';
 export const columns = [
   {
     Header: 'Name',
-    accessor: 'rootCanisterId',
+    accessor: 'dabCanisterId',
   },
   {
     Header: 'Canister',
@@ -21,7 +21,7 @@ export const generateData = (count: number = NUM_TO_GENERATE) => {
     const principal = generateRandomPrincipal();
     const accountData = {
       contractId: principal.toText(),
-      rootCanisterId: 'CanisterX'
+      dabCanisterId: 'CanisterX'
     };
 
     return accountData;

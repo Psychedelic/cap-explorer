@@ -53,51 +53,6 @@ export const createBookmarkExpandHandler = ({
   return bookmarkExpandHandler;
 };
 
-// type TokenContractsPairedRoots = Record<string, string>;
-
-// export const parseUserRootBucketsResponse = ({
-//   contracts,
-//   tokenContractsPairedRoots,
-// }: {
-//   contracts?: Principal[],
-//   tokenContractsPairedRoots: TokenContractsPairedRoots,
-// }): AccountData[] | [] => {
-//   if (!contracts || !Array.isArray(contracts) || !contracts.length) return [];
-
-//   return contracts
-//     .filter(
-//       (principal: Principal) =>  getTokenContractCanisterIdByRoot(
-//         tokenContractsPairedRoots,
-//         principal.toText(),
-//       )
-//     )
-//     .map((principal: Principal) => {
-//       const rootCanisterId = principal.toText();
-//       const contractId = getTokenContractCanisterIdByRoot(
-//         tokenContractsPairedRoots,
-//         rootCanisterId,
-//       ) as string;
-
-//       return {
-//         contractId,
-//         rootCanisterId,
-//       }
-//     });
-// }
-
-// export const getTokenContractCanisterIdByRoot = (
-//   tokenContractsPairedRoots: TokenContractsPairedRoots,
-//   rootCanisterId: string,
-// ) => {
-//   if (!tokenContractsPairedRoots[rootCanisterId]) {
-//     console.warn(`Oops! Token contract not found for root ${rootCanisterId}, omitted.` );
-
-//     return false;
-//   }
-
-//   return tokenContractsPairedRoots[rootCanisterId];
-// }
-
 export type PromiseTokenContractsPairedRoots = Record<string, Promise<string | undefined>>;
 
 export type tokenContractsPairedRoots = Record<string, string>;
@@ -125,7 +80,7 @@ export const parseUserRootBucketsResponse = async ({
       contractId,
       // rootCanisterId: rootContractPrincipal.toText(),
       // TODO: should rename `rootCanisterId` to `dabCanisterId`
-      rootCanisterId: contractId,
+      dabCanisterId: contractId,
     });
   }
 

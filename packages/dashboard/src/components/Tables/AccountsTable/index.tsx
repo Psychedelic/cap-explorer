@@ -33,7 +33,7 @@ const Container = styled('div', {
 
 export interface AccountData {
   contractId: string,
-  rootCanisterId: string,
+  dabCanisterId: string,
 }
 
 interface Column {
@@ -42,14 +42,14 @@ interface Column {
 }
 
 export const DEFAULT_COLUMN_ORDER: (keyof AccountData)[] = [
-  'rootCanisterId',
+  'dabCanisterId',
   'contractId',
 ];
 
 const columns: Column[] = [
   {
     Header: 'Name',
-    accessor: 'rootCanisterId',
+    accessor: 'dabCanisterId',
   },
   {
     Header: 'Token contract',
@@ -87,7 +87,7 @@ const AccountDab = ({
 
   return identityInDab
           ? <IdentityDab name={identityInDab?.name} image={identityInDab?.logo_url} />
-          : <span>Unnamed</span>
+          : <NamedAccountLink name='Unnamed' account={canisterId} />
 };
 
 const AccountsTable = ({
@@ -103,7 +103,7 @@ const AccountsTable = ({
   const formatters = useMemo(() => ({
     body: {
       contractId: (cellValue: string) => <NamedAccountLink name={cellValue} account={cellValue} />,
-      rootCanisterId: (cellValue: string) => (
+      dabCanisterId: (cellValue: string) => (
         <DabLink tokenContractId={cellValue}>
           <AccountDab canisterId={cellValue} />
         </DabLink>
