@@ -7,6 +7,20 @@ const IdentityDabContainer = styled('div', {
   justifyContent: 'space-between',
   alignItems: 'center',
 
+  '& span, & img': {
+    transition: 'all 0.2s',
+  },
+
+  '&:hover': {
+    '& span': {
+      color: '$purple',
+    },
+
+    '& > img': {
+      opacity: 0.8,
+    },
+  },
+
   '& > img': {
     width: '20px',
     height: '20px',

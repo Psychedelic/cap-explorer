@@ -125,10 +125,12 @@ export const useAccountStore = create<AccountStore>((set) => ({
 
     console.log('[debug] promisedTokenContractsPairedRoots', promisedTokenContractsPairedRoots);
 
-    const pageData = parseUserRootBucketsResponse({
+    const pageData = await parseUserRootBucketsResponse({
       ...response,
-      tokenContractsPairedRoots,
+      promisedTokenContractsPairedRoots,
     });
+
+    console.log('[debug] pageData', pageData);
 
     set((state: AccountStore) => ({
       accounts: response,

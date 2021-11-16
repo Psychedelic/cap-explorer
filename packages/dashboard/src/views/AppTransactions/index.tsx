@@ -3,6 +3,7 @@ import TransactionsTable, { FetchPageDataHandler } from '@components/Tables/Tran
 import Breadcrumb from '@components/Breadcrumb';
 import Page, { PageRow } from '@components/Page';
 import IdentityCopy from '@components/IdentityCopy';
+import { DabLink } from '@components/Link';
 import {
   useTransactionStore,
   PAGE_SIZE,
@@ -20,7 +21,6 @@ import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import OverallValues from '@components/OverallValues';
-import { getTokenContractCanisterIdByRoot } from '@utils/account';
 
 const UserBar = styled('div', {
   display: 'flex',
@@ -75,19 +75,12 @@ const AppTransactions = () => {
 
   // Dab metadata handler
   useEffect(() => {
-    const getDabMetadataHandler = async () => {
-      // TODO: Change to actual implementation once CAP PR's ready
-      const { tokenContractsPairedRoots } = await import('@utils/mocks/tokenContractsCapRoots');
-
-      const contractId = getTokenContractCanisterIdByRoot(
-        tokenContractsPairedRoots,
-        tokenId,
-      ) as string;
-
-      
+    const getDabMetadataHandler = async () => {      
       const metadata = await getDabMetadata({
-        canisterId: contractId,
+        canisterId: tokenId,
       });
+
+      console.log('[debug] metadata', metadata);
 
       if (!metadata) return;
 
@@ -111,11 +104,13 @@ const AppTransactions = () => {
         <UserBar
           data-id="user-bar"
         >
+          <DabLink tokenContractId={tokenId}>
           {
             identityInDab
             ? <IdentityDab name={identityInDab?.name} image={identityInDab?.logo_url} />
             : <IdentityDab name='Unnamed' />
           }
+          </DabLink>
           <IdentityCopy account={
             isSmallerThanBreakpointLG
               ? trimAccount(tokenId)
@@ -135,13 +130,13 @@ const AppTransactions = () => {
         />
       </PageRow>
       <PageRow>
-        <TransactionsTable
+        {/* <TransactionsTable
           data={transactions}
           id="app-transactions-page"
           isLoading={isLoading}
           pageCount={totalPages}
           fetchPageDataHandler={fetchPageDataHandler}
-        />
+        /> */}
       </PageRow>
     </Page>
   );

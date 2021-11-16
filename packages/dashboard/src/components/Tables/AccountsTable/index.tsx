@@ -5,6 +5,7 @@ import Title from '@components/Title';
 import { AccountLink, NamedAccountLink } from '@components/Link';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
+import { DabLink } from '@components/Link';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -86,7 +87,7 @@ const AccountDab = ({
 
   return identityInDab
           ? <IdentityDab name={identityInDab?.name} image={identityInDab?.logo_url} />
-          : <NamedAccountLink name='Unnamed' account={canisterId} />
+          : <span>Unnamed</span>
 };
 
 const AccountsTable = ({
@@ -101,20 +102,12 @@ const AccountsTable = ({
 }) => {
   const formatters = useMemo(() => ({
     body: {
-      contractId: (cellValue: string) => {
-        const found = data.find((x) => x.contractId === cellValue);
-
-        if (!found?.rootCanisterId) return '';
-
-        return <NamedAccountLink name={cellValue} account={found.rootCanisterId} />;
-      },
-      rootCanisterId: (cellValue: string) => {
-        const found = data.find((x) => x.rootCanisterId === cellValue);
-
-        if (!found?.contractId) return '';
-
-        return <AccountDab canisterId={found.contractId} />
-      },
+      contractId: (cellValue: string) => <NamedAccountLink name={cellValue} account={cellValue} />,
+      rootCanisterId: (cellValue: string) => (
+        <DabLink tokenContractId={cellValue}>
+          <AccountDab canisterId={cellValue} />
+        </DabLink>
+      ),
     },
   } as FormatterTypes), [data]);
 
