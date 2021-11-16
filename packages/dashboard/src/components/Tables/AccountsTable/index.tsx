@@ -102,7 +102,7 @@ const AccountsTable = ({
 }) => {
   const formatters = useMemo(() => ({
     body: {
-      contractId: (cellValue: string) => <NamedAccountLink name={cellValue} account={cellValue} />,
+      contractId: (cellValue: string) => <NamedAccountLink name={cellValue} account={cellValue} trim={true} />,
       dabCanisterId: (cellValue: string) => (
         <DabLink tokenContractId={cellValue}>
           <AccountDab canisterId={cellValue} />

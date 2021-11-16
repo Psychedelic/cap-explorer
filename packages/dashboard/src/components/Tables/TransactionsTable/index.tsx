@@ -211,8 +211,14 @@ const TransactionsTable = ({
         if (!cellValue) return 'n/a';
         return trimAccount(cellValue);
       },
-      fee: (cellValue: string) => <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />,
-      amount: (cellValue: string) => formatPriceForChart({ value: cellValue, abbreviation: 'USD' }),
+      fee: (cellValue: string) => {
+        if (!cellValue) return 'n/a';
+        return <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />;
+      },
+      amount: (cellValue: string) => {
+        if (!cellValue) return 'n/a';
+        return formatPriceForChart({ value: cellValue, abbreviation: 'USD' });
+      },
       time: (cellValue: string) => dateRelative(cellValue),
       memo: (cellValue: string) => {
         if (!cellValue) return 'n/a';
