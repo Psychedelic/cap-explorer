@@ -48,6 +48,7 @@ const Overview = ({
               value: pageData.length,
             },
           ]}
+          isLoading={isLoading}
         />
       </PageRow>
       <PageRow>

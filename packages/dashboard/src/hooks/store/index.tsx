@@ -7,6 +7,7 @@ import {
   CapRouter,
   CapRoot,
 } from '@psychedelic/cap-js';
+import { Principal } from '@dfinity/principal';
 import { getCapRootInstance } from '@utils/cap'; 
 import { parseGetTransactionsResponse } from '@utils/transactions';
 import { parseUserRootBucketsResponse } from '@utils/account';
@@ -72,6 +73,8 @@ export const useAccountStore = create<AccountStore>((set) => ({
     // has no support for paginated response
     // TODO: seems best to call the methods from the Actor directly
     // there's no need for the method wrappers
+    // TODO: Cap-js type definitions are not showing at time of writing 
+    // and needs to be fixed
     const response = await capRouterInstance.get_user_root_buckets({
       user: managementCanisterPrincipal,
       witness: false,
@@ -89,14 +92,34 @@ export const useAccountStore = create<AccountStore>((set) => ({
       return;
     }
 
-    // Get the Root, Token Contract pair
-    // via promise all for concurrency
-    // TODO: Change to actual implementation once CAP PR's ready
-    const { tokenContractsPairedRoots } = await import('@utils/mocks/tokenContractsCapRoots');
+    // Prepare the Root, Token Contract pair
+    let promisedTokenContractsPairedRoots: Record<string, Promise<string | undefined>> = {};
 
-    const pageData = parseUserRootBucketsResponse({
+    for await (const contract of response.contracts as Principal[]) {
+      const canisterId = contract.toText();
+      let capRoot: CapRoot;
+    
+      promisedTokenContractsPairedRoots[canisterId] = (async () => {
+        try {
+          capRoot = await getCapRootInstance({
+            canisterId,
+            host: config.host,
+          });
+
+          const tokenContractPrincipal = await capRoot.contract_id();
+
+          if (!tokenContractPrincipal) throw Error('Oops! Unexpected token contract id response');
+
+          return tokenContractPrincipal.toText();
+        } catch (err) {
+          console.warn('Oops! CAP instance initialisation failed with', err);
+        }
+      })()
+    }
+
+    const pageData = await parseUserRootBucketsResponse({
       ...response,
-      tokenContractsPairedRoots,
+      promisedTokenContractsPairedRoots,
     });
 
     set((state: AccountStore) => ({
@@ -123,7 +146,7 @@ interface TransactionsFetchParams {
 
 export interface TransactionsStore {
   isLoading: boolean,
-  pageData: TransactionEvent[] | [],
+  pageData: TransactionEvent[] | undefined,
   transactionEvents: TransactionEvent[] | [],
   totalTransactions: number,
   totalPages: number,
@@ -136,7 +159,7 @@ export const PAGE_SIZE = 64;
 const MIN_PAGE_NUMBER = 1;
 
 export const useTransactionStore = create<TransactionsStore>((set) => ({
-  pageData: [],
+  pageData: undefined,
   isLoading: false,
   transactionEvents: [],
   totalTransactions: 0,
@@ -214,6 +237,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
         ...state,
         isLoading: false,
         totalPages: MIN_PAGE_NUMBER,
+        pageData: [],
       }));
 
       return;
@@ -246,7 +270,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     }));
   },
   reset: () => set((state: TransactionsStore) => ({
-    pageData: [],
+    pageData: undefined,
     transactionEvents: [],
     totalTransactions: 0,
     totalPages: 0,

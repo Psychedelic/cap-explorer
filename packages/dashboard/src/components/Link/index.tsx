@@ -79,6 +79,21 @@ export const ExternalLink = ({
   </Container>
 );
 
+export const DabLink = ({
+  tokenContractId,
+  children,
+}: {
+  tokenContractId: string,
+  children: React.ReactNode,
+}) => (
+  <PrimaryLink
+    to={getRouteByName('AppTransactions', { id: tokenContractId })}
+    tableLink={true}
+  >
+    {children}
+  </PrimaryLink>
+);
+
 export const AccountLink = ({
   account,
   trim,

@@ -5,6 +5,7 @@ import Title from '@components/Title';
 import { AccountLink, NamedAccountLink } from '@components/Link';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
+import { DabLink } from '@components/Link';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -32,7 +33,7 @@ const Container = styled('div', {
 
 export interface AccountData {
   contractId: string,
-  rootCanisterId: string,
+  dabCanisterId: string,
 }
 
 interface Column {
@@ -41,14 +42,14 @@ interface Column {
 }
 
 export const DEFAULT_COLUMN_ORDER: (keyof AccountData)[] = [
-  'rootCanisterId',
+  'dabCanisterId',
   'contractId',
 ];
 
 const columns: Column[] = [
   {
     Header: 'Name',
-    accessor: 'rootCanisterId',
+    accessor: 'dabCanisterId',
   },
   {
     Header: 'Token contract',
@@ -101,20 +102,12 @@ const AccountsTable = ({
 }) => {
   const formatters = useMemo(() => ({
     body: {
-      contractId: (cellValue: string) => {
-        const found = data.find((x) => x.contractId === cellValue);
-
-        if (!found?.rootCanisterId) return '';
-
-        return <NamedAccountLink name={cellValue} account={found.rootCanisterId} />;
-      },
-      rootCanisterId: (cellValue: string) => {
-        const found = data.find((x) => x.rootCanisterId === cellValue);
-
-        if (!found?.contractId) return '';
-
-        return <AccountDab canisterId={found.contractId} />
-      },
+      contractId: (cellValue: string) => <NamedAccountLink name={cellValue} account={cellValue} />,
+      dabCanisterId: (cellValue: string) => (
+        <DabLink tokenContractId={cellValue}>
+          <AccountDab canisterId={cellValue} />
+        </DabLink>
+      ),
     },
   } as FormatterTypes), [data]);
 
