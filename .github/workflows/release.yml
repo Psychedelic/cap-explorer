@@ -2,7 +2,9 @@ name: Release
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - test
 
   workflow_dispatch:
 
@@ -12,9 +14,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Version bump
+        run: .scripts/npm-semantic-release.sh
       - env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         name: "📤 Github Release"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: ridedott/release-me-action@master
         with:
           # Bump the node module version and commit the changed package files to the
