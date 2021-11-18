@@ -26,25 +26,11 @@ VERSION=$(node -p "require('./package.json').version")
 
 git add --force --ignore-errors packages/dashboard/package.json packages/dashboard/package-lock.json
 
-# git tag
-
-# git status
-
-# ls -la
-
-# cat CHANGELOG.md
-
-# git commit -m "chore(release): 🤖 $VERSION"
-
-
 git show --summary
 
-git push --follow-tags origin "$BRANCH"
-
+# git push --follow-tags origin "$BRANCH"
 # git push --atomic origin "$BRANCH" "v$VERSION"
 
-echo "The VERSION is"
-echo "$VERSION"
+git push origin "$BRANCH"
 
-echo "The tags are"
-git tag
+git push origin "v$VERSION"
