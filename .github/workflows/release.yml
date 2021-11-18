@@ -17,7 +17,7 @@ jobs:
       - name: Release
         run: .scripts/release.sh
         env:
-          GITHUB_ACTOR: ${{ GITHUB_ACTOR }}
+          GITHUB_ACTOR: CI
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "📤 Github Release"
         uses: ridedott/release-me-action@master
