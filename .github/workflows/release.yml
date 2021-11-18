@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - testing
+      - chore/semantic-release-package-version-bump
 
   workflow_dispatch:
 
