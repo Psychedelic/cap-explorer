@@ -19,12 +19,12 @@ jobs:
         run: .scripts/npm-semantic-release.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: "📤 Github Release"
-        uses: ridedott/release-me-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # Bump the node module version and commit the changed package files to the
-          # repository as part of the release process.
-          node-module: true
-          release-branches: '["main"]'
+      # - name: "📤 Github Release"
+      #   uses: ridedott/release-me-action@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     # Bump the node module version and commit the changed package files to the
+      #     # repository as part of the release process.
+      #     node-module: true
+      #     release-branches: '["main"]'
