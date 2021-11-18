@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const webpack = require('webpack');
+const pkgJson = require('../../../package.json');
 
 if (!process.env.NODE_ENV) throw Error('Oops! Missing the NODE_ENV environment variable.');
 
@@ -111,6 +112,14 @@ if (IS_PROD || IS_STG) {
       ],
       splitChunks: {
         chunks: 'all',
+        name(module, chunks, cacheGroupKey) {
+          const moduleFileName = module
+            .identifier()
+            .split('/')
+            .reduceRight((item) => item);
+          const allChunksNames = chunks.map((item) => item.name).join('~');
+          return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}-${pkgJson.version.split('.').join('_')}`;
+        },
         enforceSizeThreshold: 50000,
         cacheGroups: {
           defaultVendors: {
@@ -155,7 +164,7 @@ if (IS_DEV) {
           loader: 'esbuild-loader',
           options: {
             loader: 'tsx',
-            target: 'es2016',
+            target: 'es2018',
           },
         },
         ...config.module.rules,
