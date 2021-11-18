@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - testing
+      - next
       - chore/semantic-release-package-version-bump
 
   workflow_dispatch:
@@ -16,16 +16,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Release
-        run: .scripts/npm-semantic-release.sh
+        run: .scripts/release.sh
         env:
-          GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
+          GITHUB_ACTOR: ${{ GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # - name: "📤 Github Release"
-      #   uses: ridedott/release-me-action@master
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     # Bump the node module version and commit the changed package files to the
-      #     # repository as part of the release process.
-      #     node-module: true
-      #     release-branches: '["main"]'
+      - name: "📤 Github Release"
+        uses: ridedott/release-me-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          node-module: false
+          release-branches: '["main", "next", "chore/semantic-release-package-version-bump"]'
+          disable-changelog: true
