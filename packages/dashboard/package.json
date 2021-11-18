@@ -1,9 +1,6 @@
 {
   "name": "dashboard",
   "version": "0.0.1",
-  "release": {
-    "branches": ["master", "next", "testing", "chore/semantic-release-package-version-bump"]
-  },
   "keywords": [
     "package",
     "typescript"
