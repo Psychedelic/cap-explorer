@@ -9,12 +9,8 @@
     "registry": "https://npm.pkg.github.com/@psychedelic"
   },
   "devDependencies": {
-    "lerna": "^4.0.0"
-  },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
+    "lerna": "^4.0.0",
+    "standard-version": "^9.3.2"
   },
   "scripts": {
     "build:production": "lerna run --stream --scope dashboard build:production",
@@ -27,11 +23,12 @@
     "cap:update": "git submodule update --remote --merge",
     "cap:start": "./.scripts/run-cap-service.sh",
     "cap:reset": "./.scripts/cap-reset.sh",
-    "cap:generate-mocks": ".scripts/generate-cap-mocks.sh"
+    "cap:generate-mocks": ".scripts/generate-cap-mocks.sh",
+    "release": "standard-version"
   },
   "engines": {
     "node": ">=16",
     "npm": ">=7"
   },
-  "version": "1.0.0"
+  "version": "0.0.1"
 }

@@ -15,9 +15,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Version bump
+      - name: Release
         run: .scripts/npm-semantic-release.sh
         env:
+          GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # - name: "📤 Github Release"
       #   uses: ridedott/release-me-action@master
