@@ -1,6 +1,9 @@
 {
   "name": "dashboard",
   "version": "0.0.2",
+  "release": {
+    "branches": ["master", "next", "testing"]
+  },
   "keywords": [
     "package",
     "typescript"
