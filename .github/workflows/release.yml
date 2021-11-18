@@ -17,10 +17,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Version bump
         run: .scripts/npm-semantic-release.sh
-      - env:
-        name: "📤 Github Release"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "📤 Github Release"
         uses: ridedott/release-me-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           # Bump the node module version and commit the changed package files to the
           # repository as part of the release process.
