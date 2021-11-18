@@ -221,7 +221,7 @@ const TransactionsTable = ({
       },
       time: (cellValue: string) => dateRelative(cellValue),
       memo: (cellValue: string) => {
-        if (!cellValue) return 'n/a';
+        if (!cellValue || typeof cellValue !== 'number') return 'n/a';
         return Number(cellValue)
       },
     },
