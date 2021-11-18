@@ -28,9 +28,4 @@ git add --force --ignore-errors packages/dashboard/package.json packages/dashboa
 
 git show --summary
 
-# git push --follow-tags origin "$BRANCH"
-# git push --atomic origin "$BRANCH" "v$VERSION"
-
-git push origin "$BRANCH"
-
-git push origin "v$VERSION"
+git push --atomic origin "$BRANCH" "v$VERSION"
