@@ -5,7 +5,7 @@ BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 echo "🤖 NPM Semantic release"
 
-git remote set-url --push origin "https://ci:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}"
+git remote set-url --push origin "https://${{GITHUB_ACTOR}}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}"
 
 git config --global user.email 'notifications@github.com'
 git config --global user.name "CI"
