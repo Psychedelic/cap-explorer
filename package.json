@@ -41,8 +41,7 @@
       [
         "@semantic-release/exec",
         {
-          "prepareCmd": ".scripts/update-version.sh",
-          "successCmd": ".scripts/release-to-dev.sh"
+          "prepareCmd": ".scripts/update-version.sh"
         }
       ],
       [
