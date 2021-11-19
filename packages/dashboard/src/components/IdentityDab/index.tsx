@@ -26,7 +26,7 @@ const IdentityDabContainer = styled('div', {
     height: '20px',
     objectFit: 'cover',
     marginRight: '10px',
-    borderRadius: '50%',
+    borderRadius: '4px',
   },
 });
 
