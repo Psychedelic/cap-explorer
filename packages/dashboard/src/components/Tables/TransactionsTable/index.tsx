@@ -6,7 +6,6 @@ import React, {
 } from 'react';
 import { styled } from '@stitched';
 import DataTable, { HeaderTabs, TableId } from '@components/Tables/DataTable';
-import ValueCell from '@components/Tables/ValueCell';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
 import { trimAccount } from '@utils/account';
@@ -19,15 +18,15 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 0.8fr 0.8fr 0.8fr 0.8fr',
-    gridTemplateAreas: '"operation caller from to time memo fee amount"',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
+    gridTemplateAreas: '"operation price caller from to time"',
     justifySelf: 'left',
 
-    '& [data-cid]': {
+    '& [data-cid="type"], & [data-cid="amount"]': {
       justifySelf: 'left',
     },
 
-    '& [data-cid="fee"], & [data-cid="amount"]': {
+    ' & [data-cid="time"]': {
       justifySelf: 'right',
     },
   },
@@ -88,13 +87,11 @@ enum TransactionTypeAlias {
 
 export interface Data {
   operation: string,
+  amount: string,
   caller: string,
   from: string,
   to: string,
   time: string,
-  memo: number,
-  fee: number,
-  amount: number,
 }
 
 interface Column {
@@ -113,19 +110,21 @@ const DEFAULT_BASE_STATE = TransactionTypes.all;
 
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'operation',
+  'amount',
   'caller',
   'from',
   'to',
-  'time',
-  'memo',
-  'fee',
-  'amount',
+  'time'
 ];
 
 const columns: Column[] = [
   {
     Header: 'Type',
     accessor: 'operation',
+  },
+  {
+    Header: 'Price',
+    accessor: 'amount',
   },
   {
     Header: 'Caller',
@@ -142,18 +141,6 @@ const columns: Column[] = [
   {
     Header: 'Time',
     accessor: 'time',
-  },
-  {
-    Header: 'Memo',
-    accessor: 'memo',
-  },
-  {
-    Header: 'Fee',
-    accessor: 'fee',
-  },
-  {
-    Header: 'Amount',
-    accessor: 'amount',
   },
 ];
 
@@ -202,6 +189,10 @@ const TransactionsTable = ({
         if (typeof cellValue !== 'string') return;
         return <Operation type={cellValue} />
       },
+      amount: (cellValue: string) => {
+        if (!cellValue) return 'n/a';
+        return formatPriceForChart({ value: cellValue, abbreviation: 'USD' });
+      },
       caller: (cellValue: string) => trimAccount(cellValue),
       from: (cellValue: string) => {
         if (!cellValue) return 'n/a';
@@ -211,19 +202,7 @@ const TransactionsTable = ({
         if (!cellValue) return 'n/a';
         return trimAccount(cellValue);
       },
-      fee: (cellValue: string) => {
-        if (!cellValue) return 'n/a';
-        return <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />;
-      },
-      amount: (cellValue: string) => {
-        if (!cellValue) return 'n/a';
-        return formatPriceForChart({ value: cellValue, abbreviation: 'USD' });
-      },
       time: (cellValue: string) => dateRelative(cellValue),
-      memo: (cellValue: string) => {
-        if (!cellValue || typeof cellValue !== 'number') return 'n/a';
-        return Number(cellValue)
-      },
     },
   }), [headerGroupHandler]);
 
