@@ -2632,17 +2632,6 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.10.2.tgz#0798c03351f0dea1a5a4cabddf26a55a7cbee590"
   integrity sha512-IXf3XA7+XyN7CP9gGh/XB0UxVMlvARGEgGXLubFICsUMGz6Q+DU+i4gGlpOxTjKvXjkJDJC8YdqdKkDj9qZHEQ==
 
-"@psychedelic/cap-js@^0.0.4":
-  version "0.0.4"
-  resolved "https://npm.pkg.github.com/download/@psychedelic/cap-js/0.0.4/59f8d3f59baa8fd77e1f85a267d3861b1958016596c93e5316d24b924dbba609#ffe0a69096610073dda1af5b8a8b548de430efe0"
-  integrity sha512-+5jcnIGnj1EdCPC+jODlJottDEuLwYVfycU0w9gerd0h5uedqnPcqR8BQkruqjU7VQv6nOasTCeooIaLSKuL5g==
-  dependencies:
-    "@dfinity/agent" "^0.10.1"
-    "@dfinity/candid" "^0.10.1"
-    "@dfinity/principal" "^0.10.1"
-    axios "^0.24.0"
-    cross-fetch "^3.1.4"
-
 "@psychedelic/dab-js@^0.3.0":
   version "0.3.0"
   resolved "https://npm.pkg.github.com/download/@psychedelic/dab-js/0.3.0/584f12a4c94565728fb22937ed8e4561d3174f224862be5a716080f892896f6e#e1e3fc15a47377878355a08ed834a37971d852e6"
