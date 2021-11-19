@@ -52,7 +52,7 @@ const columns: Column[] = [
     accessor: 'dabCanisterId',
   },
   {
-    Header: 'Token contract',
+    Header: 'Token Canister ID',
     accessor: 'contractId',
   },
 ];
