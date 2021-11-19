@@ -44,7 +44,7 @@ const Overview = ({
         <OverallValues
           data={[
             {
-              name: 'Total Contracts',
+              name: 'Total Assets',
               value: pageData.length,
             },
           ]}
