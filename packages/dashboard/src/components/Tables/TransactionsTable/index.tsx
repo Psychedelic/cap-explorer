@@ -129,7 +129,7 @@ export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'time'
 ];
 
-const NOT_AVAILABLE_PLACEHOLDER = '--';
+const NOT_AVAILABLE_PLACEHOLDER = '---';
 
 const columns: Column[] = [
   {
