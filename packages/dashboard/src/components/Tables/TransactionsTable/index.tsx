@@ -129,6 +129,8 @@ export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'time'
 ];
 
+const NOT_AVAILABLE_PLACEHOLDER = '--';
+
 const columns: Column[] = [
   {
     Header: 'Type',
@@ -202,7 +204,7 @@ const TransactionsTable = ({
         return <Operation type={cellValue} />
       },
       amount: (cellValue: number) => {
-        if (!cellValue || typeof cellValue !== 'bigint') return 'n/a';
+        if (!cellValue || typeof cellValue !== 'bigint') return NOT_AVAILABLE_PLACEHOLDER;
 
         const usdValue = getXTCMarketValue(cellValue);
 
@@ -215,11 +217,11 @@ const TransactionsTable = ({
       },
       caller: (cellValue: string) => trimAccount(cellValue),
       from: (cellValue: string) => {
-        if (!cellValue) return 'n/a';
+        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
         return trimAccount(cellValue);
       },
       to: (cellValue: string) => {
-        if (!cellValue) return 'n/a';
+        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
         return trimAccount(cellValue);
       },
       time: (cellValue: string) => dateRelative(cellValue),
