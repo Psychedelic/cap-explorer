@@ -29,7 +29,7 @@ const Account = styled('span', {
   marginRight: '10px',
 });
 
-const ICON_RESET_TIMEOUT = 5000;
+export const ICON_RESET_TIMEOUT = 5000;
 
 const ButtonBookmark = ({ account }: { account: string }) => {
   const [checkmark, setCheckmark] = useState<boolean>(false);
