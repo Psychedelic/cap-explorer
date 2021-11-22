@@ -10,6 +10,7 @@ import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
 import { trimAccount } from '@utils/account';
 import Fleekon, { IconNames } from '@components/Fleekon';
+import { getXTCMarketValue } from '@utils/xtc';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -37,6 +38,17 @@ const Container = styled('div', {
 
   '& h1': {
     marginBottom: '20px',
+  },
+});
+
+const PriceCell = styled('div', {
+  '& div': {
+    lineHeight: 1.6,
+  },
+
+  '& div:nth-child(2)': {
+    fontSize: '12px',
+    color: '$midGrey'
   },
 });
 
@@ -189,9 +201,17 @@ const TransactionsTable = ({
         if (typeof cellValue !== 'string') return;
         return <Operation type={cellValue} />
       },
-      amount: (cellValue: string) => {
-        if (!cellValue) return 'n/a';
-        return formatPriceForChart({ value: cellValue, abbreviation: 'USD' });
+      amount: (cellValue: number) => {
+        if (!cellValue || typeof cellValue !== 'bigint') return 'n/a';
+
+        const usdValue = getXTCMarketValue(cellValue);
+
+        return (
+          <PriceCell>
+            <div>{formatPriceForChart({ value: usdValue, abbreviation: 'USD' })}</div>
+            <div>{formatPriceForChart({ value: cellValue, abbreviation: 'CYCLES' })}</div>
+          </PriceCell>
+        );
       },
       caller: (cellValue: string) => trimAccount(cellValue),
       from: (cellValue: string) => {
