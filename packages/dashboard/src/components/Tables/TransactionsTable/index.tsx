@@ -20,8 +20,8 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
-    gridTemplateAreas: '"operation amount caller from to time"',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+    gridTemplateAreas: '"operation item amount caller from to time"',
 
     '& [data-cid]': {
       justifySelf: 'left',
@@ -99,6 +99,7 @@ enum TransactionTypeAlias {
 
 export interface Data {
   operation: string,
+  item: number,
   amount: string,
   caller: string,
   from: string,
@@ -122,6 +123,7 @@ const DEFAULT_BASE_STATE = TransactionTypes.all;
 
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'operation',
+  'item',
   'amount',
   'caller',
   'from',
@@ -135,6 +137,10 @@ const columns: Column[] = [
   {
     Header: 'Type',
     accessor: 'operation',
+  },
+  {
+    Header: 'Item',
+    accessor: 'item',
   },
   {
     Header: 'Price',
@@ -202,6 +208,11 @@ const TransactionsTable = ({
       operation: (cellValue: OperationType) => {
         if (typeof cellValue !== 'string') return;
         return <Operation type={cellValue} />
+      },
+      item: (cellValue: number) => {
+        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
+
+        return cellValue;
       },
       amount: (cellValue: number) => {
         if (!cellValue || typeof cellValue !== 'bigint') return NOT_AVAILABLE_PLACEHOLDER;
