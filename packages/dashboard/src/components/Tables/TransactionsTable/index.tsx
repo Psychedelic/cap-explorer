@@ -21,10 +21,9 @@ const Container = styled('div', {
 
   '& [data-table] [data-scrollable] > div': {
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
-    gridTemplateAreas: '"operation price caller from to time"',
-    justifySelf: 'left',
+    gridTemplateAreas: '"operation amount caller from to time"',
 
-    '& [data-cid="type"], & [data-cid="amount"]': {
+    '& [data-cid]': {
       justifySelf: 'left',
     },
 
