@@ -11,6 +11,7 @@ import { formatPriceForChart } from '@utils/formatters';
 import { trimAccount } from '@utils/account';
 import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
+import IdentityCellCopy from '@components/IdentityCellCopy';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -215,14 +216,14 @@ const TransactionsTable = ({
           </PriceCell>
         );
       },
-      caller: (cellValue: string) => trimAccount(cellValue),
+      caller: (cellValue: string) => <IdentityCellCopy id={cellValue} />,
       from: (cellValue: string) => {
         if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
-        return trimAccount(cellValue);
+        return <IdentityCellCopy id={cellValue} />;
       },
       to: (cellValue: string) => {
         if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
-        return trimAccount(cellValue);
+        return <IdentityCellCopy id={cellValue} />;
       },
       time: (cellValue: string) => dateRelative(cellValue),
     },
