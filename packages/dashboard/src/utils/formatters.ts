@@ -14,7 +14,7 @@ export const CurrencyOptions = {
   ICP: 'ICP',
   // By convention Cycles values
   // are passed in Trillions of Cycles
-  CYCLES: 'TC',
+  CYCLES: 'XTC',
 };
 
 export type Currency = keyof typeof CurrencyOptions;

@@ -6,11 +6,11 @@ import React, {
 } from 'react';
 import { styled } from '@stitched';
 import DataTable, { HeaderTabs, TableId } from '@components/Tables/DataTable';
-import ValueCell from '@components/Tables/ValueCell';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
 import { trimAccount } from '@utils/account';
 import Fleekon, { IconNames } from '@components/Fleekon';
+import { getXTCMarketValue } from '@utils/xtc';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -19,15 +19,15 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 0.8fr 0.8fr 0.8fr 0.8fr',
-    gridTemplateAreas: '"operation caller from to time memo fee amount"',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
+    gridTemplateAreas: '"operation price caller from to time"',
     justifySelf: 'left',
 
-    '& [data-cid]': {
+    '& [data-cid="type"], & [data-cid="amount"]': {
       justifySelf: 'left',
     },
 
-    '& [data-cid="fee"], & [data-cid="amount"]': {
+    ' & [data-cid="time"]': {
       justifySelf: 'right',
     },
   },
@@ -38,6 +38,17 @@ const Container = styled('div', {
 
   '& h1': {
     marginBottom: '20px',
+  },
+});
+
+const PriceCell = styled('div', {
+  '& div': {
+    lineHeight: 1.6,
+  },
+
+  '& div:nth-child(2)': {
+    fontSize: '12px',
+    color: '$midGrey'
   },
 });
 
@@ -88,13 +99,11 @@ enum TransactionTypeAlias {
 
 export interface Data {
   operation: string,
+  amount: string,
   caller: string,
   from: string,
   to: string,
   time: string,
-  memo: number,
-  fee: number,
-  amount: number,
 }
 
 interface Column {
@@ -113,19 +122,23 @@ const DEFAULT_BASE_STATE = TransactionTypes.all;
 
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'operation',
+  'amount',
   'caller',
   'from',
   'to',
-  'time',
-  'memo',
-  'fee',
-  'amount',
+  'time'
 ];
+
+const NOT_AVAILABLE_PLACEHOLDER = '--';
 
 const columns: Column[] = [
   {
     Header: 'Type',
     accessor: 'operation',
+  },
+  {
+    Header: 'Price',
+    accessor: 'amount',
   },
   {
     Header: 'Caller',
@@ -142,18 +155,6 @@ const columns: Column[] = [
   {
     Header: 'Time',
     accessor: 'time',
-  },
-  {
-    Header: 'Memo',
-    accessor: 'memo',
-  },
-  {
-    Header: 'Fee',
-    accessor: 'fee',
-  },
-  {
-    Header: 'Amount',
-    accessor: 'amount',
   },
 ];
 
@@ -202,28 +203,28 @@ const TransactionsTable = ({
         if (typeof cellValue !== 'string') return;
         return <Operation type={cellValue} />
       },
+      amount: (cellValue: number) => {
+        if (!cellValue || typeof cellValue !== 'bigint') return NOT_AVAILABLE_PLACEHOLDER;
+
+        const usdValue = getXTCMarketValue(cellValue);
+
+        return (
+          <PriceCell>
+            <div>{formatPriceForChart({ value: usdValue, abbreviation: 'USD' })}</div>
+            <div>{formatPriceForChart({ value: cellValue, abbreviation: 'CYCLES' })}</div>
+          </PriceCell>
+        );
+      },
       caller: (cellValue: string) => trimAccount(cellValue),
       from: (cellValue: string) => {
-        if (!cellValue) return 'n/a';
+        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
         return trimAccount(cellValue);
       },
       to: (cellValue: string) => {
-        if (!cellValue) return 'n/a';
+        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
         return trimAccount(cellValue);
       },
-      fee: (cellValue: string) => {
-        if (!cellValue) return 'n/a';
-        return <ValueCell abbreviation="CYCLES" amount={Number(cellValue)} />;
-      },
-      amount: (cellValue: string) => {
-        if (!cellValue) return 'n/a';
-        return formatPriceForChart({ value: cellValue, abbreviation: 'USD' });
-      },
       time: (cellValue: string) => dateRelative(cellValue),
-      memo: (cellValue: string) => {
-        if (!cellValue || typeof cellValue !== 'number') return 'n/a';
-        return Number(cellValue)
-      },
     },
   }), [headerGroupHandler]);
 

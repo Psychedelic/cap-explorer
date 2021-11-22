@@ -155,7 +155,7 @@ if (IS_DEV) {
           loader: 'esbuild-loader',
           options: {
             loader: 'tsx',
-            target: 'es2016',
+            target: 'es2018',
           },
         },
         ...config.module.rules,
