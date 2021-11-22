@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { styled } from '@stitched';
 import ButtonAnimated from '@components/ButtonAnimated';
 import Fleekon from '@components/Fleekon';
+import { copyToClipboard } from '@utils/clipboard';
 
 const Styled = styled(ButtonAnimated, {
   width: '45px',
@@ -28,7 +29,7 @@ const Account = styled('span', {
   marginRight: '10px',
 });
 
-const ICON_RESET_TIMEOUT = 5000;
+export const ICON_RESET_TIMEOUT = 5000;
 
 const ButtonBookmark = ({ account }: { account: string }) => {
   const [checkmark, setCheckmark] = useState<boolean>(false);
@@ -40,7 +41,7 @@ const ButtonBookmark = ({ account }: { account: string }) => {
   // eslint-disable-next-line max-len
   const copyToClipboardHandler = (textToCopy: string) => {
     try {
-      navigator.clipboard.writeText(textToCopy);
+      copyToClipboard(textToCopy);
 
       setCheckmark(true);
 
