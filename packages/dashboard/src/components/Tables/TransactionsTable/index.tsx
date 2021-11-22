@@ -12,6 +12,7 @@ import { trimAccount } from '@utils/account';
 import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
 import IdentityCellCopy from '@components/IdentityCellCopy';
+import { CanisterMetadata } from '@utils/dab';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -20,8 +21,8 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr',
-    gridTemplateAreas: '"operation amount caller from to time"',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+    gridTemplateAreas: '"operation item amount caller from to time"',
 
     '& [data-cid]': {
       justifySelf: 'left',
@@ -38,6 +39,18 @@ const Container = styled('div', {
 
   '& h1': {
     marginBottom: '20px',
+  },
+});
+
+const ItemCell = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+
+  '& img': {
+    width: '35px',
+    height: 'auto',
+    borderRadius: '6px',
+    paddingRight: '8px',
   },
 });
 
@@ -99,6 +112,7 @@ enum TransactionTypeAlias {
 
 export interface Data {
   operation: string,
+  item: number,
   amount: string,
   caller: string,
   from: string,
@@ -122,6 +136,7 @@ const DEFAULT_BASE_STATE = TransactionTypes.all;
 
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'operation',
+  'item',
   'amount',
   'caller',
   'from',
@@ -135,6 +150,10 @@ const columns: Column[] = [
   {
     Header: 'Type',
     accessor: 'operation',
+  },
+  {
+    Header: 'Item',
+    accessor: 'item',
   },
   {
     Header: 'Price',
@@ -164,6 +183,7 @@ const TransactionsTable = ({
   pageCount,
   fetchPageDataHandler,
   isLoading = false,
+  identityInDab,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: Data[],
@@ -171,6 +191,7 @@ const TransactionsTable = ({
   pageCount: number,
   fetchPageDataHandler: FetchPageDataHandler,
   isLoading: boolean,
+  identityInDab?: CanisterMetadata,
 }) => {
   const [currentData, setCurrentData] = useState<Data[]>(data);
 
@@ -202,6 +223,20 @@ const TransactionsTable = ({
       operation: (cellValue: OperationType) => {
         if (typeof cellValue !== 'string') return;
         return <Operation type={cellValue} />
+      },
+      item: (cellValue: number) => {
+        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
+
+        return (
+          <ItemCell>
+            {
+              identityInDab
+              ? <img src={identityInDab.logo_url} alt={identityInDab.name} />
+              : null
+            }
+            <span>#{cellValue}</span>
+          </ItemCell>
+        );
       },
       amount: (cellValue: number) => {
         if (!cellValue || typeof cellValue !== 'bigint') return NOT_AVAILABLE_PLACEHOLDER;

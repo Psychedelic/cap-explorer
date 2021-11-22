@@ -176,6 +176,7 @@ const AppTransactions = ({
           isLoading={isLoading}
           pageCount={totalPages}
           fetchPageDataHandler={fetchPageDataHandler}
+          identityInDab={identityInDab}
         />
       </PageRow>
     </Page>
