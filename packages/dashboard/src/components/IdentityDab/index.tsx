@@ -7,6 +7,10 @@ const IdentityDabContainer = styled('div', {
   justifyContent: 'space-between',
   alignItems: 'center',
 
+  '& span': {
+    fontSize: '$m',
+  },
+
   '& span, & img, & a': {
     transition: 'all 0.2s',
   },
@@ -22,10 +26,10 @@ const IdentityDabContainer = styled('div', {
   },
 
   '& > img': {
-    width: '20px',
-    height: '20px',
+    width: '35px',
+    height: '35px',
     objectFit: 'cover',
-    marginRight: '10px',
+    marginRight: '15px',
     borderRadius: '4px',
   },
 });
