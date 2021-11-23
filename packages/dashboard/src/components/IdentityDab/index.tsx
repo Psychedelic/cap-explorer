@@ -26,8 +26,8 @@ const IdentityDabContainer = styled('div', {
   },
 
   '& > img': {
-    width: '35px',
-    height: '35px',
+    width: '45px',
+    height: '45px',
     objectFit: 'cover',
     marginRight: '15px',
     borderRadius: '4px',
