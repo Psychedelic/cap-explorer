@@ -23,6 +23,7 @@ const Container = styled('div', {
   '& [data-table] [data-scrollable] > div': {
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
     gridTemplateAreas: '"operation item amount caller from to time"',
+    alignItems: 'center',
 
     '& [data-cid]': {
       justifySelf: 'left',
