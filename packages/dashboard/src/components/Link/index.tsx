@@ -109,7 +109,6 @@ export const AccountLink = ({
   </PrimaryLink>
 );
 
-
 export const NamedAccountLink = ({
   account,
   name,
