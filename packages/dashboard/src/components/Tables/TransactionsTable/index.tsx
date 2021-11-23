@@ -8,11 +8,11 @@ import { styled } from '@stitched';
 import DataTable, { HeaderTabs, TableId } from '@components/Tables/DataTable';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
-import { trimAccount } from '@utils/account';
 import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
-import IdentityCellCopy from '@components/IdentityCellCopy';
 import { CanisterMetadata } from '@utils/dab';
+import { toICRocksPrincipal } from '@utils/link';
+import { trimAccount } from '@utils/account';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -250,14 +250,29 @@ const TransactionsTable = ({
           </PriceCell>
         );
       },
-      caller: (cellValue: string) => <IdentityCellCopy id={cellValue} />,
+      caller: (cellValue: string) => {
+        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
+        return (
+          <a href={toICRocksPrincipal(cellValue)} target="_blank">
+            { trimAccount(cellValue) }
+          </a>
+        );
+      },
       from: (cellValue: string) => {
         if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
-        return <IdentityCellCopy id={cellValue} />;
+        return (
+          <a href={toICRocksPrincipal(cellValue)} target="_blank">
+            { trimAccount(cellValue) }
+          </a>
+        );
       },
       to: (cellValue: string) => {
         if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
-        return <IdentityCellCopy id={cellValue} />;
+        return (
+          <a href={toICRocksPrincipal(cellValue)} target="_blank">
+            { trimAccount(cellValue) }
+          </a>
+        );
       },
       time: (cellValue: string) => dateRelative(cellValue),
     },
