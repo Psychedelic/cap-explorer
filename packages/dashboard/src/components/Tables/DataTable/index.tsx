@@ -65,8 +65,15 @@ const ColWrapper = styled('div', {
   },
 
   '@lg': {
-    width: '100%',
+    // width: '100%',
+    width: 'calc(100vw - 320px)',
     padding: '0 10px',
+    overflowX: 'scroll',
+  },
+
+  '@dataTableBreakPointL': {
+    width: '100%',
+    overflow: 'hidden',
   },
 });
 
@@ -158,13 +165,19 @@ const ScrollXContainer = styled('div', {
   },
 
   '@lg': {
-    width: '100%',
+    // width: '100%',
+    width: 'calc(100vw - 80px)',
     overflowX: 'hidden',
 
     '& > div': {
       display: 'block',
       minWidth: 'auto',
     },
+  },
+
+  '@dataTableBreakPointL': {
+    width: '100%',
+    overflow: 'hidden',
   },
 });
 
