@@ -23,8 +23,8 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
-    gridTemplateAreas: '"operation item amount caller from to time"',
+    gridTemplateColumns: '1fr 0.6fr 0.6fr 0.6fr 0.6fr 0.4fr',
+    gridTemplateAreas: '"operation item amount from to time"',
     alignItems: 'center',
 
     '& [data-cid]': {
@@ -117,7 +117,6 @@ export interface Data {
   operation: string,
   item: number,
   amount: string,
-  caller: string,
   from: string,
   to: string,
   time: string,
@@ -141,7 +140,6 @@ export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'item',
   'operation',
   'amount',
-  'caller',
   'from',
   'to',
   'time'
@@ -161,10 +159,6 @@ const columns: Column[] = [
   {
     Header: 'Price',
     accessor: 'amount',
-  },
-  {
-    Header: 'Caller',
-    accessor: 'caller',
   },
   {
     Header: 'From',
@@ -236,7 +230,6 @@ const TransactionsTable = ({
 
         return (
           <ItemCell>
-            {/* <img src={identityInDab?.logo_url || iconUnknown} alt={identityInDab?.name || 'Unknown'} /> */}
             <span
               data-image
               style={{
@@ -260,14 +253,6 @@ const TransactionsTable = ({
             <div>{formatPriceForChart({ value: usdValue, abbreviation: 'USD' })}</div>
             <div>{formatPriceForChart({ value: cellValue, abbreviation: 'CYCLES' })}</div>
           </PriceCell>
-        );
-      },
-      caller: (cellValue: string) => {
-        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
-        return (
-          <a href={toICRocksPrincipal(cellValue)} target="_blank">
-            { trimAccount(cellValue) }
-          </a>
         );
       },
       from: (cellValue: string) => {

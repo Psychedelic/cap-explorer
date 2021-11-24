@@ -92,7 +92,6 @@ export const parseGetTransactionsResponse = ({
       to: (details as unknown as TransactionDetails)?.to?.toText(),
       from: (details as unknown as TransactionDetails)?.from?.toText(),
       amount: (details as unknown as TransactionDetails)?.amount,
-      caller: v.caller.toText(),
       operation: v.operation,
       time: toTransactionTime(v.time),
     }
