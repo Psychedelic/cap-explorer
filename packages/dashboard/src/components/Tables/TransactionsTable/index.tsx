@@ -13,6 +13,7 @@ import { getXTCMarketValue } from '@utils/xtc';
 import { CanisterMetadata } from '@utils/dab';
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
+import IdentityDab from '@components/IdentityDab';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -136,8 +137,8 @@ export type FetchPageDataHandler = ({
 const DEFAULT_BASE_STATE = TransactionTypes.all;
 
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
-  'operation',
   'item',
+  'operation',
   'amount',
   'caller',
   'from',
@@ -145,7 +146,7 @@ export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'time'
 ];
 
-const NOT_AVAILABLE_PLACEHOLDER = '---';
+const NOT_AVAILABLE_PLACEHOLDER = '-';
 
 const columns: Column[] = [
   {
@@ -226,7 +227,11 @@ const TransactionsTable = ({
         return <Operation type={cellValue} />
       },
       item: (cellValue: number) => {
-        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
+        if (!cellValue) {         
+          return (
+            <IdentityDab name='Unknown' />
+          );
+        };
 
         return (
           <ItemCell>
