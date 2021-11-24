@@ -49,6 +49,17 @@ const Container = styled('div', {
   },
 });
 
+export const RawLoading = ({
+  alt,
+}: {
+ alt: string, 
+}) => (
+  <img
+    src={imgcapCircleLogoBw}
+    alt={alt}
+  />
+);
+
 export default ({
   alt,
   size,
@@ -60,9 +71,6 @@ export default ({
     size={size}
     data-id="loading"
   >
-    <img
-      src={imgcapCircleLogoBw}
-      alt={alt}
-    />
+    <RawLoading alt={alt} />
   </Container>
 );

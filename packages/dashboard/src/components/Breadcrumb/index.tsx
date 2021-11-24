@@ -1,10 +1,9 @@
 import React from 'react';
-import { styled, BREAKPOINT_LG } from '@stitched';
-import { useWindowResize } from '@hooks/windowResize';
-import { trimAccount } from '@utils/account';
+import { styled } from '@stitched';
 import Fleekon from '@components/Fleekon';
 import { RawLink } from '@components/Link';
 import { CanisterMetadata } from '@utils/dab';
+import Loading from '@components/Loading';
 
 const Hover = styled('span', {
   transition: 'color 0.2s',
@@ -41,18 +40,22 @@ const Container = styled('div', {
   },
 });
 
+const LoadingContainer = styled('span', {
+  width: '14px',
+  height: '14px',
+  position: 'relative',
+  marginLeft: '10px',
+});
+
 export interface BreadcrumbProps {
-  id: string,
   identityInDab?: CanisterMetadata,
+  isLoading: boolean,
 }
 
 const Breadcrumb = ({
-  id,
   identityInDab,
+  isLoading,
 }: BreadcrumbProps) => {
-  const isSmallerThanBreakpointLG = useWindowResize({
-    breakpoint: BREAKPOINT_LG,
-  });
 
   return (
     <Container
@@ -66,14 +69,23 @@ const Breadcrumb = ({
         className="arrow"
         size="13px"
       />
-      <span>
-        {
-          identityInDab
-          ? identityInDab?.name
-          // : isSmallerThanBreakpointLG ? trimAccount(id) : id
-          : 'unknown'
-        }
-      </span>
+      {
+        isLoading
+        ? (
+          <LoadingContainer>
+            <Loading size='s' alt='' />
+          </LoadingContainer>
+        )
+        : (
+          <span>
+          {
+            identityInDab
+            ? identityInDab?.name
+            : 'unknown'
+          }
+          </span>
+        )
+      }
     </Container>
   );
 };
