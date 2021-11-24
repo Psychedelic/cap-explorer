@@ -4,6 +4,7 @@ import { useWindowResize } from '@hooks/windowResize';
 import { trimAccount } from '@utils/account';
 import Fleekon from '@components/Fleekon';
 import { RawLink } from '@components/Link';
+import { CanisterMetadata } from '@utils/dab';
 
 const Hover = styled('span', {
   transition: 'color 0.2s',
@@ -21,6 +22,7 @@ const Container = styled('div', {
   '& span': {
     lineHeight: '$normal',
     fontSize: '$s',
+    textTransform: 'capitalize',
 
     '& .arrow': {
       width: '13px',
@@ -41,9 +43,13 @@ const Container = styled('div', {
 
 export interface BreadcrumbProps {
   id: string,
+  identityInDab?: CanisterMetadata,
 }
 
-const Breadcrumb = ({ id }: BreadcrumbProps) => {
+const Breadcrumb = ({
+  id,
+  identityInDab,
+}: BreadcrumbProps) => {
   const isSmallerThanBreakpointLG = useWindowResize({
     breakpoint: BREAKPOINT_LG,
   });
@@ -60,8 +66,14 @@ const Breadcrumb = ({ id }: BreadcrumbProps) => {
         className="arrow"
         size="13px"
       />
-      {/* TODO: Use DabJS to get token contract name */}
-      <span>{isSmallerThanBreakpointLG ? trimAccount(id) : id }</span>
+      <span>
+        {
+          identityInDab
+          ? identityInDab?.name
+          // : isSmallerThanBreakpointLG ? trimAccount(id) : id
+          : 'unknown'
+        }
+      </span>
     </Container>
   );
 };

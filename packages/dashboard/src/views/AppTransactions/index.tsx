@@ -137,7 +137,7 @@ const AppTransactions = ({
       pageId="app-transactions-page"
     >
       <PageRow>
-        <Breadcrumb id={tokenId} />
+        <Breadcrumb id={tokenId} identityInDab={identityInDab} />
       </PageRow>
       <PageRow>
         <UserBar
