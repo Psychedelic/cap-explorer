@@ -146,8 +146,8 @@ const AppTransactions = ({
           <DabLink tokenContractId={tokenId}>
           {
             identityInDab
-            ? <IdentityDab large={true} name={identityInDab?.name} image={identityInDab?.logo_url} />
-            : <IdentityDab large={true} name='Unknown' />
+            ? <IdentityDab large={true} name={identityInDab?.name} image={identityInDab?.logo_url} isLoading={isLoading} />
+            : <IdentityDab large={true} name='Unknown' isLoading={isLoading} />
           }
           </DabLink>
           <IdentityCopy account={

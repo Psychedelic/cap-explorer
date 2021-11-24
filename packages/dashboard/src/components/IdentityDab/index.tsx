@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled } from '@stitched';
 import iconUnknown from '../../images/icon-unknown.svg';
+import Loading from '@components/Loading';
 
 const IdentityDabContainer = styled('div', {
   display: 'flex',
@@ -50,15 +51,31 @@ const IdentityDabContainer = styled('div', {
   },
 });
 
+const LoaderContainer = styled('div', {
+  position: 'relative',
+  width: '45px',
+  height: '45px',
+});
+
 export default ({
   image,
   name,
   large,
+  isLoading,
 }: {
   image?: string,
   name: string,
   large?: boolean,
+  isLoading?: boolean,
 }) => {
+  if (isLoading) {
+    return (
+      <LoaderContainer>
+        <Loading size='sm' alt='Loading' />
+      </LoaderContainer>
+    );
+  }
+
   if (!image) {
     return (
       <IdentityDabContainer large={large}>

@@ -33,6 +33,12 @@ const Container = styled('div', {
           height: '20px',
         },
       },
+      sm: {
+        '& img': {
+          width: 'auto',
+          height: '40px',
+        },
+      },
       m: {
         '& img': {
           width: 'auto',
@@ -65,7 +71,7 @@ export default ({
   size,
 }: {
   alt: string,
-  size: 's' | 'm' | 'l',
+  size: 's' | 'sm' | 'm' | 'l',
 }) => (
   <Container
     size={size}
