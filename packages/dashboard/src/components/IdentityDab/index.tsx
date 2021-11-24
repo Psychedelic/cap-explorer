@@ -26,10 +26,10 @@ const IdentityDabContainer = styled('div', {
   },
 
   '& > img': {
-    width: '20px',
-    height: '20px',
+    width: '30px',
+    height: '30px',
     objectFit: 'cover',
-    marginRight: '10px',
+    marginRight: '12px',
     borderRadius: '4px',
   },
 });
