@@ -8,7 +8,7 @@ const IdentityDabContainer = styled('div', {
   alignItems: 'center',
 
   '& span': {
-    fontSize: '$S',
+    fontSize: '$s',
   },
 
   '& span, & img, & a': {
@@ -32,18 +32,36 @@ const IdentityDabContainer = styled('div', {
     marginRight: '12px',
     borderRadius: '4px',
   },
+
+  variants: {
+    large: {
+      true: {
+        '& span': {
+          fontSize: '$xl',
+          fontWeight: 600,
+        },
+        '& > img': {
+          width: '45px',
+          height: '45px',
+          marginRight: '16px',
+        },
+      },
+    }
+  },
 });
 
 export default ({
   image,
   name,
+  large,
 }: {
   image?: string,
   name: string,
+  large?: boolean,
 }) => {
   if (!image) {
     return (
-      <IdentityDabContainer>
+      <IdentityDabContainer large={large}>
         <img
           src={iconUnknown}
           alt="Unknown"
@@ -54,7 +72,7 @@ export default ({
   }
 
   return (
-    <IdentityDabContainer>
+    <IdentityDabContainer large={large}>
       <img src={image} alt={`Logo for ${name}`} />
       <span>{name}</span>
     </IdentityDabContainer>
