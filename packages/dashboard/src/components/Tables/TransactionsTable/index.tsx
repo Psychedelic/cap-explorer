@@ -14,6 +14,7 @@ import { CanisterMetadata } from '@utils/dab';
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
 import IdentityDab from '@components/IdentityDab';
+import iconUnknown from '@images/icon-unknown.svg';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -48,11 +49,11 @@ const ItemCell = styled('div', {
   display: 'flex',
   alignItems: 'center',
 
-  '& img': {
+  '& [data-image]': {
     width: '35px',
-    height: 'auto',
+    height: '35px',
     borderRadius: '6px',
-    paddingRight: '8px',
+    marginRight: '10px',
   },
 });
 
@@ -235,12 +236,17 @@ const TransactionsTable = ({
 
         return (
           <ItemCell>
-            {
-              identityInDab
-              ? <img src={identityInDab.logo_url} alt={identityInDab.name} />
-              : null
-            }
-            <span>#{cellValue}</span>
+            {/* <img src={identityInDab?.logo_url || iconUnknown} alt={identityInDab?.name || 'Unknown'} /> */}
+            <span
+              data-image
+              style={{
+                backgroundImage: `url(${identityInDab?.logo_url || iconUnknown})`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat'
+              }}
+            />
+            {`${identityInDab?.name || 'Unknown'} #${cellValue}`}
           </ItemCell>
         );
       },
