@@ -33,6 +33,8 @@ const RowWrapper = styled('div', {
   padding: '20px 0',
   color: '$defaultTxtColour',
   fontFamily: 'Inter',
+  position: 'relative',
+  transition: 'background-color 0.3s',
 
   '&:last-child': {
     borderBottom: 'none',
@@ -41,17 +43,27 @@ const RowWrapper = styled('div', {
   '& > div': {
     fontSize: '$s',
     justifySelf: 'flex-end',
+    zIndex: 2,
+
+    '&:first-child': {
+      justifySelf: 'flex-start',
+      marginLeft: '10px',
+    },
   },
 
-  '& > div:first-child': {
-    justifySelf: 'flex-start',
+
+  '&[data-row]': {
+
+    '&:hover': {  
+      backgroundColor: '#333',
+    },
   },
 });
 
 const ColWrapper = styled('div', {
   display: 'flex',
   flexDirection: 'column',
-  overflow: 'hidden',
+  overflow: 'visible',
   width: 'calc(100vw - 80px)',
   margin: 0,
   padding: 0,
@@ -72,7 +84,7 @@ const ColWrapper = styled('div', {
 
   '@dataTableBreakPointL': {
     width: '100%',
-    overflow: 'hidden',
+    overflow: 'visible',
   },
 });
 
@@ -165,7 +177,7 @@ const ScrollXContainer = styled('div', {
 
   '@lg': {
     width: 'calc(100vw - 80px)',
-    overflowX: 'hidden',
+    overflowX: 'visible',
 
     '& > div': {
       display: 'block',
@@ -175,7 +187,7 @@ const ScrollXContainer = styled('div', {
 
   '@dataTableBreakPointL': {
     width: '100%',
-    overflow: 'hidden',
+    overflow: 'visible',
   },
 });
 
