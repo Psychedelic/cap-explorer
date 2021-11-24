@@ -6,6 +6,7 @@ import { AccountLink, NamedAccountLink } from '@components/Link';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import { DabLink } from '@components/Link';
+import Loading from '@components/Loading';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -30,6 +31,14 @@ const Container = styled('div', {
   '& h1': {
     marginBottom: '20px',
   },
+});
+
+const LoadingContainer = styled('div', {
+  display: 'inline-block',
+  position: 'relative',
+  width: '20px',
+  height: '20px',
+  verticalAlign: 'middle',
 });
 
 export interface AccountData {
@@ -64,6 +73,7 @@ const AccountDab = ({
   canisterId: string,
 }) => {
   const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Dab metadata handler
   useEffect(() => {
@@ -75,20 +85,34 @@ const AccountDab = ({
         canisterId,
       });
 
-      if (!metadata) return;
+      if (!metadata) {
+        setIsLoading(false);
+
+        return;
+      }
 
       // TODO: Update name column, otherwise fallback
       setIdentityInDab({
         ...metadata,
       });
+
+      setIsLoading(false);
     };
 
     getDabMetadataHandler();
   }, []);
 
+  if (isLoading) {
+    return (
+      <LoadingContainer>
+        <Loading size='s' alt='Loading the contract metadata...' />
+      </LoadingContainer>
+    );
+  }
+
   return identityInDab
           ? <IdentityDab name={identityInDab?.name} image={identityInDab?.logo_url} />
-          : <NamedAccountLink name='Unnamed' account={canisterId} />
+          : <NamedAccountLink name='Unknown' account={canisterId} />
 };
 
 const AccountsTable = ({
