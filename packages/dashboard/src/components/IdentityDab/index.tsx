@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@stitched';
-import { NamedLink } from '@components/Link';
+import iconUnknown from '../../images/icon-unknown.svg';
 
 const IdentityDabContainer = styled('div', {
   display: 'flex',
@@ -8,7 +8,7 @@ const IdentityDabContainer = styled('div', {
   alignItems: 'center',
 
   '& span': {
-    fontSize: '$m',
+    fontSize: '$S',
   },
 
   '& span, & img, & a': {
@@ -26,16 +26,12 @@ const IdentityDabContainer = styled('div', {
   },
 
   '& > img': {
-    width: '45px',
-    height: '45px',
+    width: '20px',
+    height: '20px',
     objectFit: 'cover',
-    marginRight: '15px',
+    marginRight: '10px',
     borderRadius: '4px',
   },
-});
-
-const Unnamed = styled('span', {
-  fontWeight: 'bold',
 });
 
 export default ({
@@ -47,9 +43,13 @@ export default ({
 }) => {
   if (!image) {
     return (
-      <Unnamed>
-        <NamedLink url={'https://dab.ooo'} name='Unnamed' />
-      </Unnamed>
+      <IdentityDabContainer>
+        <img
+          src={iconUnknown}
+          alt="Unknown"
+        />
+        <span>{name}</span>
+      </IdentityDabContainer>
     )
   }
 
