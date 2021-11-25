@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from '@stitched';
 import iconUnknown from '../../images/icon-unknown.svg';
 import Loading from '@components/Loading';
@@ -57,6 +57,19 @@ const LoaderContainer = styled('div', {
   height: '45px',
 });
 
+const ImgControlled = styled('img', {
+  variants: {
+    visible: {
+      true: {
+        visibility: 'visible',
+      },
+      false: {
+        visibility: 'hidden',
+      },
+    }
+  },
+})
+
 export default ({
   image,
   name,
@@ -68,6 +81,8 @@ export default ({
   large?: boolean,
   isLoading?: boolean,
 }) => {
+  const [imgReady, setImgReady] = useState(false);
+
   if (isLoading) {
     return (
       <LoaderContainer>
@@ -79,9 +94,19 @@ export default ({
   if (!image) {
     return (
       <IdentityDabContainer large={large}>
-        <img
+        {
+          !imgReady
+          && (
+            <LoaderContainer>
+              <Loading size='sm' alt='Loading' />
+            </LoaderContainer>
+          )
+        }
+        <ImgControlled
           src={iconUnknown}
           alt="Unknown"
+          onLoad={() => setImgReady(true)}
+          visible={imgReady}
         />
         <span>{name}</span>
       </IdentityDabContainer>
@@ -90,7 +115,20 @@ export default ({
 
   return (
     <IdentityDabContainer large={large}>
-      <img src={image} alt={`Logo for ${name}`} />
+      {
+        !imgReady
+        && (
+          <LoaderContainer>
+            <Loading size='sm' alt='Loading' />
+          </LoaderContainer>
+        )
+      }
+      <ImgControlled
+        src={image}
+        alt={`Logo for ${name}`}
+        onLoad={() => setImgReady(true)}
+        visible={imgReady}
+      />
       <span>{name}</span>
     </IdentityDabContainer>
   );
