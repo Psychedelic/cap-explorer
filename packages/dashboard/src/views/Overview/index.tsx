@@ -30,7 +30,9 @@ const Overview = ({
       capRouterInstance,
     });
 
-    return () => reset();
+    // TODP: should only reset on unmount
+    // when pagination is ready
+    // return () => reset();
   }, [capRouterInstance]);
 
   return (
