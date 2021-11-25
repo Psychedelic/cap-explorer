@@ -49,6 +49,10 @@ const RowWrapper = styled('div', {
       justifySelf: 'flex-start',
       marginLeft: '10px',
     },
+    
+    '&:last-child': {
+      marginRight: '10px',
+    },
   },
 
 

@@ -13,8 +13,7 @@ import { getXTCMarketValue } from '@utils/xtc';
 import { CanisterMetadata } from '@utils/dab';
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
-import IdentityDab from '@components/IdentityDab';
-import iconUnknown from '@images/icon-unknown.svg';
+import ItemCell from '@components/ItemCell';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -42,18 +41,6 @@ const Container = styled('div', {
 
   '& h1': {
     marginBottom: '20px',
-  },
-});
-
-const ItemCell = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-
-  '& [data-image]': {
-    width: '35px',
-    height: '35px',
-    borderRadius: '6px',
-    marginRight: '10px',
   },
 });
 
@@ -221,28 +208,13 @@ const TransactionsTable = ({
         if (typeof cellValue !== 'string') return;
         return <Operation type={cellValue} />
       },
-      item: (cellValue: number) => {
-        if (!cellValue) {         
-          return (
-            <IdentityDab name='Unknown' />
-          );
-        };
-
-        return (
-          <ItemCell>
-            <span
-              data-image
-              style={{
-                backgroundImage: `url(${identityInDab?.logo_url || iconUnknown})`,
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat'
-              }}
-            />
-            {`${identityInDab?.name || 'Unknown'} #${cellValue}`}
-          </ItemCell>
-        );
-      },
+      item: (cellValue: number) => (
+        <ItemCell
+            identityInDab={identityInDab}
+            cellValue={cellValue}
+            derivedId={true}
+        />
+      ),
       amount: (cellValue: number) => {
         if (!cellValue || typeof cellValue !== 'bigint') return NOT_AVAILABLE_PLACEHOLDER;
 

@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { styled } from '@stitched';
 import DataTable, { FormatterTypes, TableId } from '@components/Tables/DataTable';
-import Title from '@components/Title';
-import { AccountLink, NamedAccountLink } from '@components/Link';
+import { NamedAccountLink } from '@components/Link';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import { DabLink } from '@components/Link';
 import Loading from '@components/Loading';
+import ItemCell from '@components/ItemCell';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -110,9 +110,12 @@ const AccountDab = ({
     );
   }
 
-  return identityInDab
-          ? <IdentityDab name={identityInDab?.name} image={identityInDab?.logo_url} />
-          : <NamedAccountLink name='Unknown' account={canisterId} />
+  return (
+    <ItemCell
+      identityInDab={identityInDab}
+      derivedId={false}
+    />
+  );
 };
 
 const AccountsTable = ({
