@@ -15,7 +15,7 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '1fr 1fr',
+    gridTemplateColumns: '0.75fr 1fr',
     gridTemplateAreas: '"name canister"',
     alignItems: 'center',
   },
