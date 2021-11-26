@@ -11,7 +11,7 @@ const DEFAULT_DEVELOPMENT_ENVIRONMENT = 'development';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_STG = process.env.NODE_ENV === 'staging';
 const IS_DEV = [DEFAULT_DEVELOPMENT_ENVIRONMENT, 'test'].includes(process.env.NODE_ENV);
-const OPT_MAX_ASSET_SIZE = 750000;
+const OPT_MAX_ASSET_SIZE = 1000000;
 
 // The IC History router id should be passed as an env variable
 // in any remote, production or staging environment setup
@@ -61,6 +61,7 @@ let config = {
       new TsconfigPathsPlugin(),
     ],
     extensions: ['.tsx', '.ts', '.js'],
+    fallback: { "events": require.resolve("events/") },
   },
   plugins: [
     new HtmlWebpackPlugin({
