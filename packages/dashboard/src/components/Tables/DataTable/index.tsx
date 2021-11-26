@@ -570,12 +570,10 @@ const DataTable = <T extends {}>({
                   aria-label="Previous page"
                   onClick={() => previousPage()}
                   disabled={!canPreviousPage}
+                  style={{
+                    display: pageOptions.length === 1 ? 'none' : '',
+                  }}
                 >
-                  {/* <Icon
-                    icon="ArrowLeft"
-                    size="lg"
-                    title="Previous page"
-                  /> */}
                   <Fleekon
                     icon="arrowRight"
                     className="arrow arrow-left"
@@ -590,12 +588,10 @@ const DataTable = <T extends {}>({
                   aria-label="Next page"
                   onClick={() => nextPage()}
                   disabled={!canNextPage}
+                  style={{
+                    display: pageOptions.length === 1 ? 'none' : '',
+                  }}
                 >
-                  {/* <Icon
-                    icon="ArrowRight"
-                    size="lg"
-                    title="Next page"
-                  /> */}
                   <Fleekon
                     icon="arrowRight"
                     className="arrow arrow-right"
