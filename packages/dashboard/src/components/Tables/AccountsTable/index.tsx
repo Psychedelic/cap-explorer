@@ -3,9 +3,7 @@ import { styled } from '@stitched';
 import DataTable, { FormatterTypes, TableId } from '@components/Tables/DataTable';
 import { NamedAccountLink } from '@components/Link';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
-import IdentityDab from '@components/IdentityDab';
 import { DabLink } from '@components/Link';
-import Loading from '@components/Loading';
 import ItemCell from '@components/ItemCell';
 
 const Container = styled('div', {
@@ -134,9 +132,9 @@ const AccountsTable = ({
         metadata?: CanisterMetadata,
       }) => {
         if (!metadata) {
-          // TODO: request the metada
+          // Request the Dab metadata
           // because we only fetch the very first ones to improve perf
-          // or serve the client asap
+          // and serve the client ASAP
           return (
             <AccountDab canisterId={contractId} />
           )
@@ -146,6 +144,7 @@ const AccountsTable = ({
           <DabLink tokenContractId={contractId}>
             <ItemCell
               identityInDab={metadata}
+              // Overview page does not requires it
               derivedId={false}
             />
           </DabLink>
