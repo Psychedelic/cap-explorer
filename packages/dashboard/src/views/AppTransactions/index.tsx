@@ -137,7 +137,7 @@ const AppTransactions = ({
       pageId="app-transactions-page"
     >
       <PageRow>
-        <Breadcrumb id={tokenId} />
+        <Breadcrumb identityInDab={identityInDab} isLoading={isLoading} />
       </PageRow>
       <PageRow>
         <UserBar
@@ -146,8 +146,8 @@ const AppTransactions = ({
           <DabLink tokenContractId={tokenId}>
           {
             identityInDab
-            ? <IdentityDab name={identityInDab?.name} image={identityInDab?.logo_url} />
-            : <IdentityDab name='Unnamed' />
+            ? <IdentityDab large={true} name={identityInDab?.name} image={identityInDab?.logo_url} isLoading={isLoading} />
+            : <IdentityDab large={true} name='Unknown' isLoading={isLoading} />
           }
           </DabLink>
           <IdentityCopy account={

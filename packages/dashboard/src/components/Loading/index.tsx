@@ -33,6 +33,12 @@ const Container = styled('div', {
           height: '20px',
         },
       },
+      sm: {
+        '& img': {
+          width: 'auto',
+          height: '40px',
+        },
+      },
       m: {
         '& img': {
           width: 'auto',
@@ -49,20 +55,28 @@ const Container = styled('div', {
   },
 });
 
+export const RawLoading = ({
+  alt,
+}: {
+ alt: string, 
+}) => (
+  <img
+    src={imgcapCircleLogoBw}
+    alt={alt}
+  />
+);
+
 export default ({
   alt,
   size,
 }: {
   alt: string,
-  size: 's' | 'm' | 'l',
+  size: 's' | 'sm' | 'm' | 'l',
 }) => (
   <Container
     size={size}
     data-id="loading"
   >
-    <img
-      src={imgcapCircleLogoBw}
-      alt={alt}
-    />
+    <RawLoading alt={alt} />
   </Container>
 );

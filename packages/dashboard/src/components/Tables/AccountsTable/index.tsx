@@ -1,11 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { styled } from '@stitched';
 import DataTable, { FormatterTypes, TableId } from '@components/Tables/DataTable';
-import Title from '@components/Title';
-import { AccountLink, NamedAccountLink } from '@components/Link';
+import { NamedAccountLink } from '@components/Link';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
-import IdentityDab from '@components/IdentityDab';
 import { DabLink } from '@components/Link';
+import ItemCell from '@components/ItemCell';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -14,7 +13,7 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '1fr 1fr',
+    gridTemplateColumns: '0.75fr 1fr',
     gridTemplateAreas: '"name canister"',
     alignItems: 'center',
   },
@@ -32,9 +31,20 @@ const Container = styled('div', {
   },
 });
 
+const LoadingContainer = styled('div', {
+  display: 'inline-block',
+  position: 'relative',
+  width: '20px',
+  height: '20px',
+  verticalAlign: 'middle',
+});
+
 export interface AccountData {
   contractId: string,
-  dabCanisterId: string,
+  dabCanister: {
+    contractId: string,
+    metadata?: CanisterMetadata,
+  },
 }
 
 interface Column {
@@ -43,14 +53,14 @@ interface Column {
 }
 
 export const DEFAULT_COLUMN_ORDER: (keyof AccountData)[] = [
-  'dabCanisterId',
+  'dabCanister',
   'contractId',
 ];
 
 const columns: Column[] = [
   {
     Header: 'Name',
-    accessor: 'dabCanisterId',
+    accessor: 'dabCanister',
   },
   {
     Header: 'Token Canister ID',
@@ -64,6 +74,7 @@ const AccountDab = ({
   canisterId: string,
 }) => {
   const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Dab metadata handler
   useEffect(() => {
@@ -75,20 +86,29 @@ const AccountDab = ({
         canisterId,
       });
 
-      if (!metadata) return;
+      if (!metadata) {
+        setIsLoading(false);
+
+        return;
+      }
 
       // TODO: Update name column, otherwise fallback
       setIdentityInDab({
         ...metadata,
       });
+
+      setIsLoading(false);
     };
 
     getDabMetadataHandler();
   }, []);
 
-  return identityInDab
-          ? <IdentityDab name={identityInDab?.name} image={identityInDab?.logo_url} />
-          : <NamedAccountLink name='Unnamed' account={canisterId} />
+  return (
+    <ItemCell
+      identityInDab={identityInDab}
+      derivedId={false}
+    />
+  );
 };
 
 const AccountsTable = ({
@@ -104,11 +124,32 @@ const AccountsTable = ({
   const formatters = useMemo(() => ({
     body: {
       contractId: (cellValue: string) => <NamedAccountLink name={cellValue} account={cellValue} />,
-      dabCanisterId: (cellValue: string) => (
-        <DabLink tokenContractId={cellValue}>
-          <AccountDab canisterId={cellValue} />
-        </DabLink>
-      ),
+      dabCanister: ({
+        contractId,
+        metadata,
+      }: {
+        contractId: string,
+        metadata?: CanisterMetadata,
+      }) => {
+        if (!metadata) {
+          // Request the Dab metadata
+          // because we only fetch the very first ones to improve perf
+          // and serve the client ASAP
+          return (
+            <AccountDab canisterId={contractId} />
+          )
+        }
+
+        return (
+          <DabLink tokenContractId={contractId}>
+            <ItemCell
+              identityInDab={metadata}
+              // Overview page does not requires it
+              derivedId={false}
+            />
+          </DabLink>
+        );
+      }
     },
   } as FormatterTypes), [data]);
 

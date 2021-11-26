@@ -13,6 +13,7 @@ import { getXTCMarketValue } from '@utils/xtc';
 import { CanisterMetadata } from '@utils/dab';
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
+import ItemCell from '@components/ItemCell';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -21,8 +22,8 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
-    gridTemplateAreas: '"operation item amount caller from to time"',
+    gridTemplateColumns: '1fr 0.6fr 0.6fr 0.4fr 0.4fr 0.6fr',
+    gridTemplateAreas: '"operation item amount from to time"',
     alignItems: 'center',
 
     '& [data-cid]': {
@@ -40,18 +41,6 @@ const Container = styled('div', {
 
   '& h1': {
     marginBottom: '20px',
-  },
-});
-
-const ItemCell = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-
-  '& img': {
-    width: '35px',
-    height: 'auto',
-    borderRadius: '6px',
-    paddingRight: '8px',
   },
 });
 
@@ -115,7 +104,6 @@ export interface Data {
   operation: string,
   item: number,
   amount: string,
-  caller: string,
   from: string,
   to: string,
   time: string,
@@ -136,16 +124,15 @@ export type FetchPageDataHandler = ({
 const DEFAULT_BASE_STATE = TransactionTypes.all;
 
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
-  'operation',
   'item',
+  'operation',
   'amount',
-  'caller',
   'from',
   'to',
   'time'
 ];
 
-const NOT_AVAILABLE_PLACEHOLDER = '---';
+const NOT_AVAILABLE_PLACEHOLDER = '-';
 
 const columns: Column[] = [
   {
@@ -159,10 +146,6 @@ const columns: Column[] = [
   {
     Header: 'Price',
     accessor: 'amount',
-  },
-  {
-    Header: 'Caller',
-    accessor: 'caller',
   },
   {
     Header: 'From',
@@ -225,20 +208,13 @@ const TransactionsTable = ({
         if (typeof cellValue !== 'string') return;
         return <Operation type={cellValue} />
       },
-      item: (cellValue: number) => {
-        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
-
-        return (
-          <ItemCell>
-            {
-              identityInDab
-              ? <img src={identityInDab.logo_url} alt={identityInDab.name} />
-              : null
-            }
-            <span>#{cellValue}</span>
-          </ItemCell>
-        );
-      },
+      item: (cellValue: number) => (
+        <ItemCell
+            identityInDab={identityInDab}
+            cellValue={cellValue}
+            derivedId={true}
+        />
+      ),
       amount: (cellValue: number) => {
         if (!cellValue || typeof cellValue !== 'bigint') return NOT_AVAILABLE_PLACEHOLDER;
 
@@ -249,14 +225,6 @@ const TransactionsTable = ({
             <div>{formatPriceForChart({ value: usdValue, abbreviation: 'USD' })}</div>
             <div>{formatPriceForChart({ value: cellValue, abbreviation: 'CYCLES' })}</div>
           </PriceCell>
-        );
-      },
-      caller: (cellValue: string) => {
-        if (!cellValue) return NOT_AVAILABLE_PLACEHOLDER;
-        return (
-          <a href={toICRocksPrincipal(cellValue)} target="_blank">
-            { trimAccount(cellValue) }
-          </a>
         );
       },
       from: (cellValue: string) => {

@@ -36,10 +36,10 @@ export const getDabMetadata = async ({
     const agent = new HttpAgent(httpAgentArgs);
 
     // TODO: check why tsc fails for agent type
-    metadata = await getCanisterInfo(
+    metadata = await getCanisterInfo({
       canisterId,
-      (agent as any),
-    );
+      agent: (agent as any),
+    });
   } catch (err) {
     console.warn(`Oops! Metadata for ${canisterId} not found in dab!`);
   }

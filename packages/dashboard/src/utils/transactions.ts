@@ -66,6 +66,10 @@ export const parseGetTransactionsResponse = ({
     const itemHandler = (details: TransactionDetails, tokenField: TokenField) => {      
       let tokenIndex: number | undefined;
 
+      if (typeof details?.token_id === 'bigint') {
+        return details.token_id;
+      }
+
       try {
         const tokenIdText = details[tokenField];
       
@@ -92,7 +96,6 @@ export const parseGetTransactionsResponse = ({
       to: (details as unknown as TransactionDetails)?.to?.toText(),
       from: (details as unknown as TransactionDetails)?.from?.toText(),
       amount: (details as unknown as TransactionDetails)?.amount,
-      caller: v.caller.toText(),
       operation: v.operation,
       time: toTransactionTime(v.time),
     }

@@ -13,9 +13,16 @@ export default {
 } as Meta;
 
 // eslint-disable-next-line react/prop-types
-const Template: Story<BreadcrumbProps> = ({ id }) => <Wrapper><Breadcrumb id={id} /></Wrapper>;
+const Template: Story<BreadcrumbProps> = (props) => <Wrapper><Breadcrumb {...props} /></Wrapper>;
 
 export const Primary = Template.bind({});
 Primary.args = {
-  id: '332ss-s-ssddssd-33323',
+  isLoading: false,
+  identityInDab: {
+    name: 'test',
+    logo_url: '',
+    url: '',
+    description: '',
+    version: 1,
+  }
 };

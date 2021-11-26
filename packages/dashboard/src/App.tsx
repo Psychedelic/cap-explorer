@@ -36,11 +36,15 @@ interface BookmarkExpandHandlerOverrides {
 // although you can dynamically import inner dependencies
 // in the component scope
 const LazyOverview = loadable(() => import('@views/Overview'), {
-  fallback: <Loading alt="Loading overview page" size="m" />,
+  // The fallback to blank is intentional
+  // previously displayed the <Loading /> but not required
+  fallback: <span data-component-loading />,
 });
 
 const LazyAppTransactions = loadable(() => import('@views/AppTransactions'), {
-  fallback: <Loading alt="Loading App Transactions page" size="m" />,
+  // The fallback to blank is intentional
+  // previously displayed the <Loading /> but not required
+  fallback: <span data-component-loading />,
 });
 
 const Routes = ({
@@ -92,23 +96,14 @@ const Routes = ({
   );
 }
 
-const App = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  // Mocks async initial request
-  useEffect(() => {
-    setTimeout(() => setIsLoading(false), 1200);
-  }, []);
-
-  return (
-    <Router>
-      <Routes
-        bookmarkColumnMode={BookmarkColumnModes.collapsed}
-        bookmarkExpandHandler={() => null}
-        loading={isLoading}
-      />
-    </Router>
-  );
-};
+const App = () => (
+  <Router>
+    <Routes
+      bookmarkColumnMode={BookmarkColumnModes.collapsed}
+      bookmarkExpandHandler={() => null}
+      loading={false}
+    />
+  </Router>
+);
 
 export default App;

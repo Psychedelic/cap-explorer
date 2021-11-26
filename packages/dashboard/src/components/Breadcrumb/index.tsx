@@ -1,9 +1,9 @@
 import React from 'react';
-import { styled, BREAKPOINT_LG } from '@stitched';
-import { useWindowResize } from '@hooks/windowResize';
-import { trimAccount } from '@utils/account';
+import { styled } from '@stitched';
 import Fleekon from '@components/Fleekon';
 import { RawLink } from '@components/Link';
+import { CanisterMetadata } from '@utils/dab';
+import Loading from '@components/Loading';
 
 const Hover = styled('span', {
   transition: 'color 0.2s',
@@ -21,6 +21,7 @@ const Container = styled('div', {
   '& span': {
     lineHeight: '$normal',
     fontSize: '$s',
+    textTransform: 'capitalize',
 
     '& .arrow': {
       width: '13px',
@@ -39,14 +40,22 @@ const Container = styled('div', {
   },
 });
 
+const LoadingContainer = styled('span', {
+  width: '14px',
+  height: '14px',
+  position: 'relative',
+  marginLeft: '10px',
+});
+
 export interface BreadcrumbProps {
-  id: string,
+  identityInDab?: CanisterMetadata,
+  isLoading: boolean,
 }
 
-const Breadcrumb = ({ id }: BreadcrumbProps) => {
-  const isSmallerThanBreakpointLG = useWindowResize({
-    breakpoint: BREAKPOINT_LG,
-  });
+const Breadcrumb = ({
+  identityInDab,
+  isLoading,
+}: BreadcrumbProps) => {
 
   return (
     <Container
@@ -60,8 +69,23 @@ const Breadcrumb = ({ id }: BreadcrumbProps) => {
         className="arrow"
         size="13px"
       />
-      {/* TODO: Use DabJS to get token contract name */}
-      <span>{isSmallerThanBreakpointLG ? trimAccount(id) : id }</span>
+      {
+        isLoading
+        ? (
+          <LoadingContainer>
+            <Loading size='s' alt='' />
+          </LoadingContainer>
+        )
+        : (
+          <span>
+          {
+            identityInDab
+            ? identityInDab?.name
+            : 'unknown'
+          }
+          </span>
+        )
+      }
     </Container>
   );
 };
