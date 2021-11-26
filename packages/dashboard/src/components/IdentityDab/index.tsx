@@ -55,16 +55,14 @@ const LoaderContainer = styled('div', {
   position: 'relative',
   width: '45px',
   height: '45px',
+  marginRight: '16px',
 });
 
 const ImgControlled = styled('img', {
   variants: {
     visible: {
-      true: {
-        visibility: 'visible',
-      },
       false: {
-        visibility: 'hidden',
+        display: 'none',
       },
     }
   },
