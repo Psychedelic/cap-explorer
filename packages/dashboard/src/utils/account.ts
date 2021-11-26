@@ -6,6 +6,7 @@ import {
 import { Principal } from "@dfinity/principal";
 import { AccountData } from '@components/Tables/AccountsTable';
 // import principal from './principal';
+import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 
 export const hashTrimmer = (hash: string) => {
   const size = 6;
@@ -67,8 +68,12 @@ export const parseUserRootBucketsResponse = async ({
   if (!contracts || !Array.isArray(contracts) || !contracts.length) return [];
 
   let data: AccountData[] = [];
+  let index = 0;
+  const PRE_FETCH_DAB_INDEX_COUNT = 8
 
   for await (const rootContractPrincipal of contracts) {
+    index += 1;
+
     const contractId = await getTokenContractCanisterIdByRoot(
       promisedTokenContractsPairedRoots,
       rootContractPrincipal.toText(),
@@ -76,11 +81,30 @@ export const parseUserRootBucketsResponse = async ({
 
     if (!contractId) continue;
 
+    // Let's prefetch the very first few
+    // to provide the user with data ASAP
+    if (index <= PRE_FETCH_DAB_INDEX_COUNT) {
+      // Fetch Dab metadata
+      const metadata = await getDabMetadata({
+        canisterId: contractId,
+      });
+
+      data.push({
+        contractId,
+        dabCanister: {
+          contractId,
+          metadata,
+        },
+      });
+
+      continue;
+    }
+
     data.push({
       contractId,
-      // rootCanisterId: rootContractPrincipal.toText(),
-      // TODO: should rename `rootCanisterId` to `dabCanisterId`
-      dabCanisterId: contractId,
+      dabCanister: {
+        contractId,
+      },
     });
   }
 

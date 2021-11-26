@@ -43,7 +43,10 @@ const LoadingContainer = styled('div', {
 
 export interface AccountData {
   contractId: string,
-  dabCanisterId: string,
+  dabCanister: {
+    contractId: string,
+    metadata?: CanisterMetadata,
+  },
 }
 
 interface Column {
@@ -52,14 +55,14 @@ interface Column {
 }
 
 export const DEFAULT_COLUMN_ORDER: (keyof AccountData)[] = [
-  'dabCanisterId',
+  'dabCanister',
   'contractId',
 ];
 
 const columns: Column[] = [
   {
     Header: 'Name',
-    accessor: 'dabCanisterId',
+    accessor: 'dabCanister',
   },
   {
     Header: 'Token Canister ID',
@@ -123,11 +126,31 @@ const AccountsTable = ({
   const formatters = useMemo(() => ({
     body: {
       contractId: (cellValue: string) => <NamedAccountLink name={cellValue} account={cellValue} />,
-      dabCanisterId: (cellValue: string) => (
-        <DabLink tokenContractId={cellValue}>
-          <AccountDab canisterId={cellValue} />
-        </DabLink>
-      ),
+      dabCanister: ({
+        contractId,
+        metadata,
+      }: {
+        contractId: string,
+        metadata?: CanisterMetadata,
+      }) => {
+        if (!metadata) {
+          // TODO: request the metada
+          // because we only fetch the very first ones to improve perf
+          // or serve the client asap
+          return (
+            <AccountDab canisterId={contractId} />
+          )
+        }
+
+        return (
+          <DabLink tokenContractId={contractId}>
+            <ItemCell
+              identityInDab={metadata}
+              derivedId={false}
+            />
+          </DabLink>
+        );
+      }
     },
   } as FormatterTypes), [data]);
 
