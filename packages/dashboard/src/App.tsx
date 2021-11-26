@@ -92,23 +92,14 @@ const Routes = ({
   );
 }
 
-const App = () => {
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  // // Mocks async initial request
-  // useEffect(() => {
-  //   setTimeout(() => setIsLoading(false), 1200);
-  // }, []);
-
-  return (
-    <Router>
-      <Routes
-        bookmarkColumnMode={BookmarkColumnModes.collapsed}
-        bookmarkExpandHandler={() => null}
-        loading={false}
-      />
-    </Router>
-  );
-};
+const App = () => (
+  <Router>
+    <Routes
+      bookmarkColumnMode={BookmarkColumnModes.collapsed}
+      bookmarkExpandHandler={() => null}
+      loading={false}
+    />
+  </Router>
+);
 
 export default App;
