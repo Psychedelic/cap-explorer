@@ -13,7 +13,7 @@ const decode32bits = (arr: Uint8Array): number => {
 
 export const decodeTokenId = (tokenId: string): number => {
   if (!isValidPrincipalFromTextId(tokenId)) {
-    throw Error(`Oops! Is not a valid token id principal (${tokenId})`,);
+    throw Error(`Oops! Is not a valid token id principal (${tokenId})`);
   }
 
   const principal = Principal.fromText(tokenId);
