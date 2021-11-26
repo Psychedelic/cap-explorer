@@ -36,10 +36,14 @@ interface BookmarkExpandHandlerOverrides {
 // although you can dynamically import inner dependencies
 // in the component scope
 const LazyOverview = loadable(() => import('@views/Overview'), {
+  // The fallback to blank is intentional
+  // previously displayed the <Loading /> but not required
   fallback: <span data-component-loading />,
 });
 
 const LazyAppTransactions = loadable(() => import('@views/AppTransactions'), {
+  // The fallback to blank is intentional
+  // previously displayed the <Loading /> but not required
   fallback: <span data-component-loading />,
 });
 
