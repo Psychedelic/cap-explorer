@@ -66,6 +66,10 @@ export const parseGetTransactionsResponse = ({
     const itemHandler = (details: TransactionDetails, tokenField: TokenField) => {      
       let tokenIndex: number | undefined;
 
+      if (typeof details?.token_id === 'bigint') {
+        return details.token_id;
+      }
+
       try {
         const tokenIdText = details[tokenField];
       
