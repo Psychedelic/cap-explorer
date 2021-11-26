@@ -12,7 +12,6 @@ import { useWindowResize } from '@hooks/windowResize';
 import {
   useParams
 } from "react-router-dom";
-import { trimAccount } from '@utils/account';
 import {
   CapRouter,
   Event as TransactionEvent,
@@ -150,11 +149,9 @@ const AppTransactions = ({
             : <IdentityDab large={true} name='Unknown' isLoading={isLoading} />
           }
           </DabLink>
-          <IdentityCopy account={
-            isSmallerThanBreakpointLG
-              ? trimAccount(tokenId)
-              : tokenId
-            }
+          <IdentityCopy
+            account={ tokenId }
+            trim={isSmallerThanBreakpointLG}
           />
         </UserBar>
       </PageRow>

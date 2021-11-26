@@ -3,6 +3,7 @@ import { styled } from '@stitched';
 import ButtonAnimated from '@components/ButtonAnimated';
 import Fleekon from '@components/Fleekon';
 import { copyToClipboard } from '@utils/clipboard';
+import { trimAccount } from '@utils/account';
 
 const Styled = styled(ButtonAnimated, {
   width: '45px',
@@ -31,7 +32,13 @@ const Account = styled('span', {
 
 export const ICON_RESET_TIMEOUT = 5000;
 
-const ButtonBookmark = ({ account }: { account: string }) => {
+const ButtonBookmark = ({
+  account,
+  trim = false,
+}: {
+  account: string,
+  trim?: boolean,
+}) => {
   const [checkmark, setCheckmark] = useState<boolean>(false);
 
   const currentIcon = checkmark ? 'check' : 'clone';
@@ -57,7 +64,7 @@ const ButtonBookmark = ({ account }: { account: string }) => {
 
   return (
     <Container>
-      <Account>{account}</Account>
+      <Account>{trim ? trimAccount(account) : account }</Account>
       <Styled onClick={() => copyToClipboardHandler(account)}>
         <Fleekon
           icon={currentIcon}
