@@ -22,7 +22,7 @@ const Container = styled('div', {
   color: '$defaultTxtColour',
 
   '& [data-table] [data-scrollable] > div': {
-    gridTemplateColumns: '1fr 0.6fr 0.6fr 0.6fr 0.6fr 0.4fr',
+    gridTemplateColumns: '1fr 0.6fr 0.6fr 0.4fr 0.4fr 0.6fr',
     gridTemplateAreas: '"operation item amount from to time"',
     alignItems: 'center',
 
