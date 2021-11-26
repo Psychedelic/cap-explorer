@@ -47,9 +47,11 @@ export default ({
       {
         !imgReady
         && (
-          <LoaderContainer>
-            <Loading size='s' alt='Loading' />
-          </LoaderContainer>
+          <span data-image>
+            <LoaderContainer>
+              <Loading size='s' alt='Loading' />
+            </LoaderContainer>
+          </span>
         )
       }
       <span
@@ -63,7 +65,13 @@ export default ({
         }}
       />
       <Hidden>
-        <img src={identityInDab?.logo_url || iconUnknown} alt='' onLoad={() => setImgReady(true)} />
+        <img
+          src={identityInDab?.logo_url || iconUnknown}
+          alt=''
+          onLoad={
+            () => setImgReady(true)
+          }
+        />
       </Hidden>
       {`${identityInDab?.name || 'Unknown'}${derivedId ? ' ' + '#' + cellValue : ''}`}
     </ItemCell>

@@ -102,14 +102,6 @@ const AccountDab = ({
     getDabMetadataHandler();
   }, []);
 
-  if (isLoading) {
-    return (
-      <LoadingContainer>
-        <Loading size='s' alt='Loading the contract metadata...' />
-      </LoadingContainer>
-    );
-  }
-
   return (
     <ItemCell
       identityInDab={identityInDab}
