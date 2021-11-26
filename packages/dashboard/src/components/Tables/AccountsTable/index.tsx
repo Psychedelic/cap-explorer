@@ -107,6 +107,7 @@ const AccountDab = ({
     <ItemCell
       identityInDab={identityInDab}
       derivedId={false}
+      asHoverState={true}
     />
   );
 };
@@ -136,7 +137,9 @@ const AccountsTable = ({
           // because we only fetch the very first ones to improve perf
           // and serve the client ASAP
           return (
-            <AccountDab canisterId={contractId} />
+            <DabLink tokenContractId={contractId}>
+              <AccountDab canisterId={contractId} />
+            </DabLink>
           )
         }
 
@@ -146,6 +149,7 @@ const AccountsTable = ({
               identityInDab={metadata}
               // Overview page does not requires it
               derivedId={false}
+              asHoverState={true}
             />
           </DabLink>
         );
