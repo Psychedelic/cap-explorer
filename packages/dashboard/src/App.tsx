@@ -93,19 +93,19 @@ const Routes = ({
 }
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Mocks async initial request
-  useEffect(() => {
-    setTimeout(() => setIsLoading(false), 1200);
-  }, []);
+  // // Mocks async initial request
+  // useEffect(() => {
+  //   setTimeout(() => setIsLoading(false), 1200);
+  // }, []);
 
   return (
     <Router>
       <Routes
         bookmarkColumnMode={BookmarkColumnModes.collapsed}
         bookmarkExpandHandler={() => null}
-        loading={isLoading}
+        loading={false}
       />
     </Router>
   );
