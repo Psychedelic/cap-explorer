@@ -11,7 +11,11 @@ const DEFAULT_DEVELOPMENT_ENVIRONMENT = 'development';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_STG = process.env.NODE_ENV === 'staging';
 const IS_DEV = [DEFAULT_DEVELOPMENT_ENVIRONMENT, 'test'].includes(process.env.NODE_ENV);
-const OPT_MAX_ASSET_SIZE = 1000000;
+// TODO: recently some of the packages made
+// the dashboard project size increase a lot
+// this should be investigated
+// was previously set at almost half
+const OPT_MAX_ASSET_SIZE = 1200000;
 
 // The IC History router id should be passed as an env variable
 // in any remote, production or staging environment setup
