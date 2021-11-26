@@ -7,6 +7,7 @@ import { Principal } from "@dfinity/principal";
 import { AccountData } from '@components/Tables/AccountsTable';
 // import principal from './principal';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
+import { preloadImage } from '@utils/images';
 
 export const hashTrimmer = (hash: string) => {
   const size = 6;
@@ -107,6 +108,27 @@ export const parseUserRootBucketsResponse = async ({
       },
     });
   }
+
+  // Preload the first top images
+  // if (metadata) {
+  //   const result = await preloadImage(metadata.logo_url);
+
+  //   console.warn(`[debug] Preloaded image for ${metadata.name}`);
+  // }
+  console.log('[debug] data ' , data);
+  let promises: any = [];
+
+  for (let i = 0; i <= PRE_FETCH_DAB_INDEX_COUNT; i++) {
+    if (!data[i]?.dabCanister?.metadata?.logo_url) continue;
+
+    promises.push(
+      preloadImage(data[i]?.dabCanister?.metadata?.logo_url as any)
+    );
+  }
+
+  const result = await Promise.all(promises);
+
+  console.log('result', result);
 
   return data;
 }
