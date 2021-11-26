@@ -24,6 +24,9 @@ const Overview = ({
 
   useEffect(() => {
     if (!capRouterInstance) return;
+
+    // If data is ready, interrupt
+    if (pageData.length) return;
     
     // TODO: cache/memoizing fetch call
     fetch({
