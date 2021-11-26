@@ -20,9 +20,8 @@
   },
   "release": {
     "branches": [
-      "master",
-      "next",
-      "chore/release-process-with-version-support"
+      "main",
+      "next"
     ],
     "plugins": [
       "@semantic-release/commit-analyzer",
