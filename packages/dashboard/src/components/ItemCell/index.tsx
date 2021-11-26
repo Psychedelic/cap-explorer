@@ -36,6 +36,12 @@ export default ({
       }}
     />
 
-    {`${identityInDab?.name || 'Unknown'}${derivedId ? ' ' + '#' + cellValue : ''}`}
+    { identityInDab?.name || 'Unknown' }
+    {
+      // If undefined, hide the cellValue
+      derivedId
+        ? cellValue ? ' #' + cellValue : ''
+        : ''
+    }
   </ItemCell>
 );
