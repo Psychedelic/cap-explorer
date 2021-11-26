@@ -110,12 +110,7 @@ export const parseUserRootBucketsResponse = async ({
   }
 
   // Preload the first top images
-  // if (metadata) {
-  //   const result = await preloadImage(metadata.logo_url);
-
-  //   console.warn(`[debug] Preloaded image for ${metadata.name}`);
-  // }
-  console.log('[debug] data ' , data);
+  // controlled by the value set in PRE_FETCH_DAB_INDEX_COUNT
   let promises: any = [];
 
   for (let i = 0; i <= PRE_FETCH_DAB_INDEX_COUNT; i++) {
@@ -128,7 +123,7 @@ export const parseUserRootBucketsResponse = async ({
 
   const result = await Promise.all(promises);
 
-  console.log('result', result);
+  console.warn(`Nice! Preloaded ${result.length} images.`);
 
   return data;
 }
