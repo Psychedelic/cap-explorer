@@ -5,7 +5,7 @@ export const preloadImage = (src: string) => {
 
   cache.setAttribute(
     'style',
-    'position: absolute; z-index: -1000; opacity: 0;',
+    'position: fixed; z-index: -1000; opacity: 0;',
   );
 
   document.body.appendChild(cache);
