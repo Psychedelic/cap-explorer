@@ -1,5 +1,4 @@
-/* eslint-disable import/prefer-default-export */
-import create, { UseStore } from 'zustand';
+import create from 'zustand';
 import {
   GetTransactionsResponseBorrowed as TransactionsResponse,
   Event as TransactionEvent,
@@ -15,9 +14,6 @@ import { managementCanisterPrincipal } from '@utils/ic-management-api';
 import { AccountData } from '@components/Tables/AccountsTable';
 import config from '../../config';
 import { shouldUseMockup } from '../../utils/mocks';
-import { trimEnd } from 'lodash';
-
-export type Store = UseStore<AccountStore>;
 
 export interface AccountStore {
   accounts: ContractsResponse | {},
@@ -28,8 +24,6 @@ export interface AccountStore {
   fetch: ({ capRouterInstance }: { capRouterInstance: CapRouter } ) => void,
   reset: () => void,
 }
-
-export type UseAccountStore = () => Promise<UseStore<AccountStore>>;
 
 // Shall use mockup data?
 const USE_MOCKUP = shouldUseMockup();
