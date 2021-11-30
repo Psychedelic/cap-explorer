@@ -158,7 +158,13 @@ const SearchInput = () => {
         {
           (
             showSuggestions
-            && <span>TODO: add icon X</span>
+            && (
+              <Fleekon
+                icon="cross"
+                size="14px"
+                className="icon-magnifying-glass"
+              />
+            )
           )
           || (
             <Fleekon
