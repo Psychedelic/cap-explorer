@@ -69,7 +69,6 @@ const Input = styled('input', {
   width: '100%',
   color: 'rgb(250, 250, 250)',
   fontSize: '$m',
-  boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.35)',
 });
 
 const SuggestionDropbox = styled('div', {
