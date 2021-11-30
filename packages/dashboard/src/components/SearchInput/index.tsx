@@ -6,7 +6,6 @@ import React, {
   useEffect,
 } from 'react';
 import { styled } from '@stitched';
-import Icon from '@components/Icon';
 import { useAccountStore } from '@hooks/store';
 import { RawLink } from '@components/Link';
 import { getRouteByName } from '@utils/routes';
@@ -128,7 +127,7 @@ const SearchInput = () => {
     domElement: refDOM?.current,
   });
   const onInputHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const matches = accounts.filter((val) => val.indexOf(e.currentTarget.value) === 0);
+    const matches = accounts.filter((val: any) => val.indexOf(e.currentTarget.value) === 0);
 
     setSuggestions(matches);
     setUserInput(e.currentTarget.value);
@@ -152,26 +151,13 @@ const SearchInput = () => {
       <div>
         <Input
           type="text"
-          placeholder="Search Dank accounts..."
+          placeholder="Search Token Contracts..."
           onChange={onInputHandler}
           value={userInput}
         />
         {
           (showSuggestions
-          && (
-            <Icon
-              icon="Times"
-              size="sm"
-              title="Close the suggestions drop-down"
-            />
-          ))
-          || (
-            <Icon
-              icon="Search"
-              size="sm"
-              title="Search"
-            />
-          )
+          && <span>TODO: Add Icon</span>)
         }
       </div>
       {
@@ -186,7 +172,7 @@ const SearchInput = () => {
                   data-suggestion-acc-id
                 >
                   <RawLink
-                    to={getRouteByName('Account', { id })}
+                    to={getRouteByName('Overview', { id })}
                   >
                     <SuggestionItem>
                       { id }
@@ -200,7 +186,7 @@ const SearchInput = () => {
                 data-suggestion
                 data-suggestions-more-acc
               >
-                <RawLink to={getRouteByName('Accounts')}>
+                <RawLink to={getRouteByName('Overview')}>
                   See more accounts...
                 </RawLink>
               </span>
