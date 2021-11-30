@@ -9,6 +9,7 @@ const Icons = {
   search: 'icon-search',
   house: 'icon-house',
   burn: 'icon-burn',
+  magnifyingGlass: 'icon-magnifying-glass',
   mint: 'icon-mint',
   transfer: 'icon-transfer',
 };
