@@ -119,28 +119,28 @@ const SuggestionMore = styled(SuggestionItem, {
 type Suggestions = string[];
 
 const SearchInput = () => {
+  const accountStore = useAccountStore();
+  const {
+    // canisterKeyPairedMetadata,
+    canisterNameKeyPairedId,
+  } = accountStore;
   const refDOM = useRef<HTMLDivElement | undefined>();
-  // const { accounts } = useAccountStore((state) => state);
   const [userInput, setUserInput] = useState<string>('');
   const [suggestions, setSuggestions] = useState<Suggestions>([]);
   const clickedOutside = useOutsideHandler({
     domElement: refDOM?.current,
   });
   const onInputHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    // TODO: use accounts state
-    const accounts = [
-      'icpuppies',
-      'icpunks',
-      'cronic critters',
-      'starverse',
-    ];
-    const matches = accounts.filter((val: string) => val.includes(e.currentTarget.value));
-    
-    console.log('[debug] matches', matches);
+    const matches =
+      Object
+        .keys(canisterNameKeyPairedId)
+        .filter(
+          (val: string) => val.toLowerCase().includes(e.currentTarget.value.toLowerCase())
+        );
 
     setSuggestions(matches);
     setUserInput(e.currentTarget.value);
-  }, [setSuggestions, setUserInput]);
+  }, [canisterNameKeyPairedId, setSuggestions, setUserInput]);
 
   const showSuggestions = !!(userInput.length && suggestions.length);
 
@@ -196,7 +196,11 @@ const SearchInput = () => {
                   data-suggestion-acc-id
                 >
                   <RawLink
-                    to={getRouteByName('Overview', { id })}
+                    to={
+                      getRouteByName('AppTransactions', {
+                        id: canisterNameKeyPairedId[id],
+                      })
+                    }
                   >
                     <SuggestionItem>
                       { id }

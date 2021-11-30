@@ -14,9 +14,16 @@ import { managementCanisterPrincipal } from '@utils/ic-management-api';
 import { AccountData } from '@components/Tables/AccountsTable';
 import config from '../../config';
 import { shouldUseMockup } from '../../utils/mocks';
+import {
+  CanisterMetadata,
+  CanisterKeyPairedMetadata,
+  CanisterNameKeyPairedId,
+} from '@utils/dab';
 
 export interface AccountStore {
   accounts: ContractsResponse | {},
+  canisterKeyPairedMetadata?: CanisterKeyPairedMetadata,
+  canisterNameKeyPairedId: CanisterNameKeyPairedId,
   isLoading: boolean,
   pageData: AccountData[],
   totalContracts: number,
@@ -30,6 +37,8 @@ const USE_MOCKUP = shouldUseMockup();
 
 export const useAccountStore = create<AccountStore>((set) => ({
   accounts: {},
+  canisterKeyPairedMetadata: {},
+  canisterNameKeyPairedId: {},
   isLoading: false,
   pageData: [],
   totalContracts: 0,
@@ -116,8 +125,29 @@ export const useAccountStore = create<AccountStore>((set) => ({
       promisedTokenContractsPairedRoots,
     });
 
+    const canisterKeyPairedMetadata = (pageData as AccountData[]).reduce((acc, curr: AccountData) => {
+      if (!curr.dabCanister.metadata) return acc;
+
+      return {
+        ...acc,
+        [curr.contractId]: curr.dabCanister.metadata,
+      };
+    }, {} as CanisterKeyPairedMetadata);
+
+    const canisterNameKeyPairedId = 
+      Object
+        .keys(canisterKeyPairedMetadata)
+        .reduce((acc, curr) => {
+        return {
+          ...acc,
+          [canisterKeyPairedMetadata[curr].name]: curr,
+        }
+      }, {} as { [name: string]: string });
+
     set((state: AccountStore) => ({
       accounts: response,
+      canisterKeyPairedMetadata,
+      canisterNameKeyPairedId,
       isLoading: false,
       pageData,
       totalContracts: pageData.length,
