@@ -31,14 +31,6 @@ const Container = styled('div', {
   },
 });
 
-const LoadingContainer = styled('div', {
-  display: 'inline-block',
-  position: 'relative',
-  width: '20px',
-  height: '20px',
-  verticalAlign: 'middle',
-});
-
 export interface AccountData {
   contractId: string,
   dabCanister: {

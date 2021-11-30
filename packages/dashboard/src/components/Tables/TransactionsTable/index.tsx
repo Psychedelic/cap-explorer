@@ -1,11 +1,10 @@
 import React, {
-  useCallback,
   useEffect,
   useState,
   useMemo,
 } from 'react';
 import { styled } from '@stitched';
-import DataTable, { HeaderTabs, TableId } from '@components/Tables/DataTable';
+import DataTable, { TableId } from '@components/Tables/DataTable';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
 import Fleekon, { IconNames } from '@components/Fleekon';
@@ -121,8 +120,6 @@ export type FetchPageDataHandler = ({
   pageIndex: number,
 }) => void;
 
-const DEFAULT_BASE_STATE = TransactionTypes.all;
-
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'item',
   'operation',
@@ -179,29 +176,6 @@ const TransactionsTable = ({
 }) => {
   const [currentData, setCurrentData] = useState<Data[]>(data);
 
-  const onSelectionHandler = useCallback((selected: TransactionTypes) => {
-    // TODO: this will be connected to the IC
-    if (selected === DEFAULT_BASE_STATE) {
-      setCurrentData(
-        data,
-      );
-      return;
-    }
-
-    // TODO: set current, as disabled transaction type
-    // setCurrentData(
-    //   data.filter((v) => v.transactionType === selected),
-    // );
-  }, [data]);
-
-  const headerGroupHandler = useCallback((filters: TransactionTypes[]) => (
-    <HeaderTabs
-      filters={filters}
-      onSelectionHandler={onSelectionHandler}
-      id={id}
-    />
-  ), [onSelectionHandler]);
-
   const formatters = useMemo(() => ({
     body: {
       operation: (cellValue: OperationType) => {
@@ -245,7 +219,7 @@ const TransactionsTable = ({
       },
       time: (cellValue: string) => dateRelative(cellValue),
     },
-  }), [headerGroupHandler]);
+  }), []);
 
   useEffect(() => {
     setCurrentData(data);

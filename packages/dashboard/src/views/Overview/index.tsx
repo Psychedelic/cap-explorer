@@ -19,7 +19,6 @@ const Overview = ({
     isLoading,
     pageData,
     fetch,
-    reset,
   } = accountStore;
 
   useEffect(() => {
@@ -32,10 +31,6 @@ const Overview = ({
     fetch({
       capRouterInstance,
     });
-
-    // TODP: should only reset on unmount
-    // when pagination is ready
-    // return () => reset();
   }, [capRouterInstance]);
 
   return (
