@@ -84,6 +84,9 @@ const SuggestionDropbox = styled('div', {
   background: 'rgb(0, 0, 0)',
   borderBottomRightRadius: '12px',
   borderBottomLeftRadius: '12px',
+
+  position: 'absolute',
+  boxShadow: '1px 1px 20px rgb(0 0 0 / 60%)',
 });
 
 const SuggestionItem = styled('div', {
