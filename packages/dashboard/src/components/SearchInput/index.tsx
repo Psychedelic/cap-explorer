@@ -10,6 +10,7 @@ import { useAccountStore } from '@hooks/store';
 import { RawLink } from '@components/Link';
 import { getRouteByName } from '@utils/routes';
 import { useOutsideHandler } from '@hooks/dom';
+import Fleekon from '@components/Fleekon';
 
 const SearchAccount = styled('div', {
   position: 'relative',
@@ -29,13 +30,13 @@ const SearchAccount = styled('div', {
     boxSizing: 'border-box',
     boxShadow: 'rgb(0 0 0 / 4%) 0px 24px 32px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 0px 1px',
 
-    '& > svg': {
+    '& > span svg': {
       opacity: 0.7,
       transition: 'opacity 0.6s',
     },
 
     '&:hover': {
-      '& > svg': {
+      '& > span svg': {
         opacity: 1,
       },
     },
@@ -156,8 +157,17 @@ const SearchInput = () => {
           value={userInput}
         />
         {
-          (showSuggestions
-          && <span>TODO: Add Icon</span>)
+          (
+            showSuggestions
+            && <span>TODO: add icon X</span>
+          )
+          || (
+            <Fleekon
+              icon="magnifyingGlass"
+              size="14px"
+              className="icon-magnifying-glass"
+            />
+          )
         }
       </div>
       {
