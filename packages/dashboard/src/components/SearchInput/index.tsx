@@ -120,18 +120,27 @@ type Suggestions = string[];
 
 const SearchInput = () => {
   const refDOM = useRef<HTMLDivElement | undefined>();
-  const { accounts } = useAccountStore((state) => state);
+  // const { accounts } = useAccountStore((state) => state);
   const [userInput, setUserInput] = useState<string>('');
   const [suggestions, setSuggestions] = useState<Suggestions>([]);
   const clickedOutside = useOutsideHandler({
     domElement: refDOM?.current,
   });
   const onInputHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const matches = accounts.filter((val: any) => val.indexOf(e.currentTarget.value) === 0);
+    // TODO: use accounts state
+    const accounts = [
+      'icpuppies',
+      'icpunks',
+      'cronic critters',
+      'starverse',
+    ];
+    const matches = accounts.filter((val: string) => val.includes(e.currentTarget.value));
+    
+    console.log('[debug] matches', matches);
 
     setSuggestions(matches);
     setUserInput(e.currentTarget.value);
-  }, [accounts, setSuggestions, setUserInput]);
+  }, [setSuggestions, setUserInput]);
 
   const showSuggestions = !!(userInput.length && suggestions.length);
 
