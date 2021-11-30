@@ -6,6 +6,7 @@ const Icons = {
   arrowRight: 'icon-arrow-right',
   clone: 'icon-clone',
   check: 'icon-check',
+  cross: 'icon-cross',
   search: 'icon-search',
   house: 'icon-house',
   burn: 'icon-burn',
