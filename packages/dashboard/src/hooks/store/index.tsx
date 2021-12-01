@@ -15,12 +15,14 @@ import { AccountData } from '@components/Tables/AccountsTable';
 import config from '../../config';
 import { shouldUseMockup } from '../../utils/mocks';
 import {
-  CanisterMetadata,
   ContractPairedMetadata,
   CanisterKeyPairedMetadata,
   CanisterNameKeyPairedId,
   getDabMetadata,
 } from '@utils/dab';
+import {
+  preloadPageDataImages,
+} from '@utils/images';
 
 export interface AccountStore {
   accounts: ContractsResponse | {},
@@ -147,6 +149,8 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
       },
     }));
 
+    await preloadPageDataImages({ pageData });
+
     const canisterKeyPairedMetadata = (pageData as AccountData[]).reduce((acc, curr: AccountData) => {
       if (!curr.dabCanister.metadata) return acc;
 
@@ -225,7 +229,6 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
       canisterKeyPairedMetadata,
       canisterNameKeyPairedId,
       contractPairedMetadata,
-      isLoading: false,
     }));
   },
   reset: () => set((state: AccountStore) => ({

@@ -1,3 +1,5 @@
+import { AccountData } from '@components/Tables/AccountsTable';
+
 export default {};
 
 export const preloadImage = (src: string) => {
@@ -37,3 +39,29 @@ const prefetch = (src: string) => {
 
   document.head.appendChild(res);
 };
+
+const PRE_FETCH_DAB_INDEX_COUNT = 10;
+
+export const preloadPageDataImages = async ({
+  pageData,
+}: {
+  pageData: AccountData[],
+}) => {
+  // Preload the first top images
+  // controlled by the value set in PRE_FETCH_DAB_INDEX_COUNT
+  let promises: any = [];
+
+  for (let i = 0; i < PRE_FETCH_DAB_INDEX_COUNT; i++) {
+    const logoUrl = pageData[i]?.dabCanister?.metadata?.logo_url;
+
+    if (!logoUrl) continue;
+
+    promises.push(
+      preloadImage(logoUrl)
+    );
+  }
+
+  const result = await Promise.all(promises);
+
+  console.warn(`Nice! Preloaded ${result.length} images.`);
+}

@@ -35,16 +35,16 @@ const Overview = ({
     });
   }, [capRouterInstance]);
 
-  useEffect(() => {
-    if (!pageData.length) return;
+  // useEffect(() => {
+  //   if (!pageData.length) return;
 
-    // TODO: this is temporary
-    // while big search is not available
-    // should be removed after
-    fetchDabMetadata({
-      pageData,
-    });
-  }, [pageData]);
+  //   // TODO: this is temporary
+  //   // while big search is not available
+  //   // should be removed after
+  //   fetchDabMetadata({
+  //     pageData,
+  //   });
+  // }, [pageData]);
 
   return (
     <Page

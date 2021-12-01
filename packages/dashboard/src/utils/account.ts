@@ -69,37 +69,14 @@ export const parseUserRootBucketsResponse = async ({
   if (!contracts || !Array.isArray(contracts) || !contracts.length) return [];
 
   let data: AccountData[] = [];
-  let index = 0;
-  const PRE_FETCH_DAB_INDEX_COUNT = 8
 
   for await (const rootContractPrincipal of contracts) {
-    index += 1;
-
     const contractId = await getTokenContractCanisterIdByRoot(
       promisedTokenContractsPairedRoots,
       rootContractPrincipal.toText(),
     );
 
     if (!contractId) continue;
-
-    // // Let's prefetch the very first few
-    // // to provide the user with data ASAP
-    // if (index <= PRE_FETCH_DAB_INDEX_COUNT) {
-    //   // Fetch Dab metadata
-    //   const metadata = await getDabMetadata({
-    //     canisterId: contractId,
-    //   });
-
-    //   data.push({
-    //     contractId,
-    //     dabCanister: {
-    //       contractId,
-    //       metadata,
-    //     },
-    //   });
-
-    //   continue;
-    // }
 
     data.push({
       contractId,
@@ -111,19 +88,19 @@ export const parseUserRootBucketsResponse = async ({
 
   // Preload the first top images
   // controlled by the value set in PRE_FETCH_DAB_INDEX_COUNT
-  let promises: any = [];
+  // let promises: any = [];
 
-  for (let i = 0; i <= PRE_FETCH_DAB_INDEX_COUNT; i++) {
-    if (!data[i]?.dabCanister?.metadata?.logo_url) continue;
+  // for (let i = 0; i <= PRE_FETCH_DAB_INDEX_COUNT; i++) {
+  //   if (!data[i]?.dabCanister?.metadata?.logo_url) continue;
 
-    promises.push(
-      preloadImage(data[i]?.dabCanister?.metadata?.logo_url as any)
-    );
-  }
+  //   promises.push(
+  //     preloadImage(data[i]?.dabCanister?.metadata?.logo_url as any)
+  //   );
+  // }
 
-  const result = await Promise.all(promises);
+  // const result = await Promise.all(promises);
 
-  console.warn(`Nice! Preloaded ${result.length} images.`);
+  // console.warn(`Nice! Preloaded ${result.length} images.`);
 
   return data;
 }
