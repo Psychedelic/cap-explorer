@@ -20,7 +20,6 @@ const Overview = ({
     isLoading,
     pageData,
     fetch,
-    fetchDabMetadata,
   } = accountStore;
 
   useEffect(() => {
@@ -34,17 +33,6 @@ const Overview = ({
       capRouterInstance,
     });
   }, [capRouterInstance]);
-
-  // useEffect(() => {
-  //   if (!pageData.length) return;
-
-  //   // TODO: this is temporary
-  //   // while big search is not available
-  //   // should be removed after
-  //   fetchDabMetadata({
-  //     pageData,
-  //   });
-  // }, [pageData]);
 
   return (
     <Page
