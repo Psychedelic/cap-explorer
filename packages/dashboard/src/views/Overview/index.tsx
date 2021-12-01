@@ -41,7 +41,9 @@ const Overview = ({
     // TODO: this is temporary
     // while big search is not available
     // should be removed after
-    fetchDabMetadata();
+    fetchDabMetadata({
+      pageData,
+    });
   }, [pageData]);
 
   return (

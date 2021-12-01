@@ -82,24 +82,24 @@ export const parseUserRootBucketsResponse = async ({
 
     if (!contractId) continue;
 
-    // Let's prefetch the very first few
-    // to provide the user with data ASAP
-    if (index <= PRE_FETCH_DAB_INDEX_COUNT) {
-      // Fetch Dab metadata
-      const metadata = await getDabMetadata({
-        canisterId: contractId,
-      });
+    // // Let's prefetch the very first few
+    // // to provide the user with data ASAP
+    // if (index <= PRE_FETCH_DAB_INDEX_COUNT) {
+    //   // Fetch Dab metadata
+    //   const metadata = await getDabMetadata({
+    //     canisterId: contractId,
+    //   });
 
-      data.push({
-        contractId,
-        dabCanister: {
-          contractId,
-          metadata,
-        },
-      });
+    //   data.push({
+    //     contractId,
+    //     dabCanister: {
+    //       contractId,
+    //       metadata,
+    //     },
+    //   });
 
-      continue;
-    }
+    //   continue;
+    // }
 
     data.push({
       contractId,

@@ -32,7 +32,7 @@ export interface AccountStore {
   totalContracts: number,
   totalPages: number,
   fetch: ({ capRouterInstance }: { capRouterInstance: CapRouter } ) => void,
-  fetchDabMetadata: () => void,
+  fetchDabMetadata: ({ pageData }: { pageData: AccountData[] }) => void,
   reset: () => void,
 }
 
@@ -125,10 +125,27 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
       })()
     }
 
-    const pageData = await parseUserRootBucketsResponse({
+    let pageData = await parseUserRootBucketsResponse({
       ...response,
       promisedTokenContractsPairedRoots,
     });
+
+    // Fetch the Dab metadata
+    await get().fetchDabMetadata({ pageData });
+
+    const contractPairedMetadata = await get().contractPairedMetadata;
+
+    // Update the pageData with the metadata
+    pageData = contractPairedMetadata.map(({
+      contractId,
+      metadata,
+    }) => ({
+      contractId,
+      dabCanister: {
+        contractId,
+        metadata,
+      },
+    }));
 
     const canisterKeyPairedMetadata = (pageData as AccountData[]).reduce((acc, curr: AccountData) => {
       if (!curr.dabCanister.metadata) return acc;
@@ -161,9 +178,11 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
   },
   // TODO: This was used temporarily
   // since big search is not yet available
-  fetchDabMetadata: async () => {
-    const pageData = get().pageData;
-
+  fetchDabMetadata: async ({
+    pageData,
+  }: {
+    pageData: AccountData[],
+  }) => {
     const promises = pageData.map(
       ({ contractId }) =>
         (async () => {
