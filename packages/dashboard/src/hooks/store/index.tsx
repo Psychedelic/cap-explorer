@@ -16,29 +16,34 @@ import config from '../../config';
 import { shouldUseMockup } from '../../utils/mocks';
 import {
   CanisterMetadata,
+  ContractPairedMetadata,
   CanisterKeyPairedMetadata,
   CanisterNameKeyPairedId,
+  getDabMetadata,
 } from '@utils/dab';
 
 export interface AccountStore {
   accounts: ContractsResponse | {},
   canisterKeyPairedMetadata?: CanisterKeyPairedMetadata,
   canisterNameKeyPairedId: CanisterNameKeyPairedId,
+  contractPairedMetadata: ContractPairedMetadata[],
   isLoading: boolean,
   pageData: AccountData[],
   totalContracts: number,
   totalPages: number,
   fetch: ({ capRouterInstance }: { capRouterInstance: CapRouter } ) => void,
+  fetchDabMetadata: () => void,
   reset: () => void,
 }
 
 // Shall use mockup data?
 const USE_MOCKUP = shouldUseMockup();
 
-export const useAccountStore = create<AccountStore>((set) => ({
+export const useAccountStore = create<AccountStore>((set, get) => ({
   accounts: {},
   canisterKeyPairedMetadata: {},
   canisterNameKeyPairedId: {},
+  contractPairedMetadata: [],
   isLoading: false,
   pageData: [],
   totalContracts: 0,
@@ -152,6 +157,56 @@ export const useAccountStore = create<AccountStore>((set) => ({
       pageData,
       totalContracts: pageData.length,
       totalPages: 1,
+    }));
+  },
+  // TODO: This was used temporarily
+  // since big search is not yet available
+  fetchDabMetadata: async () => {
+    const pageData = get().pageData;
+
+    const promises = pageData.map(
+      ({ contractId }) =>
+        (async () => {
+          const metadata = await getDabMetadata({
+            canisterId: contractId,
+          });
+
+          if (!metadata) return undefined;
+          
+          return {
+            contractId,
+            metadata,
+          };
+        })()
+    );
+
+    const promiseResponse: (ContractPairedMetadata | undefined)[] = await Promise.all(promises);
+
+    const contractPairedMetadata = promiseResponse.filter(d => d) as ContractPairedMetadata[];
+
+    const canisterKeyPairedMetadata: CanisterKeyPairedMetadata = 
+        contractPairedMetadata
+          .reduce((acc, curr) => ({
+            ...acc,
+            [curr.contractId]: curr.metadata,
+          }), {});
+
+    const canisterNameKeyPairedId: CanisterNameKeyPairedId = 
+      Object
+        .keys(canisterKeyPairedMetadata)
+        .reduce((acc, curr) => {
+        return {
+          ...acc,
+          [canisterKeyPairedMetadata[curr].name]: curr,
+        }
+      }, {});
+
+    set((state: AccountStore) => ({
+      ...state,
+      canisterKeyPairedMetadata,
+      canisterNameKeyPairedId,
+      contractPairedMetadata,
+      isLoading: false,
     }));
   },
   reset: () => set((state: AccountStore) => ({
