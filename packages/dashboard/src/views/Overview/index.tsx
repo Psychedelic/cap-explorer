@@ -7,6 +7,7 @@ import {
 } from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
 import OverallValues from '@components/OverallValues';
+import SearchInput from '@components/SearchInput';
 
 const Overview = ({
   accountStore,
@@ -39,6 +40,9 @@ const Overview = ({
     >
       <PageRow>
         <Title size="xl">Cap Explorer</Title>
+      </PageRow>
+      <PageRow>
+        <SearchInput />
       </PageRow>
       <PageRow>
         <OverallValues

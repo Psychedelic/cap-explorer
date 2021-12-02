@@ -14,6 +14,14 @@ export interface CanisterMetadata {
   logo_url: string;
 }
 
+export type ContractPairedMetadata = {
+  contractId: string;
+  metadata: CanisterMetadata;
+};
+
+export type CanisterKeyPairedMetadata = { [canisterId: string]: CanisterMetadata; };
+export type CanisterNameKeyPairedId = Record<string, string>;
+
 const USE_MOCKUP = shouldUseMockup();
 
 export const getDabMetadata = async ({
