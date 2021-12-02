@@ -219,7 +219,7 @@ const TransactionsTable = ({
       },
       time: (cellValue: string) => dateRelative(cellValue),
     },
-  }), []);
+  }), [identityInDab]);
 
   useEffect(() => {
     setCurrentData(data);
