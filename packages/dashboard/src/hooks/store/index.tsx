@@ -138,16 +138,19 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     const contractPairedMetadata = await get().contractPairedMetadata;
 
     // Update the pageData with the metadata
-    pageData = contractPairedMetadata.map(({
-      contractId,
-      metadata,
-    }) => ({
-      contractId,
-      dabCanister: {
+    pageData = [
+      ...pageData,
+      ...contractPairedMetadata.map(({
         contractId,
         metadata,
-      },
-    }));
+      }) => ({
+        contractId,
+        dabCanister: {
+          contractId,
+          metadata,
+        },
+      })),
+    ];
 
     await preloadPageDataImages({ pageData });
 
