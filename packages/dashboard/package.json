@@ -34,7 +34,6 @@
     "@psychedelic/generate-random-principal": "^0.0.1",
     "@stitches/react": "^1.2.5",
     "@storybook/react": "^6.2.8",
-    "@tippyjs/react": "^4.2.6",
     "@types/jest": "^26.0.21",
     "@types/loadable__component": "^5.13.3",
     "@types/lodash.debounce": "^4.0.6",

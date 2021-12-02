@@ -5,7 +5,6 @@ import {
 } from '@utils/dab';
 import { styled } from '@stitched';
 import iconUnknown from '@images/icon-unknown.svg';
-import Tippy from '@tippyjs/react';
 
 const ItemCell = styled('div', {
   display: 'flex',
@@ -38,6 +37,12 @@ const Tooltip = styled('div', {
   fontFamily: 'Inter',
   fontWeight: 'normal',
   boxShadow: '1px 1px 40px rgba(0,0,0,0.6)',
+  maxWidth: '500px',
+  zIndex: 9999,
+  position: 'absolute',
+  top: '78px',
+  left: 0,
+  display: 'none',
 
   '& [data-arrow]': {
     position: 'absolute',
@@ -103,39 +108,19 @@ export default ({
   identityInDab?: CanisterMetadata,
   asHoverState?: boolean,
 }) => (
-  <Tippy
-    content={
-      <Tooltip data-tooltip>
-        <span data-arrow />
-        <span data-arrow-after />
-        <span data-title>Why is this Unknown?</span>
-        <span data-description>
-          This asset has not been added to DAB yet. The owner or controller of 
-          this asset should add it to DAB so the name and other info about this 
-          asset can be automatically surfaced in every interface that uses DAB. <a href='https://dab.ooo' target='_blank'>Learn More.</a>
-        </span>
-      </Tooltip>
-    }
-    offset={[-10, 20]}
-    placement='bottom-start'
-    disabled={!!identityInDab?.name}
-    maxWidth='500px'
-    zIndex={9999}
-    interactive={true}
-    // onTrigger={(e) => console.log('[debug] Dashboard', e)}
-  >
-    <ItemCell asHoverState={asHoverState}>
-      <span
-        data-image
-        style={{
-          backgroundImage: `url(${identityInDab?.logo_url || iconUnknown})`,
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          display: 'inline-block',
-        }}
-      />
+  <ItemCell asHoverState={asHoverState}>
+    <span
+      data-image
+      style={{
+        backgroundImage: `url(${identityInDab?.logo_url || iconUnknown})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        display: 'inline-block',
+      }}
+    />
 
+    <span data-identity-name>
       { identityInDab?.name || DAB_IDENTITY_UNKNOWN }
       {
         // If undefined, hide the cellValue
@@ -143,6 +128,22 @@ export default ({
           ? cellValue ? ' #' + cellValue : ''
           : ''
       }
-    </ItemCell>
-  </Tippy>
+    </span>
+
+    {
+      !identityInDab?.name
+      && (
+        <Tooltip data-tooltip>
+          <span data-arrow />
+          <span data-arrow-after />
+          <span data-title>Why is this Unknown?</span>
+          <span data-description>
+            This asset has not been added to DAB yet. The owner or controller of 
+            this asset should add it to DAB so the name and other info about this 
+            asset can be automatically surfaced in every interface that uses DAB. <a href='https://dab.ooo' target='_blank'>Learn More.</a>
+          </span>
+        </Tooltip>
+      )
+    }
+  </ItemCell>
 );
