@@ -45,7 +45,7 @@ const Tooltip = styled('div', {
   width: '85vw',
 
   '@lg': {
-    maxWidth: '500px',
+    maxWidth: '540px',
   },
 
   '& [data-arrow]': {
