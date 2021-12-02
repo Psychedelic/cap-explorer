@@ -181,7 +181,7 @@ const SearchInput = () => {
       <div>
         <Input
           type="text"
-          placeholder="Search Token Contracts..."
+          placeholder="Search by Name or Canister ID..."
           onChange={onInputHandler}
           value={userInput}
         />
