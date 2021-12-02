@@ -212,16 +212,6 @@ const SearchInput = () => {
                 </span>
               ))
             }
-            <SuggestionMore>
-              <span
-                data-suggestion
-                data-suggestions-more-acc
-              >
-                <RawLink to={getRouteByName('Overview')}>
-                  See more accounts...
-                </RawLink>
-              </span>
-            </SuggestionMore>
           </SuggestionDropbox>
         )
       }
