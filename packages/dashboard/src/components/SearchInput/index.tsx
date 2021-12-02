@@ -124,7 +124,7 @@ type Suggestions = string[];
 const SearchInput = () => {
   const accountStore = useAccountStore();
   const {
-    // canisterKeyPairedMetadata,
+    canisterKeyPairedMetadata,
     canisterNameKeyPairedId,
   } = accountStore;
   const refDOM = useRef<HTMLDivElement | undefined>();
@@ -134,14 +134,32 @@ const SearchInput = () => {
     domElement: refDOM?.current,
   });
   const onInputHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const matches =
+    // Filter by name
+    // gets a list of names
+    const matchesByName =
       Object
         .keys(canisterNameKeyPairedId)
         .filter(
           (val: string) => val.toLowerCase().includes(e.currentTarget.value.toLowerCase())
         );
 
-    setSuggestions(matches);
+    // Reverse lookup which computes the name based in the requested id
+    // gets a list of names
+    const matchesById =
+      canisterKeyPairedMetadata
+      && Object
+          .keys(canisterKeyPairedMetadata)
+          .map((canisterId) => canisterId)
+          .filter(
+            (val: string) => val.toLowerCase().includes(e.currentTarget.value.toLowerCase())
+          )
+          .map((canisterId: string) => canisterKeyPairedMetadata[canisterId].name)
+      || [];
+
+    setSuggestions([
+      ...matchesByName,
+      ...matchesById,
+    ]);
     setUserInput(e.currentTarget.value);
   }, [canisterNameKeyPairedId, setSuggestions, setUserInput]);
 
