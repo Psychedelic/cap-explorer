@@ -37,12 +37,16 @@ const Tooltip = styled('div', {
   fontFamily: 'Inter',
   fontWeight: 'normal',
   boxShadow: '1px 1px 40px rgba(0,0,0,0.6)',
-  maxWidth: '500px',
   zIndex: 9999,
   position: 'absolute',
   top: '78px',
   left: 0,
   display: 'none',
+  width: '85vw',
+
+  '@lg': {
+    maxWidth: '500px',
+  },
 
   '& [data-arrow]': {
     position: 'absolute',
