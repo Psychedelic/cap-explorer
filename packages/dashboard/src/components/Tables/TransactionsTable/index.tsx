@@ -184,9 +184,9 @@ const TransactionsTable = ({
       },
       item: (cellValue: number) => (
         <ItemCell
-            identityInDab={identityInDab}
-            cellValue={cellValue}
-            derivedId={true}
+          identityInDab={identityInDab}
+          cellValue={cellValue}
+          derivedId={true}
         />
       ),
       amount: (cellValue: number) => {

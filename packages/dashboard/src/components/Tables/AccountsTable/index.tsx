@@ -129,9 +129,11 @@ const AccountsTable = ({
           // because we only fetch the very first ones to improve perf
           // and serve the client ASAP
           return (
-            <DabLink tokenContractId={contractId}>
-              <AccountDab canisterId={contractId} />
-            </DabLink>
+            // TODO: Disabled for debugging should remove the commented out
+            // <DabLink tokenContractId={contractId}>
+            //   <AccountDab canisterId={contractId} />
+            // </DabLink>
+            <AccountDab canisterId={contractId} />
           )
         }
 
