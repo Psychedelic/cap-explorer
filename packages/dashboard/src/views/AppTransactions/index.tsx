@@ -113,6 +113,7 @@ const AppTransactions = ({
     })();
   }, [pageData]);
 
+  // TODO: This might be already in cache, if the user comes from Overview
   // Dab metadata handler
   useEffect(() => {
     const getDabMetadataHandler = async () => {      
