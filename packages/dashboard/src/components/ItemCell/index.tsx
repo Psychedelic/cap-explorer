@@ -1,5 +1,8 @@
 import React from 'react';
-import { CanisterMetadata } from '@utils/dab';
+import {
+  CanisterMetadata,
+  DAB_IDENTITY_UNKNOWN,
+} from '@utils/dab';
 import { styled } from '@stitched';
 import iconUnknown from '@images/icon-unknown.svg';
 import Tippy from '@tippyjs/react';
@@ -109,7 +112,7 @@ export default ({
         <span data-description>
           This asset has not been added to DAB yet. The owner or controller of 
           this asset should add it to DAB so the name and other info about this 
-          asset can be automatically surfaced in every interface that uses DAB. <a href='TODO#LEARN-MORE' target='_blank'>Learn More.</a>
+          asset can be automatically surfaced in every interface that uses DAB. <a href='https://dab.ooo' target='_blank'>Learn More.</a>
         </span>
       </Tooltip>
     }
@@ -117,6 +120,9 @@ export default ({
     placement='bottom-start'
     disabled={!!identityInDab?.name}
     maxWidth='500px'
+    zIndex={9999}
+    interactive={true}
+    // onTrigger={(e) => console.log('[debug] Dashboard', e)}
   >
     <ItemCell asHoverState={asHoverState}>
       <span
@@ -130,7 +136,7 @@ export default ({
         }}
       />
 
-      { identityInDab?.name || 'Unknown' }
+      { identityInDab?.name || DAB_IDENTITY_UNKNOWN }
       {
         // If undefined, hide the cellValue
         derivedId

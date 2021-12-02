@@ -54,3 +54,5 @@ export const getDabMetadata = async ({
 
   return metadata;
 }
+
+export const DAB_IDENTITY_UNKNOWN = 'Unknown';

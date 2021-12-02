@@ -22,6 +22,7 @@ import { PAGE_SIZE } from '@hooks/store';
 import Loading from '@components/Loading';
 import Fleekon from '@components/Fleekon';
 import Pagination from '@components/Pagination';
+import { DAB_IDENTITY_UNKNOWN } from '@utils/dab';
 
 const RowWrapper = styled('div', {
   display: 'grid',
@@ -58,6 +59,7 @@ const RowWrapper = styled('div', {
 
 
   '&[data-row]': {
+    zIndex: 1,
 
     '&:hover': {  
       backgroundColor: '#333',
@@ -426,7 +428,16 @@ const DataTable = <T extends {}>({
       // TODO: What to do on failure? Handle gracefully
       console.warn(`Oops! Failed to fetch the page ${pageIndex} data`);
     };
+
+    return () => queueClearZIndex.forEach((fn) => fn());
   }, [pageIndex]);
+
+  let rowClearZIndexTimeouts: Record<any, any> = {};
+  let queueClearZIndex: any[] = [];
+
+  useEffect(() => {
+    return () => queueClearZIndex.forEach((fn) => fn());
+  }, []);
 
   return (
     <>
@@ -480,7 +491,42 @@ const DataTable = <T extends {}>({
                       prepareRow(row);
 
                       return (
-                        <RowWrapper key={row.index} data-row>
+                        <RowWrapper
+                          key={row.index}
+                          data-row
+                          onMouseEnter={
+                            (e) => {
+                              const textContent = e.currentTarget.querySelector('[data-cid="dabCanister"] div:first-child')?.textContent;
+
+                              if (textContent !== DAB_IDENTITY_UNKNOWN) return;
+                              clearTimeout(rowClearZIndexTimeouts[row.index]);
+
+                              queueClearZIndex.forEach((fn) => fn());
+
+                              ((currentTarget) => {
+                                currentTarget.style.zIndex = '2';
+                              })(e.currentTarget)
+                            }
+                          }
+                          onMouseLeave={
+                            (e) => {
+                              const textContent = e.currentTarget.querySelector('[data-cid="dabCanister"] div:first-child')?.textContent;
+
+                              if (textContent !== DAB_IDENTITY_UNKNOWN) return;
+                              ((currentTarget) => {
+                                queueClearZIndex.push(
+                                  () => {
+                                    currentTarget.style.zIndex = '1';
+                                  }
+                                );
+
+                                rowClearZIndexTimeouts[row.index] = setTimeout(() => {
+                                  currentTarget.style.zIndex = '1';
+                                }, 400);
+                              })(e.currentTarget)
+                            }
+                          }
+                        >
                           {
                             row.cells.map((cell) => {
                               const { key: colHeaderKey } = cell.column.getHeaderProps();

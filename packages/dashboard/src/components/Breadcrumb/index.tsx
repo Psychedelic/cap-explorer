@@ -2,7 +2,10 @@ import React from 'react';
 import { styled } from '@stitched';
 import Fleekon from '@components/Fleekon';
 import { RawLink } from '@components/Link';
-import { CanisterMetadata } from '@utils/dab';
+import {
+  CanisterMetadata,
+  DAB_IDENTITY_UNKNOWN,
+} from '@utils/dab';
 import Loading from '@components/Loading';
 
 const Hover = styled('span', {
@@ -81,7 +84,7 @@ const Breadcrumb = ({
           {
             identityInDab
             ? identityInDab?.name
-            : 'unknown'
+            : DAB_IDENTITY_UNKNOWN
           }
           </span>
         )
