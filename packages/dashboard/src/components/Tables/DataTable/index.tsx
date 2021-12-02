@@ -432,8 +432,8 @@ const DataTable = <T extends {}>({
     return () => queueClearZIndex.forEach((fn) => fn());
   }, [pageIndex]);
 
-  let rowClearZIndexTimeouts: Record<any, any> = {};
-  let queueClearZIndex: any[] = [];
+  let rowClearZIndexTimeouts: Record<number, ReturnType<typeof setTimeout>> = {};
+  let queueClearZIndex: (() => void)[] = [];
 
   useEffect(() => {
     return () => queueClearZIndex.forEach((fn) => fn());
@@ -522,7 +522,7 @@ const DataTable = <T extends {}>({
 
                                 rowClearZIndexTimeouts[row.index] = setTimeout(() => {
                                   currentTarget.style.zIndex = '1';
-                                }, 400);
+                                }, 600);
                               })(e.currentTarget)
                             }
                           }
