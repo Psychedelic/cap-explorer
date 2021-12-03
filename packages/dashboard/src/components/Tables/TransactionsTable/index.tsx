@@ -11,7 +11,6 @@ import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
 import {
   CanisterMetadata,
-  getNFTDetails,
 } from '@utils/dab';
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
@@ -228,34 +227,6 @@ const TransactionsTable = ({
 
   useEffect(() => {
     setCurrentData(data);
-
-    // Get all the Dab NFT item details
-    // export interface Data {
-    //   operation: string,
-    //   item: number,
-    //   amount: string,
-    //   from: string,
-    //   to: string,
-    //   time: string,
-    // }
-    (async () => {
-      console.log('[debug] transactions table: data: ', data);
-      const standard = identityInDab?.name;
-  
-      if (!standard) return;
-  
-      const dabNFTMetadataPromises = data.map(
-        (item) => getNFTDetails({
-            tokenId,
-            tokenIndex: item.item,
-            standard,
-          })
-      );
-  
-      const dabNFTMetadataRes = await Promise.all(dabNFTMetadataPromises);
-
-      console.log('[debug] transactions table: dabNFTMetadataRes: ', dabNFTMetadataRes);
-    })();    
   }, [data]);
 
   return (

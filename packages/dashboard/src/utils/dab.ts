@@ -2,6 +2,7 @@ import config from '../config';
 import {
   getCanisterInfo,
   getNFTActor,
+  NFTDetails,
 } from '@psychedelic/dab-js';
 import { HttpAgent } from '@dfinity/agent';
 import { mockCanisterMetadata } from '@utils/mocks/dabMetadata';
@@ -68,7 +69,7 @@ export const getNFTDetails = async ({
   tokenId: string,
   tokenIndex: number,
   standard: string,
-}) => {
+}): Promise<NFTDetails> => {
   const httpAgentArgs = {
     host: 'https://ic0.app/',
     canisterId: tokenId,

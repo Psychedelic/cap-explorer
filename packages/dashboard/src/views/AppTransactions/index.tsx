@@ -22,6 +22,7 @@ import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import OverallValues from '@components/OverallValues';
 import { Principal } from '@dfinity/principal';
+import { useDabStore } from '@hooks/store';
 
 const UserBar = styled('div', {
   display: 'flex',
@@ -35,6 +36,12 @@ const AppTransactions = ({
 }: {
   capRouterInstance: CapRouter | undefined,
 }) => {
+  const dabStore = useDabStore();
+  const {
+    // isLoading: isLoadingDabItemDetails,
+    fetchDabItemDetails,
+    nftItemDetails,
+  } = dabStore;
   const [isLoading, setIsLoading] = useState(true);
   const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
   const isSmallerThanBreakpointLG = useWindowResize({
@@ -80,7 +87,19 @@ const AppTransactions = ({
     if (!pageData) return;
 
     setTransactions(pageData);
+
+    console.log('[debug] app transactions: fetch dab item details started');
+    fetchDabItemDetails({
+      data: pageData,
+      tokenId,
+      standard: 'ICPunks',
+    });
   }, [pageData]);
+
+  useEffect(() => {
+    console.log('[debug] app transactions: fetch dab item details completed');
+    console.log('[debug] app transactions: nftItemDetails', nftItemDetails);
+  }, [nftItemDetails]);
 
   useEffect(() => {
     if (!rootCanisterId) return;

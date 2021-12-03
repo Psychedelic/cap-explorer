@@ -6,6 +6,9 @@ import {
   CapRouter,
   CapRoot,
 } from '@psychedelic/cap-js';
+import {
+  NFTDetails,
+} from '@psychedelic/dab-js';
 import { Principal } from '@dfinity/principal';
 import { getCapRootInstance } from '@utils/cap'; 
 import { parseGetTransactionsResponse } from '@utils/transactions';
@@ -19,6 +22,7 @@ import {
   CanisterKeyPairedMetadata,
   CanisterNameKeyPairedId,
   getDabMetadata,
+  getNFTDetails,
 } from '@utils/dab';
 import {
   preloadPageDataImages,
@@ -383,4 +387,69 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     totalTransactions: 0,
     totalPages: 0,
   })),
+}));
+
+type NFTItemDetails = {
+  [tokenContractId: string]: {
+    [index: string]: NFTDetails,
+  }
+}
+
+export interface DabStore {
+  isLoading: boolean,
+  nftItemDetails: NFTItemDetails,
+  fetchDabItemDetails: ({
+    data,
+    tokenId,
+    standard,
+  }: {
+    data: any[],
+    tokenId: string,
+    standard: TokenStandards,
+  }) => void,
+}
+
+type TokenStandards = 'ICPunks';
+
+export const useDabStore = create<DabStore>((set, get) => ({
+  isLoading: false,
+  nftItemDetails: {},
+  fetchDabItemDetails: async ({
+    data,
+    tokenId,
+    standard,
+  }: {
+    data: any[],
+    tokenId: string,
+    standard: TokenStandards,
+  }) => {
+    const dabNFTMetadataPromises = data.map(
+      (item) => getNFTDetails({
+          tokenId,
+          tokenIndex: item.item,
+          standard,
+        })
+    );
+
+    // TODO: Split into parts to accelerate availability to end user
+    const dabNFTMetadataPromiseRes: NFTDetails[] = await Promise.all(dabNFTMetadataPromises);
+
+    // let nftItemDetails: NFTItemDetails = get().nftItemDetails;
+
+    const currNftItemDetails = dabNFTMetadataPromiseRes.reduce((acc, curr) => {
+      acc[curr.canister] = {
+        ...acc[curr.canister],
+        [curr.index.toString()]: curr,
+      };
+
+      return acc;
+    }, {} as NFTItemDetails);
+
+    set({
+      nftItemDetails: {
+        ...get().nftItemDetails,
+        ...currNftItemDetails,
+      },
+    })
+  },
 }));
