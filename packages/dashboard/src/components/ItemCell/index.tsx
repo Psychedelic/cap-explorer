@@ -6,6 +6,7 @@ import {
 import { styled } from '@stitched';
 import iconUnknown from '@images/icon-unknown.svg';
 import { TableUnknownCellTooltip } from '@components/Tooltips'
+import { NFTDetails } from '@psychedelic/dab-js';
 
 const ItemCell = styled('div', {
   display: 'flex',
@@ -37,17 +38,30 @@ export default ({
   derivedId = true,
   identityInDab,
   asHoverState = false,
+  nftDetails,
 }: {
   cellValue?: number,
   derivedId?: boolean,
   identityInDab?: CanisterMetadata,
   asHoverState?: boolean,
+  nftDetails?: NFTDetails,
 }) => (
   <ItemCell data-dab-identity-cell asHoverState={asHoverState}>
+    {/* export interface NFTDetails {
+        index: bigint;
+        canister: string;
+        id?: string;
+        name?: string;
+        url: string;
+        metadata: any;
+        standard: string;
+        collection?: string;
+    } */}
+
     <span
       data-image
       style={{
-        backgroundImage: `url(${identityInDab?.logo_url || iconUnknown})`,
+        backgroundImage: `url(${nftDetails?.url || identityInDab?.logo_url || iconUnknown})`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',

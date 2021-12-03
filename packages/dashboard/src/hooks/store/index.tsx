@@ -389,7 +389,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
   })),
 }));
 
-type NFTItemDetails = {
+export type NFTItemDetails = {
   [tokenContractId: string]: {
     [index: string]: NFTDetails,
   }
@@ -409,7 +409,7 @@ export interface DabStore {
   }) => void,
 }
 
-type TokenStandards = 'ICPunks';
+export type TokenStandards = 'ICPunks';
 
 export const useDabStore = create<DabStore>((set, get) => ({
   isLoading: false,
@@ -423,6 +423,7 @@ export const useDabStore = create<DabStore>((set, get) => ({
     tokenId: string,
     standard: TokenStandards,
   }) => {
+    // TODO: the call should be omitted, if already in cache
     const dabNFTMetadataPromises = data.map(
       (item) => getNFTDetails({
           tokenId,

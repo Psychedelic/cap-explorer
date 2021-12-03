@@ -202,6 +202,7 @@ const AppTransactions = ({
           fetchPageDataHandler={fetchPageDataHandler}
           identityInDab={identityInDab}
           tokenId={tokenId}
+          nftItemDetails={nftItemDetails}
         />
       </PageRow>
     </Page>

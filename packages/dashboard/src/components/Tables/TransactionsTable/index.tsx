@@ -15,6 +15,7 @@ import {
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
 import ItemCell from '@components/ItemCell';
+import { NFTItemDetails } from '@hooks/store';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -168,6 +169,7 @@ const TransactionsTable = ({
   isLoading = false,
   identityInDab,
   tokenId,
+  nftItemDetails,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: Data[],
@@ -177,6 +179,7 @@ const TransactionsTable = ({
   isLoading: boolean,
   identityInDab?: CanisterMetadata,
   tokenId: string,
+  nftItemDetails: NFTItemDetails,
 }) => {
   const [currentData, setCurrentData] = useState<Data[]>(data);
 
@@ -186,13 +189,26 @@ const TransactionsTable = ({
         if (typeof cellValue !== 'string') return;
         return <Operation type={cellValue} />
       },
-      item: (cellValue: number) => (
-        <ItemCell
-          identityInDab={identityInDab}
-          cellValue={cellValue}
-          derivedId={true}
-        />
-      ),
+      item: (cellValue: number) => {
+        let nftDetails;
+
+        try {
+          nftDetails = nftItemDetails[tokenId][cellValue];
+        } catch (err) {
+          console.log('[debug] err', err);
+        }
+
+        console.log(`[debug] nftDetails ${cellValue}`, nftDetails);
+
+        return (
+          <ItemCell
+            identityInDab={identityInDab}
+            cellValue={cellValue}
+            derivedId={true}
+            nftDetails={nftDetails}
+          />
+        );
+      },
       amount: (cellValue: number) => {
         if (!cellValue || typeof cellValue !== 'bigint') return NOT_AVAILABLE_PLACEHOLDER;
 
@@ -223,7 +239,7 @@ const TransactionsTable = ({
       },
       time: (cellValue: string) => dateRelative(cellValue),
     },
-  }), [identityInDab]);
+  }), [identityInDab, nftItemDetails]);
 
   useEffect(() => {
     setCurrentData(data);
