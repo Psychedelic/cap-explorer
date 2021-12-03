@@ -71,11 +71,24 @@ const Tooltip = styled('div', {
       },
     },
   },
+
+  '& [data-hover-placeholder]': {
+    background: 'transparent',
+    width: '180px',
+    height: '100%',
+    position: 'absolute',
+    top: '-50%',
+    left: 0,
+    opacity: 0.2,
+    pointerEvents: 'visible',
+    zIndex: 0,
+  },
 });
 
 export const TableUnknownCellTooltip = () => {
   return (
     <Tooltip data-tooltip>
+      <span data-hover-placeholder />
       <span data-arrow />
       <span data-arrow-after />
       <span data-title>Why is this Unknown?</span>
