@@ -1,7 +1,11 @@
 import React from 'react';
-import { CanisterMetadata } from '@utils/dab';
+import {
+  CanisterMetadata,
+  DAB_IDENTITY_UNKNOWN,
+} from '@utils/dab';
 import { styled } from '@stitched';
 import iconUnknown from '@images/icon-unknown.svg';
+import { TableUnknownCellTooltip } from '@components/Tooltips'
 
 const ItemCell = styled('div', {
   display: 'flex',
@@ -49,12 +53,21 @@ export default ({
       }}
     />
 
-    { identityInDab?.name || 'Unknown' }
+    <span data-identity-name>
+      { identityInDab?.name || DAB_IDENTITY_UNKNOWN }
+      {
+        // If undefined, hide the cellValue
+        derivedId
+          ? cellValue ? ' #' + cellValue : ''
+          : ''
+      }
+    </span>
+
     {
-      // If undefined, hide the cellValue
-      derivedId
-        ? cellValue ? ' #' + cellValue : ''
-        : ''
+      !identityInDab?.name
+      && (
+        <TableUnknownCellTooltip />
+      )
     }
   </ItemCell>
 );

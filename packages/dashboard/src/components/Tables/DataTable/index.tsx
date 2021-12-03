@@ -58,9 +58,19 @@ const RowWrapper = styled('div', {
 
 
   '&[data-row]': {
+    zIndex: 1,
 
     '&:hover': {  
       backgroundColor: '#333',
+      zIndex: 2,
+
+      '& [data-cid="dabCanister"]': {
+        '&:hover': {
+          '& [data-tooltip]': {
+            display: 'block',
+          },
+        },
+      }
     },
   },
 });
@@ -480,7 +490,10 @@ const DataTable = <T extends {}>({
                       prepareRow(row);
 
                       return (
-                        <RowWrapper key={row.index} data-row>
+                        <RowWrapper
+                          key={row.index}
+                          data-row
+                        >
                           {
                             row.cells.map((cell) => {
                               const { key: colHeaderKey } = cell.column.getHeaderProps();
