@@ -23,8 +23,10 @@ const ItemCell = styled('div', {
     asHoverState: {
       true: {
         '&:hover': {
-          color: '$purple',
-        },      
+          '& [data-identity-name]': {
+            color: '$purple',
+          },
+        },
       }
     }
   },
