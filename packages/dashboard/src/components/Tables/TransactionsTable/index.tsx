@@ -9,7 +9,10 @@ import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
 import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
-import { CanisterMetadata } from '@utils/dab';
+import {
+  CanisterMetadata,
+  getNFTDetails,
+} from '@utils/dab';
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
 import ItemCell from '@components/ItemCell';
@@ -165,6 +168,7 @@ const TransactionsTable = ({
   fetchPageDataHandler,
   isLoading = false,
   identityInDab,
+  tokenId,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: Data[],
@@ -173,6 +177,7 @@ const TransactionsTable = ({
   fetchPageDataHandler: FetchPageDataHandler,
   isLoading: boolean,
   identityInDab?: CanisterMetadata,
+  tokenId: string,
 }) => {
   const [currentData, setCurrentData] = useState<Data[]>(data);
 
@@ -223,6 +228,34 @@ const TransactionsTable = ({
 
   useEffect(() => {
     setCurrentData(data);
+
+    // Get all the Dab NFT item details
+    // export interface Data {
+    //   operation: string,
+    //   item: number,
+    //   amount: string,
+    //   from: string,
+    //   to: string,
+    //   time: string,
+    // }
+    (async () => {
+      console.log('[debug] transactions table: data: ', data);
+      const standard = identityInDab?.name;
+  
+      if (!standard) return;
+  
+      const dabNFTMetadataPromises = data.map(
+        (item) => getNFTDetails({
+            tokenId,
+            tokenIndex: item.item,
+            standard,
+          })
+      );
+  
+      const dabNFTMetadataRes = await Promise.all(dabNFTMetadataPromises);
+
+      console.log('[debug] transactions table: dabNFTMetadataRes: ', dabNFTMetadataRes);
+    })();    
   }, [data]);
 
   return (

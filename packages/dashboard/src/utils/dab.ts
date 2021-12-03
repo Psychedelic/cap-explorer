@@ -1,5 +1,8 @@
 import config from '../config';
-import { getCanisterInfo } from '@psychedelic/dab-js';
+import {
+  getCanisterInfo,
+  getNFTActor,
+} from '@psychedelic/dab-js';
 import { HttpAgent } from '@dfinity/agent';
 import { mockCanisterMetadata } from '@utils/mocks/dabMetadata';
 import { shouldUseMockup } from '@utils/mocks';
@@ -37,7 +40,7 @@ export const getDabMetadata = async ({
 
   const httpAgentArgs = {
     host: config.host,
-    canisterId,
+    canisterId, // TODO: why is this here? Typo? remove it
   };
   
   try {
@@ -56,3 +59,32 @@ export const getDabMetadata = async ({
 }
 
 export const DAB_IDENTITY_UNKNOWN = 'Unknown';
+
+export const getNFTDetails = async ({
+  tokenId,
+  tokenIndex,
+  standard,
+}: {
+  tokenId: string,
+  tokenIndex: number,
+  standard: string,
+}) => {
+  const httpAgentArgs = {
+    host: 'https://ic0.app/',
+    canisterId: tokenId,
+  };
+
+  const agent = new HttpAgent(httpAgentArgs);
+  
+  const actor = await getNFTActor({
+    agent,
+    canisterId: tokenId,
+    standard,
+  });
+
+  const details = await actor.details(
+    tokenIndex,
+  );
+
+  return details;
+};

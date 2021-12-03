@@ -86,7 +86,7 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     // TODO: Cap-js type definitions are not showing at time of writing 
     // and needs to be fixed
     const response = await capRouterInstance.get_user_root_buckets({
-      user: managementCanisterPrincipal,
+      user: (managementCanisterPrincipal as any),
       witness: false,
     });
 

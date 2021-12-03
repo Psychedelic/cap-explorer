@@ -105,7 +105,7 @@ const AppTransactions = ({
       if (!capRouterInstance) return;
 
       const { canister } = await capRouterInstance.get_token_contract_root_bucket({
-        tokenId: Principal.fromText(tokenId),
+        tokenId: (Principal.fromText(tokenId) as any),
       });
 
       const rootCanisterId = canister?.[0];
@@ -182,6 +182,7 @@ const AppTransactions = ({
           pageCount={totalPages}
           fetchPageDataHandler={fetchPageDataHandler}
           identityInDab={identityInDab}
+          tokenId={tokenId}
         />
       </PageRow>
     </Page>
