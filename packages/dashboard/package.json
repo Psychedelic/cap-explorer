@@ -23,10 +23,10 @@
     "email": "helder@fleek.co"
   },
   "dependencies": {
-    "@dfinity/agent": "^0.10.1",
-    "@dfinity/candid": "^0.10.1",
-    "@dfinity/identity": "^0.10.1",
-    "@dfinity/principal": "^0.10.1",
+    "@dfinity/agent": "^0.9.3",
+    "@dfinity/candid": "^0.9.3",
+    "@dfinity/identity": "^0.9.3",
+    "@dfinity/principal": "^0.9.3",
     "@fleekhq/fleekon": "^0.0.4",
     "@loadable/component": "^5.14.1",
     "@psychedelic/cap-js": "^0.0.7",
