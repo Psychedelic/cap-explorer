@@ -64,7 +64,7 @@ const RowWrapper = styled('div', {
       backgroundColor: '#333',
       zIndex: 2,
 
-      '& [data-cid="dabCanister"]': {
+      '& [data-dab-identity-cell]': {
         '&:hover': {
           '& [data-tooltip]': {
             display: 'block',

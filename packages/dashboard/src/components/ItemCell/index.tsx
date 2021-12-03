@@ -43,7 +43,7 @@ export default ({
   identityInDab?: CanisterMetadata,
   asHoverState?: boolean,
 }) => (
-  <ItemCell asHoverState={asHoverState}>
+  <ItemCell data-dab-identity-cell asHoverState={asHoverState}>
     <span
       data-image
       style={{
