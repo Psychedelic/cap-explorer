@@ -58,11 +58,18 @@ const AppTransactions = ({
   }) => {
     // Skip initial page because it's handled in the
     // scope of this component useEffect on mount call
-    if (!pageIndex || !rootCanisterId) return;
+    if (typeof pageIndex === 'undefined' || !rootCanisterId) return;
+
+    // Create the page numbers from zero to total pages
+    // and inverse the order to use by the UI page index
+    // The page is the formula, but using the array to improve readability
+    // ((totalPages - pageIndex) + 1) - totalPages;
+    const pages = Array.from(Array(totalPages).keys()).reverse();
+    const page = pages[pageIndex];
 
     await fetch({
       tokenId: rootCanisterId,
-      page: pageIndex,
+      page,
       witness: false,
     });
 
