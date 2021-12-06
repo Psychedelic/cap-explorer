@@ -262,6 +262,7 @@ interface TransactionsFetchParams {
 
 export interface TransactionsStore {
   isLoading: boolean,
+  page: number | undefined,
   pageData: TransactionEvent[] | undefined,
   transactionEvents: TransactionEvent[] | [],
   totalTransactions: number,
@@ -280,6 +281,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
   transactionEvents: [],
   totalTransactions: 0,
   totalPages: 0,
+  page: undefined,
   fetch: async ({
     tokenId,
     page,
@@ -288,6 +290,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     set((state: TransactionsStore) => ({
       ...state,
       isLoading: true,
+      page,
     }));
 
     // Shall use mockup data?
@@ -425,20 +428,27 @@ export const useDabStore = create<DabStore>((set, get) => ({
     tokenId,
     standard,
   }: {
-    data: any[],
+    data: TransactionEvent[],
     tokenId: string,
     standard: TokenStandards,
   }) => {
     // TODO: Check if the data is already in place / cached
+    const nftItemDetails = get().nftItemDetails;
 
-    // TODO: the call should be omitted, if already in cache
+    // Omit, what's already in cache
     const dabNFTMetadataPromises = data.map(
-      (item) => getNFTDetails({
+      (item) => {
+        if (nftItemDetails?.[tokenId]?.[Number(item.item).toString()]) {
+          return;
+        }
+
+        return getNFTDetails({
           tokenId,
           tokenIndex: item.item,
           standard,
-        })
-    );
+        });
+      }
+    ).filter((metadataPromise) => typeof metadataPromise !== 'undefined') as Promise<NFTDetails>[];
 
     set({
       isLoading: true,
@@ -447,8 +457,6 @@ export const useDabStore = create<DabStore>((set, get) => ({
     // TODO: Split into parts to accelerate availability to end user
     const dabNFTMetadataPromiseRes: NFTDetails[] = await Promise.all(dabNFTMetadataPromises);
 
-    // let nftItemDetails: NFTItemDetails = get().nftItemDetails;
-
     const currNftItemDetails = dabNFTMetadataPromiseRes.reduce((acc, curr) => {
       acc[curr.canister] = {
         ...acc[curr.canister],
@@ -456,14 +464,11 @@ export const useDabStore = create<DabStore>((set, get) => ({
       };
 
       return acc;
-    }, {} as NFTItemDetails);
+    }, { ...nftItemDetails });
 
     set({
       isLoading: false,
-      nftItemDetails: {
-        ...get().nftItemDetails,
-        ...currNftItemDetails,
-      },
+      nftItemDetails: currNftItemDetails,
     })
   },
 }));
