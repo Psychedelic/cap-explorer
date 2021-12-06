@@ -24,6 +24,8 @@ export type ContractPairedMetadata = {
   metadata: CanisterMetadata;
 };
 
+export type ContractKeyPairedMetadata = Record<string, CanisterMetadata>;
+
 export type CanisterKeyPairedMetadata = { [canisterId: string]: CanisterMetadata; };
 export type CanisterNameKeyPairedId = Record<string, string>;
 

@@ -6,6 +6,7 @@ import IdentityCopy from '@components/IdentityCopy';
 import { DabLink } from '@components/Link';
 import {
   useTransactionStore,
+  useAccountStore,
   PAGE_SIZE,
 } from '@hooks/store';
 import { useWindowResize } from '@hooks/windowResize';
@@ -47,7 +48,10 @@ const AppTransactions = ({
     fetchDabItemDetails,
     nftItemDetails,
   } = dabStore;
+  const accountStore = useAccountStore();
+  const { contractKeyPairedMetadata } = accountStore;
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingDabMetada, setIsLoadingDabMetada] = useState(true);
   const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
   const isSmallerThanBreakpointLG = useWindowResize({
     breakpoint: BREAKPOINT_DATA_TABLE_L,
@@ -161,7 +165,9 @@ const AppTransactions = ({
   // TODO: This might be already in cache, if the user comes from Overview
   // Dab metadata handler
   useEffect(() => {
-    const getDabMetadataHandler = async () => {      
+    const getDabMetadataHandler = async () => {    
+      setIsLoadingDabMetada(true);
+
       const metadata = await getDabMetadata({
         canisterId: tokenId,
       });
@@ -174,15 +180,35 @@ const AppTransactions = ({
       });
     };
 
-    getDabMetadataHandler();
-  }, []);
+    if (!contractKeyPairedMetadata || !tokenId) {
+      getDabMetadataHandler();
+
+      return;
+    };
+
+    const identityInDab = contractKeyPairedMetadata[tokenId];
+
+    if (!identityInDab) {
+      getDabMetadataHandler();
+
+      return;
+    };
+
+    setIdentityInDab(identityInDab);
+  }, [contractKeyPairedMetadata, tokenId]);
+
+  useEffect(() => {
+    if (!identityInDab) return;
+
+    setIsLoadingDabMetada(false);
+  }, [identityInDab]);
 
   return (
     <Page
       pageId="app-transactions-page"
     >
       <PageRow>
-        <Breadcrumb identityInDab={identityInDab} isLoading={isLoading} />
+        <Breadcrumb identityInDab={identityInDab} isLoading={isLoadingDabMetada} />
       </PageRow>
       <PageRow>
         <UserBar
@@ -191,8 +217,8 @@ const AppTransactions = ({
           <DabLink tokenContractId={tokenId}>
           {
             identityInDab
-            ? <IdentityDab large={true} name={identityInDab?.name} image={identityInDab?.logo_url} isLoading={isLoading} />
-            : <IdentityDab large={true} name='Unknown' isLoading={isLoading} />
+            ? <IdentityDab large={true} name={identityInDab?.name} image={identityInDab?.logo_url} isLoading={isLoadingDabMetada} />
+            : <IdentityDab large={true} name='Unknown' isLoading={isLoadingDabMetada} />
           }
           </DabLink>
           <IdentityCopy
