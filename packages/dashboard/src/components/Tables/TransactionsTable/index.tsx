@@ -195,7 +195,7 @@ const TransactionsTable = ({
         let nftDetails;
 
         try {
-          nftDetails = nftItemDetails[tokenId][cellValue];
+          nftDetails = nftItemDetails?.[tokenId]?.[cellValue];
         } catch (err) {
           console.log('[debug] err', err);
         }
