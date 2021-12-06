@@ -62,8 +62,9 @@ const AppTransactions = ({
 
     // Create the page numbers from zero to total pages
     // and inverse the order to use by the UI page index
+    // The page is the formula, but using the array to improve readability
+    // ((totalPages - pageIndex) + 1) - totalPages;
     const pages = Array.from(Array(totalPages).keys()).reverse();
-
     const page = pages[pageIndex];
 
     await fetch({
