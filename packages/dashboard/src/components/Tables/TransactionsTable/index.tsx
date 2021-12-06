@@ -170,6 +170,7 @@ const TransactionsTable = ({
   identityInDab,
   tokenId,
   nftItemDetails,
+  isLoadingDabItemDetails,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: Data[],
@@ -180,6 +181,7 @@ const TransactionsTable = ({
   identityInDab?: CanisterMetadata,
   tokenId: string,
   nftItemDetails: NFTItemDetails,
+  isLoadingDabItemDetails: boolean,
 }) => {
   const [currentData, setCurrentData] = useState<Data[]>(data);
 
@@ -198,14 +200,13 @@ const TransactionsTable = ({
           console.log('[debug] err', err);
         }
 
-        console.log(`[debug] nftDetails ${cellValue}`, nftDetails);
-
         return (
           <ItemCell
             identityInDab={identityInDab}
             cellValue={cellValue}
             derivedId={true}
             nftDetails={nftDetails}
+            isLoadingDabItemDetails={isLoadingDabItemDetails}
           />
         );
       },
@@ -239,7 +240,7 @@ const TransactionsTable = ({
       },
       time: (cellValue: string) => dateRelative(cellValue),
     },
-  }), [identityInDab, nftItemDetails]);
+  }), [identityInDab, nftItemDetails, isLoadingDabItemDetails]);
 
   useEffect(() => {
     setCurrentData(data);

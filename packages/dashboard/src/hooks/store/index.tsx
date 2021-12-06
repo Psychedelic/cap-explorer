@@ -432,6 +432,10 @@ export const useDabStore = create<DabStore>((set, get) => ({
         })
     );
 
+    set({
+      isLoading: true,
+    });
+
     // TODO: Split into parts to accelerate availability to end user
     const dabNFTMetadataPromiseRes: NFTDetails[] = await Promise.all(dabNFTMetadataPromises);
 
@@ -447,6 +451,7 @@ export const useDabStore = create<DabStore>((set, get) => ({
     }, {} as NFTItemDetails);
 
     set({
+      isLoading: false,
       nftItemDetails: {
         ...get().nftItemDetails,
         ...currNftItemDetails,

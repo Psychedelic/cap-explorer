@@ -38,7 +38,7 @@ const AppTransactions = ({
 }) => {
   const dabStore = useDabStore();
   const {
-    // isLoading: isLoadingDabItemDetails,
+    isLoading: isLoadingDabItemDetails,
     fetchDabItemDetails,
     nftItemDetails,
   } = dabStore;
@@ -203,6 +203,7 @@ const AppTransactions = ({
           identityInDab={identityInDab}
           tokenId={tokenId}
           nftItemDetails={nftItemDetails}
+          isLoadingDabItemDetails={isLoadingDabItemDetails}
         />
       </PageRow>
     </Page>

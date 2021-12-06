@@ -7,6 +7,7 @@ import { styled } from '@stitched';
 import iconUnknown from '@images/icon-unknown.svg';
 import { TableUnknownCellTooltip } from '@components/Tooltips'
 import { NFTDetails } from '@psychedelic/dab-js';
+import Loading from '@components/Loading';
 
 const ItemCell = styled('div', {
   display: 'flex',
@@ -18,6 +19,7 @@ const ItemCell = styled('div', {
     height: '35px',
     borderRadius: '6px',
     marginRight: '10px',
+    position: 'relative',
   },
 
   variants: {
@@ -39,35 +41,36 @@ export default ({
   identityInDab,
   asHoverState = false,
   nftDetails,
+  isLoadingDabItemDetails = false,
 }: {
   cellValue?: number,
   derivedId?: boolean,
   identityInDab?: CanisterMetadata,
   asHoverState?: boolean,
   nftDetails?: NFTDetails,
+  isLoadingDabItemDetails?: boolean,
 }) => (
   <ItemCell data-dab-identity-cell asHoverState={asHoverState}>
-    {/* export interface NFTDetails {
-        index: bigint;
-        canister: string;
-        id?: string;
-        name?: string;
-        url: string;
-        metadata: any;
-        standard: string;
-        collection?: string;
-    } */}
-
-    <span
-      data-image
-      style={{
-        backgroundImage: `url(${nftDetails?.url || identityInDab?.logo_url || iconUnknown})`,
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        display: 'inline-block',
-      }}
-    />
+    {
+      isLoadingDabItemDetails
+      ? (
+        <span data-image>
+          <Loading size='s' alt='Loading' />
+        </span>
+      )
+      : (
+        <span
+          data-image
+          style={{
+            backgroundImage: `url(${nftDetails?.url || identityInDab?.logo_url || iconUnknown})`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            display: 'inline-block',
+          }}
+        />
+      )
+    }
 
     <span data-identity-name>
       { identityInDab?.name || DAB_IDENTITY_UNKNOWN }
