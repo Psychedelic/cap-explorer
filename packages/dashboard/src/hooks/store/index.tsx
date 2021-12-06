@@ -429,6 +429,8 @@ export const useDabStore = create<DabStore>((set, get) => ({
     tokenId: string,
     standard: TokenStandards,
   }) => {
+    // TODO: Check if the data is already in place / cached
+
     // TODO: the call should be omitted, if already in cache
     const dabNFTMetadataPromises = data.map(
       (item) => getNFTDetails({

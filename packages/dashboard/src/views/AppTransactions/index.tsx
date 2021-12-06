@@ -112,6 +112,12 @@ const AppTransactions = ({
       return;
     };
 
+    // TODO: Check if the data is already in place / cached
+    // and only make a new request if required
+    // Example, cache by page number or boundaries (first and last item range)
+
+    console.log('[debug] pageData', pageData);
+
     fetchDabItemDetails({
       data: pageData,
       tokenId,
@@ -159,6 +165,8 @@ const AppTransactions = ({
       }
 
       setRootCanisterId(rootCanisterId.toText());
+
+      console.log('[debug] appTransactions: rootCanisterId', rootCanisterId.toText());
     })();
   }, [pageData]);
 
