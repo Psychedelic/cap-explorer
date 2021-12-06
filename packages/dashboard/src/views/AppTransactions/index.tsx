@@ -100,6 +100,8 @@ const AppTransactions = ({
     // TODO: should validate if known standard
     const standard: string = identityInDab.name;
 
+    // TODO: the cap client should pass the standard
+    // for the events being pushed to cap service
     if (!isValidStandard(standard)) {
       console.warn(`Oops! Standard ${standard} is unknown`)
 
