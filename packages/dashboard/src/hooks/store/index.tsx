@@ -10,7 +10,8 @@ import {
   NFTDetails,
 } from '@psychedelic/dab-js';
 import { Principal } from '@dfinity/principal';
-import { getCapRootInstance } from '@utils/cap'; 
+import { getCapRootInstance } from '@utils/cap';
+import { CanisterMetadata } from '@utils/dab'; 
 import { parseGetTransactionsResponse } from '@utils/transactions';
 import { parseUserRootBucketsResponse } from '@utils/account';
 import { managementCanisterPrincipal } from '@utils/ic-management-api';
@@ -141,20 +142,20 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
 
     const contractPairedMetadata = await get().contractPairedMetadata;
 
-    // Update the pageData with the metadata
-    pageData = [
-      ...pageData,
-      ...contractPairedMetadata.map(({
-        contractId,
-        metadata,
-      }) => ({
+    const contractKeyPairedMetadata = contractPairedMetadata.reduce((acc, curr) => {
+      acc[curr.contractId] = curr?.metadata
+      return acc;
+    }, {} as Record<string, CanisterMetadata>);
+
+    pageData = pageData.map(({ contractId, dabCanister }: AccountData) => {
+      return ({
         contractId,
         dabCanister: {
-          contractId,
-          metadata,
-        },
-      })),
-    ];
+          ...dabCanister,
+          metadata: contractKeyPairedMetadata?.[contractId],
+        }
+      })
+    });
 
     await preloadPageDataImages({ pageData });
 
