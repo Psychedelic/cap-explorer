@@ -11,7 +11,10 @@ import {
 } from '@psychedelic/dab-js';
 import { Principal } from '@dfinity/principal';
 import { getCapRootInstance } from '@utils/cap';
-import { CanisterMetadata } from '@utils/dab'; 
+import {
+  CanisterMetadata,
+  TokenStandards,
+} from '@utils/dab'; 
 import { parseGetTransactionsResponse } from '@utils/transactions';
 import { parseUserRootBucketsResponse } from '@utils/account';
 import { managementCanisterPrincipal } from '@utils/ic-management-api';
@@ -409,8 +412,6 @@ export interface DabStore {
     standard: TokenStandards,
   }) => void,
 }
-
-export type TokenStandards = 'ICPunks';
 
 export const useDabStore = create<DabStore>((set, get) => ({
   isLoading: false,

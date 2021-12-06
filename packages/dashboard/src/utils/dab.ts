@@ -3,6 +3,7 @@ import {
   getCanisterInfo,
   getNFTActor,
   NFTDetails,
+  standards,
 } from '@psychedelic/dab-js';
 import { HttpAgent } from '@dfinity/agent';
 import { mockCanisterMetadata } from '@utils/mocks/dabMetadata';
@@ -89,3 +90,7 @@ export const getNFTDetails = async ({
 
   return details;
 };
+
+export type TokenStandards = keyof typeof standards;
+
+export const isValidStandard = (name: string) => standards.hasOwnProperty(name.toLowerCase());

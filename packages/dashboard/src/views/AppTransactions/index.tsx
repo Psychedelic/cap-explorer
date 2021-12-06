@@ -18,7 +18,12 @@ import {
 } from '@psychedelic/cap-js';
 import { scrollTop } from '@utils/window';
 import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
-import { getDabMetadata, CanisterMetadata } from '@utils/dab';
+import {
+  getDabMetadata,
+  CanisterMetadata,
+  isValidStandard,
+  TokenStandards,
+} from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import OverallValues from '@components/OverallValues';
 import { Principal } from '@dfinity/principal';
@@ -87,14 +92,26 @@ const AppTransactions = ({
     if (!pageData) return;
 
     setTransactions(pageData);
+  }, [pageData]);
 
-    console.log('[debug] app transactions: fetch dab item details started');
+  useEffect(() => {
+    if (!pageData || !identityInDab) return;
+
+    // TODO: should validate if known standard
+    const standard: string = identityInDab.name;
+
+    if (!isValidStandard(standard)) {
+      console.warn(`Oops! Standard ${standard} is unknown`)
+
+      return;
+    };
+
     fetchDabItemDetails({
       data: pageData,
       tokenId,
-      standard: 'ICPunks',
+      standard: standard as TokenStandards,
     });
-  }, [pageData]);
+  }, [pageData, identityInDab]);
 
   useEffect(() => {
     console.log('[debug] app transactions: fetch dab item details completed');
