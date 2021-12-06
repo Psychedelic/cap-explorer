@@ -429,10 +429,8 @@ const DataTable = <T extends {}>({
     if (typeof fetchPageDataHandler !== 'function') return;
 
     try {
-      const nextPage = Math.max(0, pageIndex - 1);
-
       fetchPageDataHandler({
-        pageIndex: nextPage,
+        pageIndex,
       });
     } catch (err) {
       // TODO: What to do on failure? Handle gracefully
