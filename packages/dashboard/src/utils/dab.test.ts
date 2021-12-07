@@ -1,6 +1,7 @@
 import {
   createNFTDetailsHandlerPromiseList,
   GetNFTDetails,
+  mapNftDetailsPromisesResult,
 } from './dab';
 import {
   NFTDetails,
@@ -377,6 +378,59 @@ describe('Dab', () => {
           });
   
           expect(promises).toBeUndefined();
+        });
+      });
+    });
+  });
+  describe('mapNftDetailsPromisesResult', () => {
+    describe('on valid arguments', () => {
+      describe('when non-cached NFT Item details', () => {
+        const tokenId = 'qcg3w-tyaaa-aaaah-qakea-cai';
+        const nftItemDetails = {
+          [tokenId]: {
+            4071: {
+              canister: tokenId,
+              index: 4071n,
+              metadata: {
+                desc: "",
+                id: 4071n,
+                name: "ICPunk #4071",
+                url: "/Token/4071",
+              },
+              name: "ICPunk #4071",
+              standard: "ICPunks",
+              url: "https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/4071",
+            },
+          },
+        };
+        const dabNFTMetadataPromiseRes = [{
+          canister: "qcg3w-tyaaa-aaaah-qakea-cai",
+          index: 4071n,
+          metadata: {},
+          name: "ICPunk #4071",
+          standard: "ICPunks",
+          url: "https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/2477",
+        }];
+
+        it('should provide a list of NFT Item details', async () => {
+          const result = mapNftDetailsPromisesResult({
+            cachedNftItemDetails: nftItemDetails,
+            dabNFTMetadataPromiseRes,
+          });
+          const expected = {
+            'qcg3w-tyaaa-aaaah-qakea-cai': {
+              '4071': {
+                canister: 'qcg3w-tyaaa-aaaah-qakea-cai',
+                index: 4071n,
+                metadata: {},
+                name: 'ICPunk #4071',
+                standard: 'ICPunks',
+                url: 'https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/2477'
+              }
+            }
+          }
+
+          expect(result).toStrictEqual(expected);
         });
       });
     });
