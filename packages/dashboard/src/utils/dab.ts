@@ -72,15 +72,17 @@ export const getDabMetadata = async ({
 
 export const DAB_IDENTITY_UNKNOWN = 'Unknown';
 
+export interface GetNFTDetails {
+  tokenId: string,
+  tokenIndex: number,
+  standard: string,
+}
+
 export const getNFTDetails = async ({
   tokenId,
   tokenIndex,
   standard,
-}: {
-  tokenId: string,
-  tokenIndex: number,
-  standard: string,
-}): Promise<NFTDetails> => {
+}: GetNFTDetails): Promise<NFTDetails> => {
   const httpAgentArgs = {
     host: 'https://ic0.app/',
     canisterId: tokenId,
@@ -110,26 +112,26 @@ export const createNFTDetailsHandlerPromiseList = ({
   standard,
   tokenId,
   transactionEvents,
+  callback = getNFTDetails,
 }: {
   nftItemDetails: NFTItemDetails,
   standard: TokenStandards,
   tokenId: string,
-  transactionEvents: TransactionEvent[]
+  transactionEvents: TransactionEvent[],
+  callback: (params: GetNFTDetails) => Promise<NFTDetails>,
 }): Promise<NFTDetails>[] | undefined => {
   if (!Array.isArray(transactionEvents)) return;
 
   const promises = transactionEvents.map(
     (item) => {
       // Skip, what's already in cache
-      if (nftItemDetails?.[tokenId]?.[Number(item.item).toString()]) {
-        return;
-      }
+      if (nftItemDetails?.[tokenId]?.[Number(item.item).toString()]) return;
 
       const tokenIndex = item?.item;
 
       if (!tokenIndex) return;
 
-      return getNFTDetails({
+      return callback({
         tokenId,
         tokenIndex,
         standard,
