@@ -385,24 +385,7 @@ describe('Dab', () => {
   describe('mapNftDetailsPromisesResult', () => {
     describe('on valid arguments', () => {
       describe('when non-cached NFT Item details', () => {
-        const tokenId = 'qcg3w-tyaaa-aaaah-qakea-cai';
-        const nftItemDetails = {
-          [tokenId]: {
-            4071: {
-              canister: tokenId,
-              index: 4071n,
-              metadata: {
-                desc: "",
-                id: 4071n,
-                name: "ICPunk #4071",
-                url: "/Token/4071",
-              },
-              name: "ICPunk #4071",
-              standard: "ICPunks",
-              url: "https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/4071",
-            },
-          },
-        };
+        const nftItemDetails = {};
         const dabNFTMetadataPromiseRes = [{
           canister: "qcg3w-tyaaa-aaaah-qakea-cai",
           index: 4071n,
@@ -431,6 +414,75 @@ describe('Dab', () => {
           }
 
           expect(result).toStrictEqual(expected);
+        });
+      });
+
+      describe('when cached NFT Item details', () => {
+        const tokenId = 'qcg3w-tyaaa-aaaah-qakea-cai';
+        const nftItemDetails = {
+          [tokenId]: {
+            4071: {
+              canister: tokenId,
+              index: 4071n,
+              metadata: {
+                name: "ICPunk #4071",
+                url: "/Token/4071",
+              },
+              name: "ICPunk #4071",
+              standard: "ICPunks",
+              url: "https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/4071",
+            },
+            9876: {
+              canister: tokenId,
+              index: 9876n,
+              metadata: {
+                name: "ICPunk #9876",
+                url: "/Token/9876",
+              },
+              name: "ICPunk #9876",
+              standard: "ICPunks",
+              url: "https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/9876",
+            },
+          },
+        };
+        const dabNFTMetadataPromiseRes = [{
+          canister: "qcg3w-tyaaa-aaaah-qakea-cai",
+          index: 4071n,
+          metadata: {},
+          name: "ICPunk #4071",
+          standard: "ICPunks",
+          url: "https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/2477",
+        }];
+
+        it('should provide a list of NFT Item details', async () => {
+          const result = mapNftDetailsPromisesResult({
+            cachedNftItemDetails: nftItemDetails,
+            dabNFTMetadataPromiseRes,
+          });
+          const expected = {
+            'qcg3w-tyaaa-aaaah-qakea-cai': {
+              '4071': {
+                canister: 'qcg3w-tyaaa-aaaah-qakea-cai',
+                index: 4071n,
+                metadata: {},
+                name: 'ICPunk #4071',
+                standard: 'ICPunks',
+                url: 'https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/2477'
+              },
+              '9876': {
+                canister: 'qcg3w-tyaaa-aaaah-qakea-cai',
+                index: 9876n,
+                metadata: {},
+                name: 'ICPunk #9876',
+                standard: 'ICPunks',
+                url: 'https://qcg3w-tyaaa-aaaah-qakea-cai.raw.ic0.app/Token/9876'
+              },
+            }
+          }
+
+          expect(
+            Object.keys(result[tokenId]).length == Object.keys(expected[tokenId]).length
+          ).toBeTruthy();
         });
       });
     });
