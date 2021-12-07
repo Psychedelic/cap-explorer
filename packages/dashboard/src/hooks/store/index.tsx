@@ -345,8 +345,8 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       return;
     }
 
-    // TODO: seems best to call the methods from the Actor directly
-    // there's no need for the method wrappers
+    // Alternatively, methods call can be done directly in the Actor
+    // the wrapped method is inplace to allow caching by e.g. kyassu
     // the only "inconvinence" here is that page would have to pass [] on none
     // e.g. capRoot.actor.get_transactions({ page: [], witness: false });
     const response: TransactionsResponse = await capRoot.get_transactions({
@@ -367,8 +367,8 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       return;
     }
 
-    // TODO: If a user request a page that is not the most recent
-    // then the total transactions calculation will fail...
+    // At time of writing there's no support for requesting a particular page number
+    // if that'd be the case, the total transactions calculation would fail...
     const totalTransactions = PAGE_SIZE * response.page + response.data.length;
 
     const getTotalPages = (totalPages: number) => {
@@ -387,9 +387,9 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
         ...state.transactionEvents,
         pageData,
       ],
-      // TODO: For totalTransactions/Pages Check TODO above,
-      // as total transactions at time of writing
-      // can only be computed on first page:None request...
+      // As noted above the total transactions
+      // are calculated on initial call
+      // we persist the initial state by max value fallback
       totalTransactions: Math.max(
         totalTransactions,
         state.totalTransactions,
