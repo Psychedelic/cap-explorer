@@ -69,45 +69,38 @@ export default ({
   currentPageIndex: number,
   nextPage: () => void,
   canNextPage: boolean,
-}) => {
-  const showPaginationArrows = pageOptions.length === 1;
-  const displayStyle = showPaginationArrows  ? 'none' : '';
-
-  return (
-    <Pagination data-pagination>
-      <button
-        type="button"
-        aria-label="Previous page"
-        onClick={() => previousPage()}
-        disabled={!canPreviousPage}
-        style={{
-          display: displayStyle,
-        }}
-      >
-        <Fleekon
-          icon="arrowRight"
-          className="arrow arrow-left"
-          size="13px"
-        />
-      </button>
-      <span data-page-index={currentPageIndex}>
-        {`${currentPageIndex} of ${pageOptions.length}`}
-      </span>
-      <button
-        type="button"
-        aria-label="Next page"
-        onClick={() => nextPage()}
-        disabled={!canNextPage}
-        style={{
-          display: displayStyle,
-        }}
-      >
-        <Fleekon
-          icon="arrowRight"
-          className="arrow arrow-right"
-          size="13px"
-        />
-      </button>
-    </Pagination>
-  );
-}
+}) => (
+  <Pagination data-pagination>
+    <button
+      type="button"
+      aria-label="Previous page"
+      onClick={() => previousPage()}
+      style={{
+        display: !canPreviousPage ? 'none' : '',
+      }}
+    >
+      <Fleekon
+        icon="arrowRight"
+        className="arrow arrow-left"
+        size="13px"
+      />
+    </button>
+    <span data-page-index={currentPageIndex}>
+      {`${currentPageIndex} of ${pageOptions.length}`}
+    </span>
+    <button
+      type="button"
+      aria-label="Next page"
+      onClick={() => nextPage()}
+      style={{
+        display: !canNextPage ? 'none' : '',
+      }}
+    >
+      <Fleekon
+        icon="arrowRight"
+        className="arrow arrow-right"
+        size="13px"
+      />
+    </button>
+  </Pagination>
+);

@@ -524,8 +524,8 @@ const DataTable = <T extends {}>({
               </ScrollXContainer>
 
               <Pagination
-                canNextPage={canNextPage}
-                canPreviousPage={canPreviousPage}
+                canNextPage={canNextPage && currentPageIndex < pageCount}
+                canPreviousPage={canPreviousPage && currentPageIndex > 1}
                 currentPageIndex={currentPageIndex}
                 nextPage={nextPage}
                 pageOptions={pageOptions}
