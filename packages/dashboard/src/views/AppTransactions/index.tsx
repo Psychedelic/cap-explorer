@@ -83,12 +83,14 @@ const AppTransactions = ({
     const pages = Array.from(Array(totalPages).keys()).reverse();
     const page = pages[pageIndex];
 
+    await setIsLoading(true);
+
     await fetch({
       tokenId: rootCanisterId,
       page,
       witness: false,
     });
-
+ 
     scrollTop();
   }
   
@@ -112,23 +114,12 @@ const AppTransactions = ({
       return;
     };
 
-    // TODO: Check if the data is already in place / cached
-    // and only make a new request if required
-    // Example, cache by page number or boundaries (first and last item range)
-
-    console.log('[debug] pageData', pageData);
-
     fetchDabItemDetails({
       data: pageData,
       tokenId,
       standard: standard as TokenStandards,
     });
   }, [pageData, identityInDab]);
-
-  useEffect(() => {
-    console.log('[debug] app transactions: fetch dab item details completed');
-    console.log('[debug] app transactions: nftItemDetails', nftItemDetails);
-  }, [nftItemDetails]);
 
   useEffect(() => {
     if (!rootCanisterId) return;
@@ -165,8 +156,6 @@ const AppTransactions = ({
       }
 
       setRootCanisterId(rootCanisterId.toText());
-
-      console.log('[debug] appTransactions: rootCanisterId', rootCanisterId.toText());
     })();
   }, [pageData]);
 

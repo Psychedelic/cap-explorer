@@ -197,7 +197,7 @@ const TransactionsTable = ({
         try {
           nftDetails = nftItemDetails?.[tokenId]?.[cellValue];
         } catch (err) {
-          console.log('[debug] err', err);
+          console.warn(`Oops! Failed to get NFT details for token ${tokenId} and mint ${cellValue}`, err);
         }
 
         return (

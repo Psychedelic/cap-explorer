@@ -282,6 +282,11 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
   totalTransactions: 0,
   totalPages: 0,
   page: undefined,
+  setIsLoading: async (isLoading: boolean) => {
+    set((state: TransactionsStore) => ({
+      isLoading,
+    }));
+  },
   fetch: async ({
     tokenId,
     page,
