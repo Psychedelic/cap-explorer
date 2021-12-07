@@ -44,7 +44,6 @@ export const getDabMetadata = async ({
 
   const httpAgentArgs = {
     host: config.host,
-    canisterId, // TODO: why is this here? Typo? remove it
   };
   
   try {
