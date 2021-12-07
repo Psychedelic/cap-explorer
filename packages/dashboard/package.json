@@ -16,7 +16,7 @@
     "build:staging": "webpack -c ./webpack/webpack.config.js --node-env staging --mode=production",
     "build:local": "webpack -c ./webpack/webpack.config.js --node-env development --mode=development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "test:unit": "jest --config jest.config.js"
+    "test:unit": "IC_HISTORY_ROUTER_ID='lj532-6iaaa-aaaah-qcc7a-cai' jest --config jest.config.js"
   },
   "author": {
     "name": "Helder Oliveira",
