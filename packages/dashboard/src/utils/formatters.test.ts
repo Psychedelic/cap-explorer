@@ -66,7 +66,7 @@ describe('formatPriceForChart', () => {
       value: '100',
       abbreviation: 'CYCLES',
     });
-    expect(formatted).toBe('100 TC');
+    expect(formatted).toBe('100 XTC');
   });
 
   it('should provide a formatted price when value is number', () => {
@@ -74,7 +74,7 @@ describe('formatPriceForChart', () => {
       value: 350,
       abbreviation: 'CYCLES',
     });
-    expect(formatted).toBe('350 TC');
+    expect(formatted).toBe('350 XTC');
   });
 
   it('should provide a formatted price for USD', () => {
@@ -117,12 +117,12 @@ describe('formatPriceForChart', () => {
     expect(formatted).toBe('$5T');
   });
 
-  it('should provide a formatted price for CYCLES (base Trillion Cycles TC)', () => {
+  it('should provide a formatted price for CYCLES (base Trillion Cycles XTC)', () => {
     const formatted = formatPriceForChart({
       value: 22,
       abbreviation: 'CYCLES',
     });
-    expect(formatted).toBe('22 TC');
+    expect(formatted).toBe('22 XTC');
   });
 
   it('should provide a formatted price for M of Trillion Cycles (TC)', () => {
@@ -130,7 +130,7 @@ describe('formatPriceForChart', () => {
       value: 1000000,
       abbreviation: 'CYCLES',
     });
-    expect(formatted).toBe('1,000,000 TC');
+    expect(formatted).toBe('1,000,000 XTC');
   });
 
   it('should provide a formatted price for B of Trillion Cycles (TC)', () => {
@@ -138,7 +138,7 @@ describe('formatPriceForChart', () => {
       value: 1000000000,
       abbreviation: 'CYCLES',
     });
-    expect(formatted).toBe('1,000,000,000 TC');
+    expect(formatted).toBe('1,000,000,000 XTC');
   });
 
   it('should provide a formatted price for T of Trillion Cycles (TC)', () => {
@@ -146,7 +146,7 @@ describe('formatPriceForChart', () => {
       value: 1000000000000,
       abbreviation: 'CYCLES',
     });
-    expect(formatted).toBe('1,000,000,000,000 TC');
+    expect(formatted).toBe('1,000,000,000,000 XTC');
   });
 
   it('should provide a formatted price for decimal point CYCLES', () => {
@@ -154,7 +154,7 @@ describe('formatPriceForChart', () => {
       value: 0.00000100,
       abbreviation: 'CYCLES',
     });
-    expect(formatted).toBe('0.000001 TC');
+    expect(formatted).toBe('0.000001 XTC');
   });
 });
 

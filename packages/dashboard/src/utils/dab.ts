@@ -118,7 +118,7 @@ export const createNFTDetailsHandlerPromiseList = ({
   standard: TokenStandards,
   tokenId: string,
   transactionEvents: TransactionEvent[],
-  callback: (params: GetNFTDetails) => Promise<NFTDetails>,
+  callback?: (params: GetNFTDetails) => Promise<NFTDetails>,
 }): Promise<NFTDetails>[] | undefined => {
   if (!Array.isArray(transactionEvents) || !transactionEvents.length) return;
 
