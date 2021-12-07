@@ -437,7 +437,6 @@ export const useDabStore = create<DabStore>((set, get) => ({
     tokenId: string,
     standard: TokenStandards,
   }) => {
-    // TODO: Check if the data is already in place / cached
     const nftItemDetails = get().nftItemDetails;
 
     // Omit, what's already in cache
