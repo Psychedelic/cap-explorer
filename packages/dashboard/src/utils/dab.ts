@@ -120,7 +120,7 @@ export const createNFTDetailsHandlerPromiseList = ({
   transactionEvents: TransactionEvent[],
   callback: (params: GetNFTDetails) => Promise<NFTDetails>,
 }): Promise<NFTDetails>[] | undefined => {
-  if (!Array.isArray(transactionEvents)) return;
+  if (!Array.isArray(transactionEvents) || !transactionEvents.length) return;
 
   const promises = transactionEvents.map(
     (item) => {
