@@ -5,11 +5,20 @@ import {
   NFTDetails,
   standards,
 } from '@psychedelic/dab-js';
+import {
+  Event as TransactionEvent,
+} from '@psychedelic/cap-js';
 import { HttpAgent } from '@dfinity/agent';
 import { mockCanisterMetadata } from '@utils/mocks/dabMetadata';
 import { shouldUseMockup } from '@utils/mocks';
 
 export default {};
+
+export type NFTItemDetails = {
+  [tokenContractId: string]: {
+    [index: string]: NFTDetails,
+  }
+}
 
 export interface CanisterMetadata {
   url: string;
@@ -95,3 +104,40 @@ export const getNFTDetails = async ({
 export type TokenStandards = keyof typeof standards;
 
 export const isValidStandard = (name: string) => standards.hasOwnProperty(name.toLowerCase());
+
+export const createNFTDetailsHandlerPromiseList = ({
+  nftItemDetails,
+  standard,
+  tokenId,
+  transactionEvents,
+}: {
+  nftItemDetails: NFTItemDetails,
+  standard: TokenStandards,
+  tokenId: string,
+  transactionEvents: TransactionEvent[]
+}): Promise<NFTDetails>[] | undefined => {
+  if (!Array.isArray(transactionEvents)) return;
+
+  const promises = transactionEvents.map(
+    (item) => {
+      // Skip, what's already in cache
+      if (nftItemDetails?.[tokenId]?.[Number(item.item).toString()]) {
+        return;
+      }
+
+      const tokenIndex = item?.item;
+
+      if (!tokenIndex) return;
+
+      return getNFTDetails({
+        tokenId,
+        tokenIndex,
+        standard,
+      });
+    }
+  )
+  // Filter out none callbacks
+  .filter((metadataPromise) => typeof metadataPromise !== 'undefined') as Promise<NFTDetails>[];
+
+  return promises;
+}

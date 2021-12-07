@@ -11,11 +11,11 @@ import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
 import {
   CanisterMetadata,
+  NFTItemDetails,
 } from '@utils/dab';
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
 import ItemCell from '@components/ItemCell';
-import { NFTItemDetails } from '@hooks/store';
 
 const Container = styled('div', {
   fontSize: '$s',

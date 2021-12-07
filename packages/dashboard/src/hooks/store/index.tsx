@@ -13,8 +13,9 @@ import { Principal } from '@dfinity/principal';
 import { getCapRootInstance } from '@utils/cap';
 import {
   CanisterMetadata,
+  createNFTDetailsHandlerPromiseList,
   TokenStandards,
-} from '@utils/dab'; 
+} from '@utils/dab';
 import { parseGetTransactionsResponse } from '@utils/transactions';
 import { parseUserRootBucketsResponse } from '@utils/account';
 import { managementCanisterPrincipal } from '@utils/ic-management-api';
@@ -28,6 +29,7 @@ import {
   ContractKeyPairedMetadata,
   getDabMetadata,
   getNFTDetails,
+  NFTItemDetails,
 } from '@utils/dab';
 import {
   preloadPageDataImages,
@@ -405,12 +407,6 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
   })),
 }));
 
-export type NFTItemDetails = {
-  [tokenContractId: string]: {
-    [index: string]: NFTDetails,
-  }
-}
-
 export interface DabStore {
   isLoading: boolean,
   nftItemDetails: NFTItemDetails,
@@ -439,26 +435,25 @@ export const useDabStore = create<DabStore>((set, get) => ({
   }) => {
     const nftItemDetails = get().nftItemDetails;
 
-    // Omit, what's already in cache
-    const dabNFTMetadataPromises = data.map(
-      (item) => {
-        if (nftItemDetails?.[tokenId]?.[Number(item.item).toString()]) {
-          return;
-        }
+    const dabNFTMetadataPromises = createNFTDetailsHandlerPromiseList({
+      nftItemDetails,
+      standard,
+      tokenId,
+      transactionEvents: data,
+    });
 
-        return getNFTDetails({
-          tokenId,
-          tokenIndex: item.item,
-          standard,
-        });
-      }
-    ).filter((metadataPromise) => typeof metadataPromise !== 'undefined') as Promise<NFTDetails>[];
+    if (!dabNFTMetadataPromises) {
+      console.warn('Oops! NFT Details handling will not proceed. Is the transaction events empty?')
+
+      return;
+    }
 
     set({
       isLoading: true,
     });
 
-    // TODO: Split into parts to accelerate availability to end user
+    // TODO: Could split into parts to accelerate availability to end user?
+    // If so, this seems to be done outside this scope
     const dabNFTMetadataPromiseRes: NFTDetails[] = await Promise.all(dabNFTMetadataPromises);
 
     const currNftItemDetails = dabNFTMetadataPromiseRes.reduce((acc, curr) => {
