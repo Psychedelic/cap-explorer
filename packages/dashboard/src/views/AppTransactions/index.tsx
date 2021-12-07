@@ -103,11 +103,9 @@ const AppTransactions = ({
   useEffect(() => {
     if (!pageData || !identityInDab) return;
 
-    // TODO: should validate if known standard
+    // Should validate if known standard
     const standard: string = identityInDab.name;
 
-    // TODO: the cap client should pass the standard
-    // for the events being pushed to cap service
     if (!isValidStandard(standard)) {
       console.warn(`Oops! Standard ${standard} is unknown`)
 
@@ -144,6 +142,9 @@ const AppTransactions = ({
       if (!capRouterInstance) return;
 
       const { canister } = await capRouterInstance.get_token_contract_root_bucket({
+        // At time of writing the typedef in cap-js
+        // differs from the downgraded dfinity principal
+        // in the cap-explorer project
         tokenId: (Principal.fromText(tokenId) as any),
       });
 
