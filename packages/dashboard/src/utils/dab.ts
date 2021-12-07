@@ -143,3 +143,24 @@ export const createNFTDetailsHandlerPromiseList = ({
 
   return promises;
 }
+
+export const mapNftDetailsPromisesResult = ({
+  dabNFTMetadataPromiseRes,
+  cachedNftItemDetails,
+}: {
+  dabNFTMetadataPromiseRes: NFTDetails[],
+  cachedNftItemDetails: NFTItemDetails,
+}) => {
+  const currNftItemDetails = dabNFTMetadataPromiseRes.reduce((acc, curr) => {
+    if (!curr || !curr?.canister || !curr?.index) return acc;
+
+    acc[curr.canister] = {
+      ...acc[curr.canister],
+      [curr.index.toString()]: curr,
+    };
+
+    return acc;
+  }, { ...cachedNftItemDetails });
+
+  return currNftItemDetails;
+}

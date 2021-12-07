@@ -14,6 +14,7 @@ import { getCapRootInstance } from '@utils/cap';
 import {
   CanisterMetadata,
   createNFTDetailsHandlerPromiseList,
+  mapNftDetailsPromisesResult,
   TokenStandards,
 } from '@utils/dab';
 import { parseGetTransactionsResponse } from '@utils/transactions';
@@ -456,14 +457,10 @@ export const useDabStore = create<DabStore>((set, get) => ({
     // If so, this seems to be done outside this scope
     const dabNFTMetadataPromiseRes: NFTDetails[] = await Promise.all(dabNFTMetadataPromises);
 
-    const currNftItemDetails = dabNFTMetadataPromiseRes.reduce((acc, curr) => {
-      acc[curr.canister] = {
-        ...acc[curr.canister],
-        [curr.index.toString()]: curr,
-      };
-
-      return acc;
-    }, { ...nftItemDetails });
+    const currNftItemDetails = mapNftDetailsPromisesResult({
+      dabNFTMetadataPromiseRes,
+      cachedNftItemDetails: nftItemDetails,
+    });
 
     set({
       isLoading: false,
