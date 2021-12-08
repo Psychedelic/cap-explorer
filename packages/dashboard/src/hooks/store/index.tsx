@@ -444,7 +444,7 @@ export const useDabStore = create<DabStore>((set, get) => ({
     const tokenContractKeyPairedStandard = dabCollection.reduce((acc, curr) => {
       const id = curr?.principal_id?.toString();
 
-      if (!id) return acc;
+      if (!id || !curr?.standard) return acc;
 
       acc[id] = curr.standard;
 
