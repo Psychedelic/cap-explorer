@@ -31,7 +31,6 @@ export interface CanisterMetadata {
   description: string;
   version: number;
   logo_url: string;
-  // standard: TokenStandards,
 }
 
 export type ContractPairedMetadata = {

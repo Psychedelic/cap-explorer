@@ -7,7 +7,6 @@ import { DabLink } from '@components/Link';
 import {
   useTransactionStore,
   useAccountStore,
-  PAGE_SIZE,
 } from '@hooks/store';
 import { useWindowResize } from '@hooks/windowResize';
 import {

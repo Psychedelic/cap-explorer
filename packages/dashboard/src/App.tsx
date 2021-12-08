@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
 import React, {
-  useCallback,
   useEffect,
   useState,
-  SetStateAction,
 } from 'react';
 import {
   BookmarkColumnModes,
@@ -13,12 +11,9 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useLocation,
 } from 'react-router-dom';
 import loadable from '@loadable/component';
-import Loading from '@components/Loading';
 import { RouteNames } from '@utils/routes';
-import { createBookmarkExpandHandler } from '@utils/account';
 import {
   useAccountStore,
   useDabStore,
