@@ -23,6 +23,20 @@ import { CapRouter } from '@psychedelic/cap-js';
 import { getCapRouterInstance } from '@utils/cap'; 
 import { TokenContractKeyPairedStandard } from '@utils/dab';
 import config from './config';
+import { styled } from '@stitched';
+
+const LoadingTransitionCtrlr = styled('div', {
+  transition: 'opacity 0.3s',
+  opacity: 0,
+
+  variants: {
+    show: {
+      true: {
+        opacity: 1,
+      },
+    }
+  },
+});
 
 export type BookmarkExpandHandler = (args?: BookmarkExpandHandlerOverrides) => void;
 
@@ -48,10 +62,10 @@ const LoadableLoadingPlaceholder = ({
     return () => clearTimeout(timeoutRef)
   }, []);
 
-  if (!show) return <span />;
-
   return (
-    <Loading alt={alt} size="m" />
+    <LoadingTransitionCtrlr show={show}>
+      <Loading alt={alt} size="m" />
+    </LoadingTransitionCtrlr>
   )
 }
 
