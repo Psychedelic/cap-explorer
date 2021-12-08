@@ -71,6 +71,8 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     capRouterInstance,
   }) => {
     set((state: AccountStore) => ({
+      // TODO: the set function merges state
+      // there seems to be no need to spread the data
       ...state,
       isLoading: true,
     }));
@@ -110,6 +112,8 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
 
       // Loading stops
       set((state: AccountStore) => ({
+        // TODO: the set function merges state
+        // there seems to be no need to spread the data
         ...state,
         isLoading: false,
       }));
@@ -342,6 +346,8 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       // TODO: What to do if cap root initialisation fails? Handle gracefully
 
       set((state: TransactionsStore) => ({
+        // TODO: the set function merges state
+        // there seems to be no need to spread the data
         ...state,
         isLoading: false,
       }));
@@ -362,6 +368,8 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       // TODO: What to do if no response? Handle gracefully
 
       set((state: TransactionsStore) => ({
+        // TODO: the set function merges state
+        // there seems to be no need to spread the data
         ...state,
         isLoading: false,
         totalPages: MIN_PAGE_NUMBER,
@@ -449,6 +457,8 @@ export const useDabStore = create<DabStore>((set, get) => ({
     }, {} as TokenContractKeyPairedStandard);
 
     set((state: any) => ({
+      // TODO: the set function merges state
+      // there seems to be no need to spread the data
       ...state,
       tokenContractKeyPairedStandard,
       dabCollection,
@@ -478,8 +488,6 @@ export const useDabStore = create<DabStore>((set, get) => ({
       return;
     }
 
-    // TODO: this doesn't seem right
-    // use the set((state) => ({ ...state, x }))
     set({
       isLoading: true,
     });
@@ -493,8 +501,6 @@ export const useDabStore = create<DabStore>((set, get) => ({
       cachedNftItemDetails: nftItemDetails,
     });
 
-    // TODO: this doesn't seem right
-    // use the set((state) => ({ ...state, x }))
     set({
       isLoading: false,
       nftItemDetails: currNftItemDetails,
