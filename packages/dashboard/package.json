@@ -16,21 +16,21 @@
     "build:staging": "webpack -c ./webpack/webpack.config.js --node-env staging --mode=production",
     "build:local": "webpack -c ./webpack/webpack.config.js --node-env development --mode=development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "test:unit": "jest --config jest.config.js"
+    "test:unit": "IC_HISTORY_ROUTER_ID='lj532-6iaaa-aaaah-qcc7a-cai' jest --config jest.config.js"
   },
   "author": {
     "name": "Helder Oliveira",
     "email": "helder@fleek.co"
   },
   "dependencies": {
-    "@dfinity/agent": "^0.10.1",
-    "@dfinity/candid": "^0.10.1",
-    "@dfinity/identity": "^0.10.1",
-    "@dfinity/principal": "^0.10.1",
+    "@dfinity/agent": "^0.9.3",
+    "@dfinity/candid": "^0.9.3",
+    "@dfinity/identity": "^0.9.3",
+    "@dfinity/principal": "^0.9.3",
     "@fleekhq/fleekon": "^0.0.4",
     "@loadable/component": "^5.14.1",
     "@psychedelic/cap-js": "^0.0.7",
-    "@psychedelic/dab-js": "^0.4.0",
+    "@psychedelic/dab-js": "^0.4.2",
     "@psychedelic/generate-random-principal": "^0.0.1",
     "@stitches/react": "^1.2.5",
     "@storybook/react": "^6.2.8",

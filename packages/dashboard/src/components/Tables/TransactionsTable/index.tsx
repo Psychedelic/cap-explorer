@@ -9,7 +9,10 @@ import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
 import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
-import { CanisterMetadata } from '@utils/dab';
+import {
+  CanisterMetadata,
+  NFTItemDetails,
+} from '@utils/dab';
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
 import ItemCell from '@components/ItemCell';
@@ -165,6 +168,9 @@ const TransactionsTable = ({
   fetchPageDataHandler,
   isLoading = false,
   identityInDab,
+  tokenId,
+  nftItemDetails,
+  isLoadingDabItemDetails,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: Data[],
@@ -173,6 +179,9 @@ const TransactionsTable = ({
   fetchPageDataHandler: FetchPageDataHandler,
   isLoading: boolean,
   identityInDab?: CanisterMetadata,
+  tokenId: string,
+  nftItemDetails: NFTItemDetails,
+  isLoadingDabItemDetails: boolean,
 }) => {
   const [currentData, setCurrentData] = useState<Data[]>(data);
 
@@ -182,13 +191,25 @@ const TransactionsTable = ({
         if (typeof cellValue !== 'string') return;
         return <Operation type={cellValue} />
       },
-      item: (cellValue: number) => (
-        <ItemCell
-          identityInDab={identityInDab}
-          cellValue={cellValue}
-          derivedId={true}
-        />
-      ),
+      item: (cellValue: number) => {
+        let nftDetails;
+
+        try {
+          nftDetails = nftItemDetails?.[tokenId]?.[cellValue];
+        } catch (err) {
+          console.warn(`Oops! Failed to get NFT details for token ${tokenId} and mint ${cellValue}`, err);
+        }
+
+        return (
+          <ItemCell
+            identityInDab={identityInDab}
+            cellValue={cellValue}
+            derivedId={true}
+            nftDetails={nftDetails}
+            isLoadingDabItemDetails={isLoadingDabItemDetails}
+          />
+        );
+      },
       amount: (cellValue: number) => {
         if (!cellValue || typeof cellValue !== 'bigint') return NOT_AVAILABLE_PLACEHOLDER;
 
@@ -219,7 +240,7 @@ const TransactionsTable = ({
       },
       time: (cellValue: string) => dateRelative(cellValue),
     },
-  }), [identityInDab]);
+  }), [identityInDab, nftItemDetails, isLoadingDabItemDetails]);
 
   useEffect(() => {
     setCurrentData(data);

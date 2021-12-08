@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
 import React, {
-  useCallback,
   useEffect,
   useState,
-  SetStateAction,
 } from 'react';
 import {
   BookmarkColumnModes,
@@ -13,15 +11,16 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useLocation,
 } from 'react-router-dom';
 import loadable from '@loadable/component';
-import Loading from '@components/Loading';
 import { RouteNames } from '@utils/routes';
-import { createBookmarkExpandHandler } from '@utils/account';
-import { useAccountStore } from '@hooks/store';
+import {
+  useAccountStore,
+  useDabStore,
+} from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
 import { getCapRouterInstance } from '@utils/cap'; 
+import { TokenContractKeyPairedStandard } from '@utils/dab';
 import config from './config';
 
 export type BookmarkExpandHandler = (args?: BookmarkExpandHandlerOverrides) => void;
@@ -51,10 +50,12 @@ const Routes = ({
   bookmarkColumnMode,
   bookmarkExpandHandler,
   loading,
+  tokenContractKeyPairedStandard,
 }: {
   bookmarkColumnMode: BookmarkColumnModes,
   bookmarkExpandHandler: BookmarkExpandHandler,
   loading: boolean,
+  tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
 }) => {
   const [capRouterInstance, setCapRouterInstance] = useState<CapRouter | undefined>();
   const accountStore = useAccountStore();
@@ -83,6 +84,7 @@ const Routes = ({
         <Route path={RouteNames.AppTransactions}>
           <LazyAppTransactions
             capRouterInstance={capRouterInstance}
+            tokenContractKeyPairedStandard={tokenContractKeyPairedStandard}
           />
         </Route>
         <Route path={RouteNames.Overview}>
@@ -96,14 +98,31 @@ const Routes = ({
   );
 }
 
-const App = () => (
-  <Router>
-    <Routes
-      bookmarkColumnMode={BookmarkColumnModes.collapsed}
-      bookmarkExpandHandler={() => null}
-      loading={false}
-    />
-  </Router>
-);
+const App = () => {
+  const {
+    fetchDabCollection,
+    tokenContractKeyPairedStandard,
+  } = useDabStore();
+
+  useEffect(() => {
+    // Required to use as a lookup table to
+    // identify the token contract nft standard
+    // at time of writing the getAllNFTs is used
+    // and while this works for now, it's not scalable
+    // as the list increases; a nft registry is under dev
+    fetchDabCollection();
+  }, []);
+
+  return (
+    <Router>
+      <Routes
+        bookmarkColumnMode={BookmarkColumnModes.collapsed}
+        bookmarkExpandHandler={() => null}
+        loading={false}
+        tokenContractKeyPairedStandard={tokenContractKeyPairedStandard}
+      />
+    </Router>
+  );
+}
 
 export default App;

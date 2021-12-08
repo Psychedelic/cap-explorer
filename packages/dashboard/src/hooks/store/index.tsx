@@ -6,8 +6,12 @@ import {
   CapRouter,
   CapRoot,
 } from '@psychedelic/cap-js';
+import {
+  NFTDetails,
+  getAllNFTS,  
+} from '@psychedelic/dab-js';
 import { Principal } from '@dfinity/principal';
-import { getCapRootInstance } from '@utils/cap'; 
+import { getCapRootInstance } from '@utils/cap';
 import { parseGetTransactionsResponse } from '@utils/transactions';
 import { parseUserRootBucketsResponse } from '@utils/account';
 import { managementCanisterPrincipal } from '@utils/ic-management-api';
@@ -15,20 +19,30 @@ import { AccountData } from '@components/Tables/AccountsTable';
 import config from '../../config';
 import { shouldUseMockup } from '../../utils/mocks';
 import {
-  ContractPairedMetadata,
+  CanisterMetadata,
+  DABCollection,
   CanisterKeyPairedMetadata,
   CanisterNameKeyPairedId,
+  createNFTDetailsHandlerPromiseList,
+  ContractPairedMetadata,
+  ContractKeyPairedMetadata,
   getDabMetadata,
+  mapNftDetailsPromisesResult,
+  NFTItemDetails,
+  TokenStandards,
+  TokenContractKeyPairedStandard,
 } from '@utils/dab';
 import {
   preloadPageDataImages,
 } from '@utils/images';
+import { Actor, HttpAgent } from "@dfinity/agent";
 
 export interface AccountStore {
   accounts: ContractsResponse | {},
   canisterKeyPairedMetadata?: CanisterKeyPairedMetadata,
   canisterNameKeyPairedId: CanisterNameKeyPairedId,
   contractPairedMetadata: ContractPairedMetadata[],
+  contractKeyPairedMetadata: ContractKeyPairedMetadata,
   isLoading: boolean,
   pageData: AccountData[],
   totalContracts: number,
@@ -46,6 +60,7 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
   canisterKeyPairedMetadata: {},
   canisterNameKeyPairedId: {},
   contractPairedMetadata: [],
+  contractKeyPairedMetadata: {},
   isLoading: false,
   pageData: [],
   totalContracts: 0,
@@ -56,6 +71,8 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     capRouterInstance,
   }) => {
     set((state: AccountStore) => ({
+      // TODO: the set function merges state
+      // there seems to be no need to spread the data
       ...state,
       isLoading: true,
     }));
@@ -86,7 +103,7 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     // TODO: Cap-js type definitions are not showing at time of writing 
     // and needs to be fixed
     const response = await capRouterInstance.get_user_root_buckets({
-      user: managementCanisterPrincipal,
+      user: (managementCanisterPrincipal as any),
       witness: false,
     });
 
@@ -95,6 +112,8 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
 
       // Loading stops
       set((state: AccountStore) => ({
+        // TODO: the set function merges state
+        // there seems to be no need to spread the data
         ...state,
         isLoading: false,
       }));
@@ -137,20 +156,20 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
 
     const contractPairedMetadata = await get().contractPairedMetadata;
 
-    // Update the pageData with the metadata
-    pageData = [
-      ...pageData,
-      ...contractPairedMetadata.map(({
-        contractId,
-        metadata,
-      }) => ({
+    const contractKeyPairedMetadata = contractPairedMetadata.reduce((acc, curr) => {
+      acc[curr.contractId] = curr?.metadata
+      return acc;
+    }, {} as Record<string, CanisterMetadata>);
+
+    pageData = pageData.map(({ contractId, dabCanister }: AccountData) => {
+      return ({
         contractId,
         dabCanister: {
-          contractId,
-          metadata,
-        },
-      })),
-    ];
+          ...dabCanister,
+          metadata: contractKeyPairedMetadata?.[contractId],
+        }
+      })
+    });
 
     await preloadPageDataImages({ pageData });
 
@@ -177,6 +196,7 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
       accounts: response,
       canisterKeyPairedMetadata,
       canisterNameKeyPairedId,
+      contractKeyPairedMetadata,
       isLoading: false,
       pageData,
       totalContracts: pageData.length,
@@ -240,6 +260,9 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     totalContracts: 0,
     totalPages: 0,
   })),
+  // TODO: should use the following instead
+  // when possible please test and move
+  // reset: () => () => set({}, true),
 }));
 
 interface TransactionsFetchParams {
@@ -250,6 +273,7 @@ interface TransactionsFetchParams {
 
 export interface TransactionsStore {
   isLoading: boolean,
+  page: number | undefined,
   pageData: TransactionEvent[] | undefined,
   transactionEvents: TransactionEvent[] | [],
   totalTransactions: number,
@@ -268,6 +292,12 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
   transactionEvents: [],
   totalTransactions: 0,
   totalPages: 0,
+  page: undefined,
+  setIsLoading: async (isLoading: boolean) => {
+    set((state: TransactionsStore) => ({
+      isLoading,
+    }));
+  },
   fetch: async ({
     tokenId,
     page,
@@ -276,6 +306,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     set((state: TransactionsStore) => ({
       ...state,
       isLoading: true,
+      page,
     }));
 
     // Shall use mockup data?
@@ -318,6 +349,8 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       // TODO: What to do if cap root initialisation fails? Handle gracefully
 
       set((state: TransactionsStore) => ({
+        // TODO: the set function merges state
+        // there seems to be no need to spread the data
         ...state,
         isLoading: false,
       }));
@@ -325,8 +358,8 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       return;
     }
 
-    // TODO: seems best to call the methods from the Actor directly
-    // there's no need for the method wrappers
+    // Alternatively, methods call can be done directly in the Actor
+    // the wrapped method is inplace to allow caching by e.g. kyassu
     // the only "inconvinence" here is that page would have to pass [] on none
     // e.g. capRoot.actor.get_transactions({ page: [], witness: false });
     const response: TransactionsResponse = await capRoot.get_transactions({
@@ -338,6 +371,8 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       // TODO: What to do if no response? Handle gracefully
 
       set((state: TransactionsStore) => ({
+        // TODO: the set function merges state
+        // there seems to be no need to spread the data
         ...state,
         isLoading: false,
         totalPages: MIN_PAGE_NUMBER,
@@ -347,8 +382,8 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
       return;
     }
 
-    // TODO: If a user request a page that is not the most recent
-    // then the total transactions calculation will fail...
+    // At time of writing there's no support for requesting a particular page number
+    // if that'd be the case, the total transactions calculation would fail...
     const totalTransactions = PAGE_SIZE * response.page + response.data.length;
 
     const getTotalPages = (totalPages: number) => {
@@ -367,9 +402,9 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
         ...state.transactionEvents,
         pageData,
       ],
-      // TODO: For totalTransactions/Pages Check TODO above,
-      // as total transactions at time of writing
-      // can only be computed on first page:None request...
+      // As noted above the total transactions
+      // are calculated on initial call
+      // we persist the initial state by max value fallback
       totalTransactions: Math.max(
         totalTransactions,
         state.totalTransactions,
@@ -383,4 +418,95 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
     totalTransactions: 0,
     totalPages: 0,
   })),
+}));
+
+export interface DabStore {
+  isLoading: boolean,
+  nftItemDetails: NFTItemDetails,
+  dabCollection: DABCollection,
+  tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
+  fetchDabCollection: () => void,
+  fetchDabItemDetails: ({
+    data,
+    tokenId,
+    standard,
+  }: {
+    data: any[],
+    tokenId: string,
+    standard: TokenStandards,
+  }) => void,
+}
+
+export const useDabStore = create<DabStore>((set, get) => ({
+  isLoading: false,
+  nftItemDetails: {},
+  dabCollection: [],
+  tokenContractKeyPairedStandard: {},
+  fetchDabCollection: async () => {
+    const agent = new HttpAgent({
+      host: config.host,
+    });
+  
+    const dabCollection = await getAllNFTS({ agent });
+
+    const tokenContractKeyPairedStandard = dabCollection.reduce((acc, curr) => {
+      const id = curr?.principal_id?.toString();
+
+      if (!id || !curr?.standard) return acc;
+
+      acc[id] = curr.standard;
+
+      return acc;
+    }, {} as TokenContractKeyPairedStandard);
+
+    set((state: any) => ({
+      // TODO: the set function merges state
+      // there seems to be no need to spread the data
+      ...state,
+      tokenContractKeyPairedStandard,
+      dabCollection,
+    }));
+  },
+  fetchDabItemDetails: async ({
+    data,
+    tokenId,
+    standard,
+  }: {
+    data: TransactionEvent[],
+    tokenId: string,
+    standard: TokenStandards,
+  }) => {
+    const nftItemDetails = get().nftItemDetails;
+
+    const dabNFTMetadataPromises = createNFTDetailsHandlerPromiseList({
+      nftItemDetails,
+      standard,
+      tokenId,
+      transactionEvents: data,
+    });
+
+    if (!dabNFTMetadataPromises) {
+      console.warn('Oops! NFT Details handling will not proceed. Is the transaction events empty?')
+
+      return;
+    }
+
+    set({
+      isLoading: true,
+    });
+
+    // TODO: Could split into parts to accelerate availability to end user?
+    // If so, this seems to be done outside this scope
+    const dabNFTMetadataPromiseRes: NFTDetails[] = await Promise.all(dabNFTMetadataPromises);
+
+    const currNftItemDetails = mapNftDetailsPromisesResult({
+      dabNFTMetadataPromiseRes,
+      cachedNftItemDetails: nftItemDetails,
+    });
+
+    set({
+      isLoading: false,
+      nftItemDetails: currNftItemDetails,
+    })
+  },
 }));

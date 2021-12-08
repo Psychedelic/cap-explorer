@@ -156,11 +156,7 @@ describe('Account', () => {
           ...response,
           promisedTokenContractsPairedRoots: {},
         });
-        const expectedData = [{
-          canister: identity.toText(),
-          age: undefined,
-          transactions: undefined,
-        }];
+        const expectedData = (async () => undefined)();
         expect(parsed).toStrictEqual(expectedData);
       });
     });
@@ -182,7 +178,7 @@ describe('Account', () => {
             ...response,
             promisedTokenContractsPairedRoots: {},
           });
-          const expectedData: any[] = [];
+          const expectedData = (async () => undefined)();
           expect(parsed).toStrictEqual(expectedData);
         });
       });
@@ -205,7 +201,7 @@ describe('Account', () => {
             ...response,
             promisedTokenContractsPairedRoots: {},
           });
-          const expectedData: any[] = [];
+          const expectedData = (async () => undefined)();
           expect(parsed).toStrictEqual(expectedData);
         });
       });
