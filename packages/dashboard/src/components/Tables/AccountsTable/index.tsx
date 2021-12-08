@@ -5,8 +5,7 @@ import { NamedAccountLink } from '@components/Link';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import { DabLink } from '@components/Link';
 import ItemCell from '@components/ItemCell';
-import { useHistory } from 'react-router-dom';
-import { getRouteByName } from '@utils/routes';
+import { UnknownItemCell } from '@components/ItemCell';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -106,31 +105,6 @@ const AccountDab = ({
   );
 };
 
-const UnknownItemCell = ({
-  contractId,
-}: {
-  contractId: string,
-}) => {
-  const history = useHistory();
-
-  return (
-    <span onClick={(e) => {
-      if ((e.target as HTMLInputElement).getAttribute('data-tooltip')) {
-        return;
-      }
-
-      if (!(e.target as HTMLInputElement).getAttribute('data-learn-more')) {
-        history.push(
-          getRouteByName('AppTransactions', { id: contractId })
-        );
-        return;
-      }
-    }}>
-      <AccountDab canisterId={contractId} />
-    </span>
-  );
-};
-
 const AccountsTable = ({
   data = [],
   id,
@@ -156,7 +130,12 @@ const AccountsTable = ({
           // because we only fetch the very first ones to improve perf
           // and serve the client ASAP
           return (
-            <UnknownItemCell contractId={contractId} />
+            <UnknownItemCell
+              contractId={contractId}
+              routeName='AppTransactions'
+            >
+              <AccountDab canisterId={contractId} />
+            </UnknownItemCell>
           )
         }
 

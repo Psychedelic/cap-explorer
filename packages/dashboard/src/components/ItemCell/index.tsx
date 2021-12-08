@@ -8,10 +8,13 @@ import iconUnknown from '@images/icon-unknown.svg';
 import { TableUnknownCellTooltip } from '@components/Tooltips'
 import { NFTDetails } from '@psychedelic/dab-js';
 import Loading from '@components/Loading';
+import { useHistory } from 'react-router-dom';
+import { getRouteByName, RouteName } from '@utils/routes';
 
 const ItemCell = styled('div', {
   '& [data-cta]': {
     cursor: 'pointer',
+    paddingRight: '20px',
 
     display: 'flex',
     alignItems: 'center',
@@ -96,3 +99,38 @@ export default ({
     }
   </ItemCell>
 );
+
+export const UnknownItemCell = ({
+  contractId,
+  children,
+  routeName,
+}: {
+  contractId: string,
+  children: React.ReactNode,
+  routeName: RouteName,
+}) => {
+  const history = useHistory();
+
+  const getRouteByNameHandler = () => 
+    routeName === 'AppTransactions'
+      ? getRouteByName('AppTransactions', { id: contractId })
+      : ''
+  
+
+  return (
+    <span onClick={(e) => {
+      if ((e.target as HTMLInputElement).getAttribute('data-tooltip')) {
+        return;
+      }
+
+      if (!(e.target as HTMLInputElement).getAttribute('data-learn-more')) {
+        history.push(
+          getRouteByNameHandler()
+        );
+        return;
+      }
+    }}>
+      { children }
+    </span>
+  );
+};
