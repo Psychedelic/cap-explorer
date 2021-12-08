@@ -61,10 +61,13 @@ const Tooltip = styled('div', {
     color: '#8D8E92',
     fontWeight: 'regular',
     lineHeight: 1.4,
+    pointerEvents: 'none',
 
     '& a': {
       color: '$purple',
       transition: 'opacity 0.3s',
+      cursor: 'pointer',
+      pointerEvents: 'visible',
 
       '&:hover': {
         opacity: 0.8,
@@ -75,13 +78,20 @@ const Tooltip = styled('div', {
   '& [data-hover-placeholder]': {
     background: 'transparent',
     width: '180px',
-    height: '100%',
+    height: '30px',
     position: 'absolute',
-    top: '-50%',
+    top: '-25px',
     left: 0,
-    opacity: 0.2,
     pointerEvents: 'visible',
     zIndex: 0,
+  },
+
+  '& [data-pointer-events-none]': {
+    pointerEvents: 'none'
+  },
+
+  '& [data-pointer-events]': {
+    pointerEvents: 'auto'
   },
 });
 
@@ -91,11 +101,11 @@ export const TableUnknownCellTooltip = () => {
       <span data-hover-placeholder />
       <span data-arrow />
       <span data-arrow-after />
-      <span data-title>Why is this Unknown?</span>
-      <span data-description>
+      <span data-title data-pointer-events-none>Why is this Unknown?</span>
+      <span data-description data-pointer-events-none>
         This asset has not been added to DAB yet. The owner or controller of 
         this asset should add it to DAB so the name and other info about this 
-        asset can be automatically surfaced in every interface that uses DAB. <a href='https://dab.ooo' target='_blank'>Learn More.</a>
+        asset can be automatically surfaced in every interface that uses DAB. <a data-learn-more data-pointer-events href='https://dab.ooo' target='_blank'>Learn More.</a>
       </span>
     </Tooltip>
   );

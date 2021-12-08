@@ -8,7 +8,9 @@ export enum RouteNames {
   AppTransactions = '/app-transactions/:id',
 }
 
-export const getRouteByName = (name: keyof typeof RouteNames, args?: { id: string }) => {
+export type RouteName = keyof typeof RouteNames;
+
+export const getRouteByName = (name: RouteName, args?: { id: string }) => {
   let pathname = `${RouteNames[name]}${getTestQuery()}`;
 
   if (name === 'AppTransactions') {
