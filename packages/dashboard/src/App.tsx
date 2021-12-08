@@ -13,6 +13,7 @@ import {
   Route,
 } from 'react-router-dom';
 import loadable from '@loadable/component';
+import Loading from '@components/Loading';
 import { RouteNames } from '@utils/routes';
 import {
   useAccountStore,
@@ -22,11 +23,50 @@ import { CapRouter } from '@psychedelic/cap-js';
 import { getCapRouterInstance } from '@utils/cap'; 
 import { TokenContractKeyPairedStandard } from '@utils/dab';
 import config from './config';
+import { styled } from '@stitched';
+
+const LoadingTransitionCtrlr = styled('div', {
+  transition: 'opacity 0.3s',
+  opacity: 0,
+
+  variants: {
+    show: {
+      true: {
+        opacity: 1,
+      },
+    }
+  },
+});
 
 export type BookmarkExpandHandler = (args?: BookmarkExpandHandlerOverrides) => void;
 
 interface BookmarkExpandHandlerOverrides {
   isCollapsed?: boolean,
+}
+
+const LoadableLoadingPlaceholder = ({
+  alt
+}: {
+  alt: string,
+}) => {
+  // The loader is only displayed for network speeds
+  // which are slow or take longer the X to load...
+  const AWAIT_TIMEOUT_UNTIL_LOAD_MS = 1200;
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    let timeoutRef = setTimeout(() => {
+      setShow(true)
+    }, AWAIT_TIMEOUT_UNTIL_LOAD_MS);
+
+    return () => clearTimeout(timeoutRef)
+  }, []);
+
+  return (
+    <LoadingTransitionCtrlr show={show}>
+      <Loading alt={alt} size="m" />
+    </LoadingTransitionCtrlr>
+  )
 }
 
 // Dynamic imports
@@ -36,14 +76,14 @@ interface BookmarkExpandHandlerOverrides {
 // in the component scope
 const LazyOverview = loadable(() => import('@views/Overview'), {
   // The fallback to blank is intentional
-  // previously displayed the <Loading /> but not required
-  fallback: <span data-component-loading />,
+  // which transitions to the loader for slower internet connections
+  fallback: <LoadableLoadingPlaceholder alt="Loading Overview page" />,
 });
 
 const LazyAppTransactions = loadable(() => import('@views/AppTransactions'), {
   // The fallback to blank is intentional
-  // previously displayed the <Loading /> but not required
-  fallback: <span data-component-loading />,
+  // which transitions to the loader for slower internet connections
+  fallback: <LoadableLoadingPlaceholder alt="Loading App Transactions page" />,
 });
 
 const Routes = ({
