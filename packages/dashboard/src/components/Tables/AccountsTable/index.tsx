@@ -104,6 +104,30 @@ const AccountDab = ({
   );
 };
 
+const UnknownItemCell = ({
+  contractId,
+}: {
+  contractId: string,
+}) => {
+  const [isClickable, setIsClickable] = useState(false);
+
+  if (!isClickable) {
+    return (
+      <AccountDab canisterId={contractId} />
+    ); 
+  }
+
+  return (
+    <span
+      onMouseEnter={() => setIsClickable(false)}
+    >
+      <DabLink tokenContractId={contractId}>
+        <AccountDab canisterId={contractId} />
+      </DabLink>
+    </span>
+  );
+};
+
 const AccountsTable = ({
   data = [],
   id,
@@ -129,9 +153,7 @@ const AccountsTable = ({
           // because we only fetch the very first ones to improve perf
           // and serve the client ASAP
           return (
-            <DabLink tokenContractId={contractId}>
-              <AccountDab canisterId={contractId} />
-            </DabLink>
+            <UnknownItemCell contractId={contractId} />
           )
         }
 

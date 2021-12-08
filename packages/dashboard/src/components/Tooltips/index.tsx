@@ -61,10 +61,13 @@ const Tooltip = styled('div', {
     color: '#8D8E92',
     fontWeight: 'regular',
     lineHeight: 1.4,
+    pointerEvents: 'none',
 
     '& a': {
       color: '$purple',
       transition: 'opacity 0.3s',
+      cursor: 'pointer',
+      pointerEvents: 'visible',
 
       '&:hover': {
         opacity: 0.8,
