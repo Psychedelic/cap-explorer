@@ -5,6 +5,8 @@ import { NamedAccountLink } from '@components/Link';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import { DabLink } from '@components/Link';
 import ItemCell from '@components/ItemCell';
+import { useHistory } from 'react-router-dom';
+import { getRouteByName } from '@utils/routes';
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -109,21 +111,22 @@ const UnknownItemCell = ({
 }: {
   contractId: string,
 }) => {
-  const [isClickable, setIsClickable] = useState(false);
-
-  if (!isClickable) {
-    return (
-      <AccountDab canisterId={contractId} />
-    ); 
-  }
+  const history = useHistory();
 
   return (
-    <span
-      onMouseEnter={() => setIsClickable(false)}
-    >
-      <DabLink tokenContractId={contractId}>
-        <AccountDab canisterId={contractId} />
-      </DabLink>
+    <span onClick={(e) => {
+      if ((e.target as HTMLInputElement).getAttribute('data-tooltip')) {
+        return;
+      }
+
+      if (!(e.target as HTMLInputElement).getAttribute('data-learn-more')) {
+        history.push(
+          getRouteByName('AppTransactions', { id: contractId })
+        );
+        return;
+      }
+    }}>
+      <AccountDab canisterId={contractId} />
     </span>
   );
 };

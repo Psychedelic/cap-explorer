@@ -10,16 +10,20 @@ import { NFTDetails } from '@psychedelic/dab-js';
 import Loading from '@components/Loading';
 
 const ItemCell = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-  transition: 'color 0.3s',
+  '& [data-cta]': {
+    cursor: 'pointer',
 
-  '& [data-image]': {
-    width: '35px',
-    height: '35px',
-    borderRadius: '6px',
-    marginRight: '10px',
-    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    transition: 'color 0.3s',
+  
+    '& [data-image]': {
+      width: '35px',
+      height: '35px',
+      borderRadius: '6px',
+      marginRight: '10px',
+      position: 'relative',
+    },
   },
 
   variants: {
@@ -51,36 +55,38 @@ export default ({
   isLoadingDabItemDetails?: boolean,
 }) => (
   <ItemCell data-dab-identity-cell asHoverState={asHoverState}>
-    {
-      isLoadingDabItemDetails
-      ? (
-        <span data-image>
-          <Loading size='s' alt='Loading' />
-        </span>
-      )
-      : (
-        <span
-          data-image
-          style={{
-            backgroundImage: `url(${nftDetails?.url || identityInDab?.logo_url || iconUnknown})`,
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            display: 'inline-block',
-          }}
-        />
-      )
-    }
-
-    <span data-identity-name>
-      { identityInDab?.name || DAB_IDENTITY_UNKNOWN }
+    <div data-cta>
       {
-        // If undefined, hide the cellValue
-        derivedId
-          ? cellValue ? ' #' + cellValue : ''
-          : ''
+        isLoadingDabItemDetails
+        ? (
+          <span data-image>
+            <Loading size='s' alt='Loading' />
+          </span>
+        )
+        : (
+          <span
+            data-image
+            style={{
+              backgroundImage: `url(${nftDetails?.url || identityInDab?.logo_url || iconUnknown})`,
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              display: 'inline-block',
+            }}
+          />
+        )
       }
-    </span>
+
+      <span data-identity-name>
+        { identityInDab?.name || DAB_IDENTITY_UNKNOWN }
+        {
+          // If undefined, hide the cellValue
+          derivedId
+            ? cellValue ? ' #' + cellValue : ''
+            : ''
+        }
+      </span>
+    </div>
 
     {
       !identityInDab?.name

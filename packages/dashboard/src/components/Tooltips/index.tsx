@@ -78,9 +78,9 @@ const Tooltip = styled('div', {
   '& [data-hover-placeholder]': {
     background: 'transparent',
     width: '180px',
-    height: '100%',
+    height: '40px',
     position: 'absolute',
-    top: '-50%',
+    top: '-25px',
     left: 0,
     opacity: 0.2,
     pointerEvents: 'visible',
@@ -98,7 +98,7 @@ export const TableUnknownCellTooltip = () => {
       <span data-description>
         This asset has not been added to DAB yet. The owner or controller of 
         this asset should add it to DAB so the name and other info about this 
-        asset can be automatically surfaced in every interface that uses DAB. <a href='https://dab.ooo' target='_blank'>Learn More.</a>
+        asset can be automatically surfaced in every interface that uses DAB. <a data-learn-more href='https://dab.ooo' target='_blank'>Learn More.</a>
       </span>
     </Tooltip>
   );
