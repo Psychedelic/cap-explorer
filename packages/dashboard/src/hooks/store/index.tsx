@@ -21,7 +21,6 @@ import { shouldUseMockup } from '../../utils/mocks';
 import {
   CanisterMetadata,
   DABCollection,
-  DAB_CANISTER_ID,
   CanisterKeyPairedMetadata,
   CanisterNameKeyPairedId,
   createNFTDetailsHandlerPromiseList,
@@ -31,6 +30,7 @@ import {
   mapNftDetailsPromisesResult,
   NFTItemDetails,
   TokenStandards,
+  TokenContractKeyPairedStandard,
 } from '@utils/dab';
 import {
   preloadPageDataImages,
@@ -409,14 +409,11 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
   })),
 }));
 
-type TokenContractCanisterId = string;
-type TokenContractKeyPairedStandard = Record<TokenContractCanisterId, TokenStandards | string>;
-
 export interface DabStore {
   isLoading: boolean,
   nftItemDetails: NFTItemDetails,
   dabCollection: DABCollection,
-  tokenContractKeyPairedStandard: Record<string, string>,
+  tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
   fetchDabCollection: () => void,
   fetchDabItemDetails: ({
     data,

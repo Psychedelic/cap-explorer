@@ -25,6 +25,7 @@ import {
 } from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
 import { getCapRouterInstance } from '@utils/cap'; 
+import { TokenContractKeyPairedStandard } from '@utils/dab';
 import config from './config';
 
 export type BookmarkExpandHandler = (args?: BookmarkExpandHandlerOverrides) => void;
@@ -54,10 +55,12 @@ const Routes = ({
   bookmarkColumnMode,
   bookmarkExpandHandler,
   loading,
+  tokenContractKeyPairedStandard,
 }: {
   bookmarkColumnMode: BookmarkColumnModes,
   bookmarkExpandHandler: BookmarkExpandHandler,
   loading: boolean,
+  tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
 }) => {
   const [capRouterInstance, setCapRouterInstance] = useState<CapRouter | undefined>();
   const accountStore = useAccountStore();
@@ -86,6 +89,7 @@ const Routes = ({
         <Route path={RouteNames.AppTransactions}>
           <LazyAppTransactions
             capRouterInstance={capRouterInstance}
+            tokenContractKeyPairedStandard={tokenContractKeyPairedStandard}
           />
         </Route>
         <Route path={RouteNames.Overview}>
@@ -102,6 +106,7 @@ const Routes = ({
 const App = () => {
   const {
     fetchDabCollection,
+    tokenContractKeyPairedStandard,
   } = useDabStore();
 
   useEffect(() => {
@@ -119,6 +124,7 @@ const App = () => {
         bookmarkColumnMode={BookmarkColumnModes.collapsed}
         bookmarkExpandHandler={() => null}
         loading={false}
+        tokenContractKeyPairedStandard={tokenContractKeyPairedStandard}
       />
     </Router>
   );

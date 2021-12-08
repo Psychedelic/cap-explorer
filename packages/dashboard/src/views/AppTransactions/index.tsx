@@ -24,6 +24,7 @@ import {
   CanisterMetadata,
   isValidStandard,
   TokenStandards,
+  TokenContractKeyPairedStandard,
 } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import OverallValues from '@components/OverallValues';
@@ -39,8 +40,10 @@ const UserBar = styled('div', {
 
 const AppTransactions = ({
   capRouterInstance,
+  tokenContractKeyPairedStandard,
 }: {
   capRouterInstance: CapRouter | undefined,
+  tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
 }) => {
   const dabStore = useDabStore();
   const {
@@ -104,10 +107,10 @@ const AppTransactions = ({
     if (!pageData || !identityInDab) return;
 
     // Should validate if known standard
-    const standard: string = identityInDab.name;
+    const foundStandard = tokenContractKeyPairedStandard[tokenId];
 
-    if (!isValidStandard(standard)) {
-      console.warn(`Oops! Standard ${standard} is unknown`)
+    if (!isValidStandard(foundStandard)) {
+      console.warn(`Oops! Standard ${foundStandard} is unknown`)
 
       return;
     };
@@ -115,7 +118,7 @@ const AppTransactions = ({
     fetchDabItemDetails({
       data: pageData,
       tokenId,
-      standard: standard as TokenStandards,
+      standard: foundStandard as TokenStandards,
     });
   }, [pageData, identityInDab]);
 

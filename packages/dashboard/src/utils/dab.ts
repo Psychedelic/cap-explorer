@@ -110,8 +110,14 @@ export const getNFTDetails = async ({
 };
 
 export type TokenStandards = keyof typeof standards;
+export type TokenContractCanisterId = string;
+export type TokenContractKeyPairedStandard = Record<TokenContractCanisterId, TokenStandards | string>;
 
-export const isValidStandard = (name: string) => standards.hasOwnProperty(name.toLowerCase());
+export const isValidStandard = (standardName: string) => {
+  if (!standardName) return false;
+
+  return standards.hasOwnProperty(standardName.toLowerCase())
+};
 
 export const createNFTDetailsHandlerPromiseList = ({
   nftItemDetails,
