@@ -89,7 +89,7 @@ export const getNFTDetails = async ({
   standard,
 }: GetNFTDetails): Promise<NFTDetails> => {
   const httpAgentArgs = {
-    host: 'https://ic0.app/',
+    host: config.host,
     canisterId: tokenId,
   };
 
