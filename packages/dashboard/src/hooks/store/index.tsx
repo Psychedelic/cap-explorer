@@ -442,7 +442,9 @@ export const useDabStore = create<DabStore>((set, get) => ({
     const dabCollection = await getAllNFTS({ agent });
 
     const tokenContractKeyPairedStandard = dabCollection.reduce((acc, curr) => {
-      const id = curr.principal_id.toString();
+      const id = curr?.principal_id?.toString();
+
+      if (!id) return acc;
 
       acc[id] = curr.standard;
 
