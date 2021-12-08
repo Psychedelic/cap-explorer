@@ -410,7 +410,7 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
 }));
 
 type TokenContractCanisterId = string;
-type TokenContractKeyPairedStandard = Record<TokenContractCanisterId, TokenStandards>;
+type TokenContractKeyPairedStandard = Record<TokenContractCanisterId, TokenStandards | string>;
 
 export interface DabStore {
   isLoading: boolean,
