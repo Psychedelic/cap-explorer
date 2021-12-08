@@ -76,13 +76,13 @@ const LoadableLoadingPlaceholder = ({
 // in the component scope
 const LazyOverview = loadable(() => import('@views/Overview'), {
   // The fallback to blank is intentional
-  // previously displayed the <Loading /> but not required
+  // which transitions to the loader for slower internet connections
   fallback: <LoadableLoadingPlaceholder alt="Loading Overview page" />,
 });
 
 const LazyAppTransactions = loadable(() => import('@views/AppTransactions'), {
   // The fallback to blank is intentional
-  // previously displayed the <Loading /> but not required
+  // which transitions to the loader for slower internet connections
   fallback: <LoadableLoadingPlaceholder alt="Loading App Transactions page" />,
 });
 
