@@ -260,6 +260,9 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     totalContracts: 0,
     totalPages: 0,
   })),
+  // TODO: should use the following instead
+  // when possible please test and move
+  // reset: () => () => set({}, true),
 }));
 
 interface TransactionsFetchParams {
