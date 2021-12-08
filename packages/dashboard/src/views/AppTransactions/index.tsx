@@ -172,7 +172,11 @@ const AppTransactions = ({
         canisterId: tokenId,
       });
 
-      if (!metadata) return;
+      if (!metadata) {
+        setIsLoadingDabMetada(false);
+
+        return;
+      };
 
       // TODO: Update name column, otherwise fallback
       setIdentityInDab({
