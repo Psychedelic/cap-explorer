@@ -101,12 +101,15 @@ const Routes = ({
 
 const App = () => {
   const {
-    dabCollection,
     fetchDabCollection,
-    tokenContractKeyPairedStandard,
   } = useDabStore();
 
   useEffect(() => {
+    // Required to use as a lookup table to
+    // identify the token contract nft standard
+    // at time of writing the getAllNFTs is used
+    // and while this works for now, it's not scalable
+    // as the list increases; a nft registry is under dev
     fetchDabCollection();
   }, []);
 
