@@ -19,7 +19,10 @@ import loadable from '@loadable/component';
 import Loading from '@components/Loading';
 import { RouteNames } from '@utils/routes';
 import { createBookmarkExpandHandler } from '@utils/account';
-import { useAccountStore } from '@hooks/store';
+import {
+  useAccountStore,
+  useDabStore,
+} from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
 import { getCapRouterInstance } from '@utils/cap'; 
 import config from './config';
@@ -96,14 +99,26 @@ const Routes = ({
   );
 }
 
-const App = () => (
-  <Router>
-    <Routes
-      bookmarkColumnMode={BookmarkColumnModes.collapsed}
-      bookmarkExpandHandler={() => null}
-      loading={false}
-    />
-  </Router>
-);
+const App = () => {
+  const {
+    dabCollection,
+    fetchDabCollection,
+    tokenContractKeyPairedStandard,
+  } = useDabStore();
+
+  useEffect(() => {
+    fetchDabCollection();
+  }, []);
+
+  return (
+    <Router>
+      <Routes
+        bookmarkColumnMode={BookmarkColumnModes.collapsed}
+        bookmarkExpandHandler={() => null}
+        loading={false}
+      />
+    </Router>
+  );
+}
 
 export default App;

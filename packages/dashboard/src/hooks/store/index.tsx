@@ -8,15 +8,10 @@ import {
 } from '@psychedelic/cap-js';
 import {
   NFTDetails,
+  getAllNFTS,  
 } from '@psychedelic/dab-js';
 import { Principal } from '@dfinity/principal';
 import { getCapRootInstance } from '@utils/cap';
-import {
-  CanisterMetadata,
-  createNFTDetailsHandlerPromiseList,
-  mapNftDetailsPromisesResult,
-  TokenStandards,
-} from '@utils/dab';
 import { parseGetTransactionsResponse } from '@utils/transactions';
 import { parseUserRootBucketsResponse } from '@utils/account';
 import { managementCanisterPrincipal } from '@utils/ic-management-api';
@@ -24,17 +19,23 @@ import { AccountData } from '@components/Tables/AccountsTable';
 import config from '../../config';
 import { shouldUseMockup } from '../../utils/mocks';
 import {
-  ContractPairedMetadata,
+  CanisterMetadata,
+  DABCollection,
+  DAB_CANISTER_ID,
   CanisterKeyPairedMetadata,
   CanisterNameKeyPairedId,
+  createNFTDetailsHandlerPromiseList,
+  ContractPairedMetadata,
   ContractKeyPairedMetadata,
   getDabMetadata,
-  getNFTDetails,
+  mapNftDetailsPromisesResult,
   NFTItemDetails,
+  TokenStandards,
 } from '@utils/dab';
 import {
   preloadPageDataImages,
 } from '@utils/images';
+import { Actor, HttpAgent } from "@dfinity/agent";
 
 export interface AccountStore {
   accounts: ContractsResponse | {},
@@ -408,9 +409,15 @@ export const useTransactionStore = create<TransactionsStore>((set) => ({
   })),
 }));
 
+type TokenContractCanisterId = string;
+type TokenContractKeyPairedStandard = Record<TokenContractCanisterId, TokenStandards>;
+
 export interface DabStore {
   isLoading: boolean,
   nftItemDetails: NFTItemDetails,
+  dabCollection: DABCollection,
+  tokenContractKeyPairedStandard: Record<string, string>,
+  fetchDabCollection: () => void,
   fetchDabItemDetails: ({
     data,
     tokenId,
@@ -425,6 +432,29 @@ export interface DabStore {
 export const useDabStore = create<DabStore>((set, get) => ({
   isLoading: false,
   nftItemDetails: {},
+  dabCollection: [],
+  tokenContractKeyPairedStandard: {},
+  fetchDabCollection: async () => {
+    const agent = new HttpAgent({
+      host: config.host,
+    });
+  
+    const dabCollection = await getAllNFTS({ agent });
+
+    const tokenContractKeyPairedStandard = dabCollection.reduce((acc, curr) => {
+      const id = curr.principal_id.toString();
+
+      acc[id] = curr.standard;
+
+      return acc;
+    }, {} as TokenContractKeyPairedStandard);
+
+    set((state: any) => ({
+      ...state,
+      tokenContractKeyPairedStandard,
+      dabCollection,
+    }));
+  },
   fetchDabItemDetails: async ({
     data,
     tokenId,
@@ -449,6 +479,8 @@ export const useDabStore = create<DabStore>((set, get) => ({
       return;
     }
 
+    // TODO: this doesn't seem right
+    // use the set((state) => ({ ...state, x }))
     set({
       isLoading: true,
     });
@@ -462,6 +494,8 @@ export const useDabStore = create<DabStore>((set, get) => ({
       cachedNftItemDetails: nftItemDetails,
     });
 
+    // TODO: this doesn't seem right
+    // use the set((state) => ({ ...state, x }))
     set({
       isLoading: false,
       nftItemDetails: currNftItemDetails,

@@ -4,6 +4,7 @@ import {
   getNFTActor,
   NFTDetails,
   standards,
+  getAllNFTS,
 } from '@psychedelic/dab-js';
 import {
   Event as TransactionEvent,
@@ -13,6 +14,10 @@ import { mockCanisterMetadata } from '@utils/mocks/dabMetadata';
 import { shouldUseMockup } from '@utils/mocks';
 
 export default {};
+
+export const DAB_CANISTER_ID = 'aipdg-waaaa-aaaah-aaq5q-cai';
+
+export type DABCollection = Awaited<ReturnType<typeof getAllNFTS>>;
 
 export type NFTItemDetails = {
   [tokenContractId: string]: {
@@ -26,6 +31,7 @@ export interface CanisterMetadata {
   description: string;
   version: number;
   logo_url: string;
+  // standard: TokenStandards,
 }
 
 export type ContractPairedMetadata = {
