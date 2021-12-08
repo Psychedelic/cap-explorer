@@ -13,6 +13,7 @@ import {
   Route,
 } from 'react-router-dom';
 import loadable from '@loadable/component';
+import Loading from '@components/Loading';
 import { RouteNames } from '@utils/routes';
 import {
   useAccountStore,
@@ -29,6 +30,29 @@ interface BookmarkExpandHandlerOverrides {
   isCollapsed?: boolean,
 }
 
+const LoadableLoadingPlaceholder = ({
+  alt
+}: {
+  alt: string,
+}) => {
+  // The loader is only displayed for network speeds
+  // which are slow or take longer the X to load...
+  const AWAIT_TIMEOUT_UNTIL_LOAD_MS = 1200;
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShow(true)
+    }, AWAIT_TIMEOUT_UNTIL_LOAD_MS);
+  }, []);
+
+  if (!show) return <span />;
+
+  return (
+    <Loading alt={alt} size="m" />
+  )
+}
+
 // Dynamic imports
 // the wrapped dynamic version of the component could be exported
 // from the component path, but we keep it here for clear evidence
@@ -37,13 +61,13 @@ interface BookmarkExpandHandlerOverrides {
 const LazyOverview = loadable(() => import('@views/Overview'), {
   // The fallback to blank is intentional
   // previously displayed the <Loading /> but not required
-  fallback: <span data-component-loading />,
+  fallback: <LoadableLoadingPlaceholder alt="Loading Overview page" />,
 });
 
 const LazyAppTransactions = loadable(() => import('@views/AppTransactions'), {
   // The fallback to blank is intentional
   // previously displayed the <Loading /> but not required
-  fallback: <span data-component-loading />,
+  fallback: <LoadableLoadingPlaceholder alt="Loading App Transactions page" />,
 });
 
 const Routes = ({
