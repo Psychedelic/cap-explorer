@@ -21,7 +21,7 @@ const Overall = styled('div', {
     '& span': {
       paddingRight: '4px',
 
-      '&:first-child:after': {
+      '&[data-name]:after': {
         content: ':',
       },
 
@@ -57,7 +57,7 @@ const OverallValues = ({
         value,
       }) => (
         <div key={name}>
-          <span>{name}</span>
+          <span data-name>{name}</span>
           <span>
             {
               isLoading
