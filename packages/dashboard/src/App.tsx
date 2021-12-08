@@ -41,9 +41,11 @@ const LoadableLoadingPlaceholder = ({
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => {
+    let timeoutRef = setTimeout(() => {
       setShow(true)
     }, AWAIT_TIMEOUT_UNTIL_LOAD_MS);
+
+    return () => clearTimeout(timeoutRef)
   }, []);
 
   if (!show) return <span />;
