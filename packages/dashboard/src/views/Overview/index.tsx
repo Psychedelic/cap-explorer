@@ -6,27 +6,26 @@ import AccountsTable from '@components/Tables/AccountsTable';
 import Title from '@components/Title';
 import Page, { PageRow } from '@components/Page';
 import {
-  AccountStore,
-  DabStore,
+  useAccountStore,
+  useDabStore,
 } from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
 import OverallValues from '@components/OverallValues';
 import SearchInput from '@components/SearchInput';
 
 const Overview = ({
-  accountStore,
   capRouterInstance,
-  dabStore,
 }: {
-  accountStore: AccountStore,
   capRouterInstance: CapRouter | undefined,
-  dabStore: DabStore,
 }) => {
+  const [pageLoading, setPageLoading] = useState(false);
+  const dabStore = useDabStore();
+  const accountStore = useAccountStore();
+
   const {
     pageData,
     fetch,    
   } = accountStore;
-  const [pageLoading, setPageLoading] = useState(false);
 
   useEffect(() => {
     setPageLoading(true);
@@ -52,6 +51,7 @@ const Overview = ({
     (async () => {
       await fetch({
         capRouterInstance,
+        // Optionally, maybe Move this to the fn handler
         dabStore,
       });
 

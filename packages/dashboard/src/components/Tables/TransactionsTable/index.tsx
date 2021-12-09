@@ -11,7 +11,6 @@ import { formatPriceForChart } from '@utils/formatters';
 import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
 import {
-  CanisterMetadata,
   DABCollectionItem,
   NFTItemDetails,
 } from '@utils/dab';

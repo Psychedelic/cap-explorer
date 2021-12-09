@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import React, {
-  useCallback,
   useEffect,
   useState,
 } from 'react';
@@ -15,12 +14,6 @@ import {
 } from 'react-router-dom';
 import loadable from '@loadable/component';
 import { RouteNames } from '@utils/routes';
-import {
-  useAccountStore,
-  useDabStore,
-  AccountStore,
-  DabStore,
-} from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
 import { getCapRouterInstance } from '@utils/cap'; 
 import config from './config';
@@ -53,13 +46,9 @@ const Routes = ({
   bookmarkColumnMode,
   bookmarkExpandHandler,
   loading,
-  accountStore,
-  dabStore,
 }: {
   bookmarkColumnMode: BookmarkColumnModes,
   bookmarkExpandHandler: BookmarkExpandHandler,
-  accountStore: AccountStore,
-  dabStore: DabStore,
   loading: boolean,
 }) => {
   const [capRouterInstance, setCapRouterInstance] = useState<CapRouter | undefined>();
@@ -92,8 +81,6 @@ const Routes = ({
         </Route>
         <Route path={RouteNames.Overview}>
           <LazyOverview
-            accountStore={accountStore}
-            dabStore={dabStore}
             capRouterInstance={capRouterInstance}
           />
         </Route>
@@ -102,22 +89,15 @@ const Routes = ({
   );
 }
 
-const App = () => {
-  const dabStore = useDabStore();
-  const accountStore = useAccountStore();
+const App = () => (
+  <Router>
+    <Routes
+      bookmarkColumnMode={BookmarkColumnModes.collapsed}
+      bookmarkExpandHandler={() => null}
+      loading={false}
 
-  return (
-    <Router>
-      <Routes
-        bookmarkColumnMode={BookmarkColumnModes.collapsed}
-        bookmarkExpandHandler={() => null}
-        loading={false}
-        dabStore={dabStore}
-        accountStore={accountStore}
-
-      />
-    </Router>
-  );
-}
+    />
+  </Router>
+);
 
 export default App;
