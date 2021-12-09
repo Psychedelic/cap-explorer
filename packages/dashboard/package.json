@@ -11,7 +11,7 @@
   "scripts": {
     "start": "webpack serve -c ./webpack/webpack.config.js --node-env development --mode development",
     "dev:development": "yarn start",
-    "dev:production": "IC_HISTORY_ROUTER_ID='lj532-6iaaa-aaaah-qcc7a-cai' MOCKUP=false webpack serve -c ./webpack/webpack.config.js --node-env production --mode production",
+    "dev:production": "IC_HISTORY_ROUTER_ID='lj532-6iaaa-aaaah-qcc7a-cai' USE_WEBPACK_DEV_SERVER=true MOCKUP=false webpack serve -c ./webpack/webpack.config.js --node-env production --mode production",
     "build:production": "webpack -c ./webpack/webpack.config.js --node-env production --mode=production",
     "build:staging": "webpack -c ./webpack/webpack.config.js --node-env staging --mode=production",
     "build:local": "webpack -c ./webpack/webpack.config.js --node-env development --mode=development",

@@ -11,6 +11,7 @@ import config from '../../config';
 
 export interface TransactionsStore {
   isLoading: boolean,
+  setIsLoading: (isLoading: boolean) => void,
   page: number | undefined,
   pageData: TransactionEvent[] | undefined,
   transactionEvents: TransactionEvent[] | [],
