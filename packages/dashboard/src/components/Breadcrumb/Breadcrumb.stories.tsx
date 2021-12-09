@@ -18,11 +18,17 @@ const Template: Story<BreadcrumbProps> = (props) => <Wrapper><Breadcrumb {...pro
 export const Primary = Template.bind({});
 Primary.args = {
   isLoading: false,
-  identityInDab: {
-    name: 'test',
-    logo_url: '',
-    url: '',
+  // identityInDab: {
+  //   name: 'test',
+  //   logo_url: '',
+  //   url: '',
+  //   description: '',
+  //   version: 1,
+  // }
+  metadata: {
+    icon: '',
+    name: '',
     description: '',
-    version: 1,
-  }
+    principal_id: '',
+  } as any,
 };

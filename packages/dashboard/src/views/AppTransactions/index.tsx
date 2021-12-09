@@ -24,6 +24,7 @@ import {
   isValidStandard,
   TokenStandards,
   TokenContractKeyPairedStandard,
+  DABCollectionItem,
 } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import OverallValues from '@components/OverallValues';
@@ -42,6 +43,8 @@ const AppTransactions = ({
 }: {
   capRouterInstance: CapRouter | undefined,
 }) => {
+  const { id: tokenId } = useParams() as { id: string };
+
   const dabStore = useDabStore();
   const {
     isLoading: isLoadingDabItemDetails,
@@ -49,10 +52,13 @@ const AppTransactions = ({
     nftItemDetails,
   } = dabStore;
   const accountStore = useAccountStore();
-  const { contractKeyPairedMetadata } = accountStore;
+  const {
+    contractKeyPairedMetadata,
+  } = accountStore;
+  const metadata = contractKeyPairedMetadata[tokenId];
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingDabMetada, setIsLoadingDabMetada] = useState(true);
-  const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
+  const [identityInDab, setIdentityInDab] = useState<DABCollectionItem>();
   const isSmallerThanBreakpointLG = useWindowResize({
     breakpoint: BREAKPOINT_DATA_TABLE_L,
   });
@@ -65,8 +71,6 @@ const AppTransactions = ({
   } = useTransactionStore((state) => state);
   const [rootCanisterId, setRootCanisterId] = useState<string>();
   const [transactions, setTransactions] = useState<TransactionEvent>(undefined);
-
-  let { id: tokenId } = useParams() as { id: string };
 
   // TODO: on fetch by token id and page nr, cache/memoize
   const fetchPageDataHandler: FetchPageDataHandler = async ({
@@ -101,12 +105,12 @@ const AppTransactions = ({
   }, [pageData]);
 
   useEffect(() => {
-    if (!pageData || !identityInDab) return;
+    if (!pageData) return;
 
     // TODO: this needs to be refactored inline with latest dab collection changes
     // Should validate if known standard
     // const foundStandard = tokenContractKeyPairedStandard[tokenId];
-    const foundStandard = '';
+    const foundStandard = metadata?.standard;
 
     if (!isValidStandard(foundStandard)) {
       console.warn(`Oops! Standard ${foundStandard} is unknown`)
@@ -119,7 +123,7 @@ const AppTransactions = ({
       tokenId,
       standard: foundStandard as TokenStandards,
     });
-  }, [pageData, identityInDab]);
+  }, [pageData]);
 
   useEffect(() => {
     if (!rootCanisterId) return;
@@ -201,18 +205,25 @@ const AppTransactions = ({
   //   setIdentityInDab(identityInDab);
   // }, [contractKeyPairedMetadata, tokenId]);
 
-  useEffect(() => {
-    if (!identityInDab) return;
+  // useEffect(() => {
+  //   if (!identityInDab) return;
 
-    setIsLoadingDabMetada(false);
-  }, [identityInDab]);
+  //   setIsLoadingDabMetada(false);
+  // }, [identityInDab]);
+
+  useEffect(() => {
+    console.log('[debug] AppTransactions: nftItemDetails: ', nftItemDetails);
+  }, [nftItemDetails]);
 
   return (
     <Page
       pageId="app-transactions-page"
     >
       <PageRow>
-        <Breadcrumb identityInDab={identityInDab} isLoading={isLoadingDabMetada} />
+        <Breadcrumb
+          metadata={metadata}
+          isLoading={false}
+        />
       </PageRow>
       <PageRow>
         <UserBar
@@ -220,9 +231,9 @@ const AppTransactions = ({
         >
           <DabLink tokenContractId={tokenId}>
           {
-            identityInDab
-            ? <IdentityDab large={true} name={identityInDab?.name} image={identityInDab?.logo_url} isLoading={isLoadingDabMetada} />
-            : <IdentityDab large={true} name='Unknown' isLoading={isLoadingDabMetada} />
+            metadata
+            ? <IdentityDab large={true} name={metadata?.name} image={metadata?.icon} isLoading={false} />
+            : <IdentityDab large={true} name='Unknown' isLoading={false} />
           }
           </DabLink>
           <IdentityCopy
@@ -249,7 +260,7 @@ const AppTransactions = ({
           isLoading={isLoading}
           pageCount={totalPages}
           fetchPageDataHandler={fetchPageDataHandler}
-          identityInDab={identityInDab}
+          metadata={metadata}
           tokenId={tokenId}
           nftItemDetails={nftItemDetails}
           isLoadingDabItemDetails={isLoadingDabItemDetails}

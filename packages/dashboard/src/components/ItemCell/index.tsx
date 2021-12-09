@@ -2,6 +2,7 @@ import React from 'react';
 import {
   CanisterMetadata,
   DAB_IDENTITY_UNKNOWN,
+  DABCollectionItem,
 } from '@utils/dab';
 import { styled } from '@stitched';
 import iconUnknown from '@images/icon-unknown.svg';
@@ -45,14 +46,14 @@ const ItemCell = styled('div', {
 export default ({
   cellValue,
   derivedId = true,
-  identityInDab,
+  metadata,
   asHoverState = false,
   nftDetails,
   isLoadingDabItemDetails = false,
 }: {
   cellValue?: number,
   derivedId?: boolean,
-  identityInDab?: CanisterMetadata,
+  metadata?: DABCollectionItem,
   asHoverState?: boolean,
   nftDetails?: NFTDetails,
   isLoadingDabItemDetails?: boolean,
@@ -70,7 +71,7 @@ export default ({
           <span
             data-image
             style={{
-              backgroundImage: `url(${nftDetails?.url || identityInDab?.logo_url || iconUnknown})`,
+              backgroundImage: `url(${nftDetails?.url || metadata?.icon || iconUnknown})`,
               backgroundPosition: 'center',
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
@@ -81,7 +82,7 @@ export default ({
       }
 
       <span data-identity-name>
-        { identityInDab?.name || DAB_IDENTITY_UNKNOWN }
+        { metadata?.name || DAB_IDENTITY_UNKNOWN }
         {
           // If undefined, hide the cellValue
           derivedId
@@ -92,7 +93,7 @@ export default ({
     </div>
 
     {
-      !identityInDab?.name
+      !metadata?.name
       && (
         <TableUnknownCellTooltip />
       )

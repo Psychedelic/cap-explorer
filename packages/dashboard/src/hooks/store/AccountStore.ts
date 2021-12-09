@@ -164,6 +164,8 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
       return acc;
     }, {} as Record<string, DABCollectionItem>);
 
+    console.log('[debug] AccountStore: contractKeyPairedMetadata: ', contractKeyPairedMetadata);
+
     pageData = pageData.map(({ contractId, dabCanister }: AccountData) => {
       return ({
         contractId,

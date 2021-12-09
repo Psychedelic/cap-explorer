@@ -136,7 +136,7 @@ const AccountsTable = ({
         metadata,
       }: {
         contractId: string,
-        metadata?: CanisterMetadata,
+        metadata?: DABCollectionItem,
       }) => {
         if (!metadata) {
           // Request the Dab metadata
@@ -157,7 +157,7 @@ const AccountsTable = ({
         return (
           <DabLink tokenContractId={contractId}>
             <ItemCell
-              identityInDab={metadata}
+              metadata={metadata}
               // Overview page does not requires it
               derivedId={false}
               asHoverState={true}
