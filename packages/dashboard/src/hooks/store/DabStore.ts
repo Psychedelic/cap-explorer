@@ -26,7 +26,7 @@ export interface DabStore {
   dabCollection: DABCollection,
   canisterMetada: CanisterMetadata | undefined,
   tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
-  fetchDabCollection: () => void,
+  fetchDabCollection: () => Promise<DABCollection>,
   fetchDabItemDetails: ({
     data,
     tokenId,
@@ -70,6 +70,8 @@ export const useDabStore = create<DabStore>((set, get) => ({
       tokenContractKeyPairedStandard,
       dabCollection,
     }));
+
+    return dabCollection;
   },
   fetchDabItemDetails: async ({
     data,

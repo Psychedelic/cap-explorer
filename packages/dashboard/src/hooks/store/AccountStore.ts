@@ -155,16 +155,14 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     // along the accounts request, as in the future it'll be
     // controlled by the pagination
 
-    const { fetchDabCollection, dabCollection } = dabStore;
+    const { fetchDabCollection } = dabStore;
 
-    await fetchDabCollection();
+    const dabCollection = await fetchDabCollection();
 
     const contractKeyPairedMetadata = dabCollection?.reduce((acc, curr) => {
       acc[curr?.principal_id?.toString()] = curr;
       return acc;
     }, {} as Record<string, DABCollectionItem>);
-
-    console.log('[debug] AccountStore: contractKeyPairedMetadata:', contractKeyPairedMetadata);
 
     pageData = pageData.map(({ contractId, dabCanister }: AccountData) => {
       return ({
@@ -175,8 +173,6 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
         }
       })
     });
-
-    console.log('[debug] AccountStore: pageData:', pageData);
 
     // TODO: seems best not to preload to deliver
     // to the user as it goes or by item loading iteration...
