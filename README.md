@@ -190,9 +190,9 @@ Bear in mind that the [Psychedelic](https://github.com/psychedelic) keeps packag
 
 ## 🔫  Staging
 
-The Staging url can be found [here](https://blue-bar-1426.on.fleek.co/) and should be in sync with the lastest succesfull build and deploy in the HEAD of [develop branch](https://github.com/Psychedelic/cap-explorer/commits/develop).
+The Staging url can be found [here](https://zx4fi-ryaaa-aaaad-qa4ya-cai.ic.fleek.co) and should be in sync with the lastest succesfull build and deploy in the HEAD of [develop branch](https://github.com/Psychedelic/cap-explorer/commits/develop).
 
-[https://blue-bar-1426.on.fleek.co/](https://blue-bar-1426.on.fleek.co/)
+[https://zx4fi-ryaaa-aaaad-qa4ya-cai.ic.fleek.co](https://zx4fi-ryaaa-aaaad-qa4ya-cai.ic.fleek.co)
 
 ## 👻 Configure NPM for Github Package Registry
 
