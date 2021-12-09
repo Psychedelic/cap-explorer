@@ -30,13 +30,13 @@ interface BookmarkExpandHandlerOverrides {
 // from the component path, but we keep it here for clear evidence
 // although you can dynamically import inner dependencies
 // in the component scope
-const LazyOverview = loadable(() => import('@views/Overview'), {
+const LazyOverview = loadable(() => import(/* webpackPreload: true */ '@views/Overview'), {
   // The fallback to blank is intentional
   // which transitions to the loader for slower internet connections
   fallback: <LoadableLoadingPlaceholder alt="Loading Overview page" />,
 });
 
-const LazyAppTransactions = loadable(() => import('@views/AppTransactions'), {
+const LazyAppTransactions = loadable(() => import(/* webpackPrefetch: true */ '@views/AppTransactions'), {
   // The fallback to blank is intentional
   // which transitions to the loader for slower internet connections
   fallback: <LoadableLoadingPlaceholder alt="Loading App Transactions page" />,
