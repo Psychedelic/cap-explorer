@@ -16,6 +16,9 @@
 __PROJECT
 **/cap_canister_id
 
+**/webpack-stats.json
+**/compilation-stats.json
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
