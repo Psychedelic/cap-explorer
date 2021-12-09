@@ -11,6 +11,8 @@ const DEFAULT_DEVELOPMENT_ENVIRONMENT = 'development';
 const IS_PROD = process.env.NODE_ENV === 'production';
 const IS_STG = process.env.NODE_ENV === 'staging';
 const IS_DEV = [DEFAULT_DEVELOPMENT_ENVIRONMENT, 'test'].includes(process.env.NODE_ENV);
+const USE_WEBPACK_DEV_SERVER = process.env.USE_WEBPACK_DEV_SERVER === 'true'
+
 // TODO: recently some of the packages made
 // the dashboard project size increase a lot
 // this should be investigated
@@ -93,7 +95,7 @@ let config = {
 };
 
 // Configuration settings for Prod environments
-if (IS_PROD || IS_STG) {
+if (!USE_WEBPACK_DEV_SERVER && (IS_PROD || IS_STG)) {
   config = {
     ...config,
     mode: 'production',
@@ -157,7 +159,7 @@ if (IS_PROD || IS_STG) {
 }
 
 // Configuration settings for Dev environments
-if (IS_DEV) {
+if (IS_DEV || USE_WEBPACK_DEV_SERVER) {
   config = {
     ...config,
     mode: 'development',
