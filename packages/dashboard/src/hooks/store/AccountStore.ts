@@ -6,13 +6,9 @@ import {
   CapRoot,
 } from '@psychedelic/cap-js';
 import {
-  CanisterMetadata,
   CanisterKeyPairedMetadata,
   CanisterNameKeyPairedId,
-  ContractPairedMetadata,
   ContractKeyPairedMetadata,
-  getDabMetadata,
-  DABCollection,
   DABCollectionItem,
 } from '@utils/dab';
 import { USE_MOCKUP } from './index';
@@ -24,13 +20,12 @@ import { Principal } from '@dfinity/principal';
 import {
   preloadPageDataImages,
 } from '@utils/images';
-import { DabStore, useDabStore } from './DabStore';
+import { DabStore } from './DabStore';
 
 export interface AccountStore {
   accounts: ContractsResponse | {},
   canisterKeyPairedMetadata?: CanisterKeyPairedMetadata,
   canisterNameKeyPairedId: CanisterNameKeyPairedId,
-  contractPairedMetadata: ContractPairedMetadata[],
   contractKeyPairedMetadata: ContractKeyPairedMetadata,
   isLoading: boolean,
   setIsLoading: (isLoading: boolean) => void,
@@ -44,7 +39,6 @@ export interface AccountStore {
     capRouterInstance: CapRouter,
     dabStore: DabStore,
   } ) => void,
-  fetchDabMetadata: ({ pageData }: { pageData: AccountData[] }) => void,
   reset: () => void,
 }
 
@@ -142,19 +136,6 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
 
 
     // Fetch the Dab metadata
-    // await get().fetchDabMetadata({ pageData });
-
-    // const contractPairedMetadata = await get().contractPairedMetadata;
-
-    // const contractKeyPairedMetadata = contractPairedMetadata.reduce((acc, curr) => {
-    //   acc[curr.contractId] = curr?.metadata
-    //   return acc;
-    // }, {} as Record<string, CanisterMetadata>);
-
-    // TODO: The dab collection should be fetched at this point
-    // along the accounts request, as in the future it'll be
-    // controlled by the pagination
-
     const { fetchDabCollection } = dabStore;
 
     const dabCollection = await fetchDabCollection();
@@ -163,8 +144,6 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
       acc[curr?.principal_id?.toString()] = curr;
       return acc;
     }, {} as Record<string, DABCollectionItem>);
-
-    console.log('[debug] AccountStore: contractKeyPairedMetadata: ', contractKeyPairedMetadata);
 
     pageData = pageData.map(({ contractId, dabCanister }: AccountData) => {
       return ({
@@ -176,90 +155,29 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
       })
     });
 
-    // TODO: seems best not to preload to deliver
-    // to the user as it goes or by item loading iteration...
-    // Disabled for now, but to test load the first 8 images...
+    // Loading first few images only inadvance...
+    // TODO: Maybe renaming this or the fn signature
+    // to include the amount to preload to make it more readable
     await preloadPageDataImages({ pageData });
 
-    // const canisterKeyPairedMetadata = (pageData as AccountData[]).reduce((acc, curr: AccountData) => {
-    //   if (!curr.dabCanister.metadata) return acc;
-
-    //   return {
-    //     ...acc,
-    //     [curr.contractId]: curr.dabCanister.metadata,
-    //   };
-    // }, {} as CanisterKeyPairedMetadata);
-
-    // const canisterNameKeyPairedId = 
-    //   Object
-    //     .keys(canisterKeyPairedMetadata)
-    //     .reduce((acc, curr) => {
-    //     return {
-    //       ...acc,
-    //       [canisterKeyPairedMetadata[curr].name]: curr,
-    //     }
-    //   }, {} as { [name: string]: string });
+    const canisterNameKeyPairedId = 
+      Object
+        .keys(contractKeyPairedMetadata)
+        .reduce((acc, curr) => {
+        return {
+          ...acc,
+          [contractKeyPairedMetadata[curr].name]: curr,
+        }
+      }, {} as { [name: string]: string });
 
     set((state: AccountStore) => ({
       accounts: response,
-      // canisterKeyPairedMetadata,
-      // canisterNameKeyPairedId,
+      canisterNameKeyPairedId,
       contractKeyPairedMetadata,
       isLoading: false,
       pageData,
       totalContracts: pageData.length,
       totalPages: 1,
-    }));
-  },
-  // TODO: This was used temporarily
-  // since big search is not yet available
-  fetchDabMetadata: async ({
-    pageData,
-  }: {
-    pageData: AccountData[],
-  }) => {
-    const promises = pageData.map(
-      ({ contractId }) =>
-        (async () => {
-          const metadata = await getDabMetadata({
-            canisterId: contractId,
-          });
-
-          if (!metadata) return undefined;
-          
-          return {
-            contractId,
-            metadata,
-          };
-        })()
-    );
-
-    const promiseResponse: (ContractPairedMetadata | undefined)[] = await Promise.all(promises);
-
-    const contractPairedMetadata = promiseResponse.filter(d => d) as ContractPairedMetadata[];
-
-    const canisterKeyPairedMetadata: CanisterKeyPairedMetadata = 
-        contractPairedMetadata
-          .reduce((acc, curr) => ({
-            ...acc,
-            [curr.contractId]: curr.metadata,
-          }), {});
-
-    const canisterNameKeyPairedId: CanisterNameKeyPairedId = 
-      Object
-        .keys(canisterKeyPairedMetadata)
-        .reduce((acc, curr) => {
-        return {
-          ...acc,
-          [canisterKeyPairedMetadata[curr].name]: curr,
-        }
-      }, {});
-
-    set((state: AccountStore) => ({
-      ...state,
-      canisterKeyPairedMetadata,
-      canisterNameKeyPairedId,
-      contractPairedMetadata,
     }));
   },
   reset: () => set((state: AccountStore) => ({

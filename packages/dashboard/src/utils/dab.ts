@@ -35,11 +35,6 @@ export interface CanisterMetadata {
   logo_url: string;
 }
 
-export type ContractPairedMetadata = {
-  contractId: string;
-  metadata: CanisterMetadata;
-};
-
 export type ContractKeyPairedMetadata = Record<string, DABCollectionItem>;
 
 export type CanisterKeyPairedMetadata = { [canisterId: string]: CanisterMetadata; };
