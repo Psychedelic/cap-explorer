@@ -70,54 +70,6 @@ const columns: Column[] = [
   },
 ];
 
-const AccountDab = ({
-  canisterId,
-}: {
-  canisterId: string,
-}) => {
-  const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  // Dab metadata handler
-  useEffect(() => {
-    // // TODO: Should this move to the store?
-    // // at the moment is called as a "nice-to-have",
-    // // not as main business logic...
-    // const getDabMetadataHandler = async () => {
-    //   const metadata = await getDabMetadata({
-    //     canisterId,
-    //   });
-
-    //   if (!metadata) {
-    //     setIsLoading(false);
-
-    //     return;
-    //   }
-
-    //   // TODO: Update name column, otherwise fallback
-    //   setIdentityInDab({
-    //     ...metadata,
-    //   });
-
-    //   setIsLoading(false);
-    // };
-
-    // getDabMetadataHandler();
-  }, []);
-
-  console.log('[debug] AccountDab: identityInDab:', identityInDab);
-
-  return <span>Ok</span>;
-
-  // return (
-  //   <ItemCell
-  //     identityInDab={identityInDab}
-  //     derivedId={false}
-  //     asHoverState={true}
-  //   />
-  // );
-};
-
 const AccountsTable = ({
   data = [],
   id,
@@ -139,16 +91,15 @@ const AccountsTable = ({
         metadata?: DABCollectionItem,
       }) => {
         if (!metadata) {
-          // Request the Dab metadata
-          // because we only fetch the very first ones to improve perf
-          // and serve the client ASAP
+          // Displayed as unknown
           return (
             <UnknownItemCell
               contractId={contractId}
               routeName='AppTransactions'
             >
-              <AccountDab
-                canisterId={contractId}
+              <ItemCell
+                derivedId={false}
+                asHoverState={true}
               />
             </UnknownItemCell>
           )
