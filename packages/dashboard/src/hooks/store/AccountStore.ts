@@ -5,12 +5,11 @@ import {
   CapRouter,
   CapRoot,
 } from '@psychedelic/cap-js';
+import { contractKeyPairedMetadataHandler } from '@utils/account';
 import {
   CanisterKeyPairedMetadata,
   CanisterNameKeyPairedId,
   ContractKeyPairedMetadata,
-  DABCollectionItem,
-  contractKeyPairedMetadataHandler,
 } from '@utils/dab';
 import { USE_MOCKUP } from './index';
 import { getCapRootInstance } from '@utils/cap';
