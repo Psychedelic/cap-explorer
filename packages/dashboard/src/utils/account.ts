@@ -5,6 +5,7 @@ import {
 } from '../components/BookmarkPanel';
 import { Principal } from "@dfinity/principal";
 import { AccountData } from '@components/Tables/AccountsTable';
+import { DABCollection, DABCollectionItem } from './dab';
 
 export const hashTrimmer = (hash: string) => {
   const size = 6;
@@ -98,3 +99,12 @@ export const getTokenContractCanisterIdByRoot = (
 
   return promisedTokenContractsPairedRoots[rootCanisterId];
 }
+
+export const contractKeyPairedMetadataHandler = ({
+  dabCollection,
+}: {
+  dabCollection: DABCollection,
+}) => dabCollection?.reduce((acc, curr) => {
+        acc[curr?.principal_id?.toString()] = curr;
+        return acc;
+      }, {} as Record<string, DABCollectionItem>) || {};

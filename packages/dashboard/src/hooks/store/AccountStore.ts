@@ -138,6 +138,9 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     // Fetch the Dab metadata
     const { fetchDabCollection } = dabStore;
 
+    // TODO: invesitgate why the Dab collection which
+    // is returned by the service returns `timestamp`
+    // which seems that dab-js is missing it and should be updated
     const dabCollection = await fetchDabCollection();
 
     const contractKeyPairedMetadata = dabCollection?.reduce((acc, curr) => {
