@@ -10,6 +10,7 @@ import {
   CanisterNameKeyPairedId,
   ContractKeyPairedMetadata,
   DABCollectionItem,
+  contractKeyPairedMetadataHandler,
 } from '@utils/dab';
 import { USE_MOCKUP } from './index';
 import { getCapRootInstance } from '@utils/cap';
@@ -143,11 +144,9 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     // which seems that dab-js is missing it and should be updated
     const dabCollection = await fetchDabCollection();
 
-    const contractKeyPairedMetadata = dabCollection?.reduce((acc, curr) => {
-      acc[curr?.principal_id?.toString()] = curr;
-      return acc;
-    }, {} as Record<string, DABCollectionItem>);
+    const contractKeyPairedMetadata = contractKeyPairedMetadataHandler({ dabCollection });
 
+    // TODO: Create parser with related tests, also should validate the pagedata
     pageData = pageData.map(({ contractId, dabCanister }: AccountData) => {
       return ({
         contractId,
