@@ -1,11 +1,20 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { styled } from '@stitched';
-import DataTable, { FormatterTypes, TableId } from '@components/Tables/DataTable';
+// TODO: move the FormatterTypes, Tableid to the util
+import { FormatterTypes, TableId } from '@components/Tables/DataTable';
 import { NamedAccountLink } from '@components/Link';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 import { DabLink } from '@components/Link';
 import ItemCell from '@components/ItemCell';
 import { UnknownItemCell } from '@components/ItemCell';
+import loadable from '@loadable/component';
+import { LoadableLoadingPlaceholder } from '@components/LoadingForLoadable';
+
+const LazyDatatable = loadable(() => import('@components/Tables/DataTable'), {
+  // The fallback to blank is intentional
+  // which transitions to the loader for slower internet connections
+  fallback: <LoadableLoadingPlaceholder alt='Loading the Databable...' />,
+});
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -157,7 +166,7 @@ const AccountsTable = ({
     <Container
       data-id={id}
     >
-      <DataTable
+      <LazyDatatable
         columns={columns}
         data={data}
         formatters={formatters}

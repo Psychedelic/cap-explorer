@@ -4,7 +4,8 @@ import React, {
   useMemo,
 } from 'react';
 import { styled } from '@stitched';
-import DataTable, { TableId } from '@components/Tables/DataTable';
+// TODO: move the tableid to the util
+import { TableId } from '@components/Tables/DataTable';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
 import Fleekon, { IconNames } from '@components/Fleekon';
@@ -16,6 +17,14 @@ import {
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
 import ItemCell from '@components/ItemCell';
+import loadable from '@loadable/component';
+import { LoadableLoadingPlaceholder } from '@components/LoadingForLoadable';
+
+const LazyDatatable = loadable(() => import('@components/Tables/DataTable'), {
+  // The fallback to blank is intentional
+  // which transitions to the loader for slower internet connections
+  fallback: <LoadableLoadingPlaceholder alt='Loading the Databable...' />,
+});
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -250,7 +259,7 @@ const TransactionsTable = ({
     <Container
       data-id={id}
     >
-      <DataTable
+      <LazyDatatable
         columns={columns}
         data={currentData}
         formatters={formatters}
