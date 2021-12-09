@@ -164,42 +164,42 @@ const AppTransactions = ({
 
   // TODO: This might be already in cache, if the user comes from Overview
   // Dab metadata handler
-  useEffect(() => {
-    const getDabMetadataHandler = async () => {    
-      setIsLoadingDabMetada(true);
+  // useEffect(() => {
+  //   const getDabMetadataHandler = async () => {    
+  //     setIsLoadingDabMetada(true);
 
-      const metadata = await getDabMetadata({
-        canisterId: tokenId,
-      });
+  //     const metadata = await getDabMetadata({
+  //       canisterId: tokenId,
+  //     });
 
-      if (!metadata) {
-        setIsLoadingDabMetada(false);
+  //     if (!metadata) {
+  //       setIsLoadingDabMetada(false);
 
-        return;
-      };
+  //       return;
+  //     };
 
-      // TODO: Update name column, otherwise fallback
-      setIdentityInDab({
-        ...metadata,
-      });
-    };
+  //     // TODO: Update name column, otherwise fallback
+  //     setIdentityInDab({
+  //       ...metadata,
+  //     });
+  //   };
 
-    if (!contractKeyPairedMetadata || !tokenId) {
-      getDabMetadataHandler();
+  //   if (!contractKeyPairedMetadata || !tokenId) {
+  //     getDabMetadataHandler();
 
-      return;
-    };
+  //     return;
+  //   };
 
-    const identityInDab = contractKeyPairedMetadata[tokenId];
+  //   const identityInDab = contractKeyPairedMetadata[tokenId];
 
-    if (!identityInDab) {
-      getDabMetadataHandler();
+  //   if (!identityInDab) {
+  //     getDabMetadataHandler();
 
-      return;
-    };
+  //     return;
+  //   };
 
-    setIdentityInDab(identityInDab);
-  }, [contractKeyPairedMetadata, tokenId]);
+  //   setIdentityInDab(identityInDab);
+  // }, [contractKeyPairedMetadata, tokenId]);
 
   useEffect(() => {
     if (!identityInDab) return;

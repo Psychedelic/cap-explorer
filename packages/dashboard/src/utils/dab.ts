@@ -12,12 +12,14 @@ import {
 import { HttpAgent } from '@dfinity/agent';
 import { mockCanisterMetadata } from '@utils/mocks/dabMetadata';
 import { shouldUseMockup } from '@utils/mocks';
+import { ArrayElement } from '@utils/type-defs';
 
 export default {};
 
 export const DAB_CANISTER_ID = 'aipdg-waaaa-aaaah-aaq5q-cai';
 
 export type DABCollection = Awaited<ReturnType<typeof getAllNFTS>>;
+export type DABCollectionItem = ArrayElement<DABCollection>;
 
 export type NFTItemDetails = {
   [tokenContractId: string]: {
@@ -38,7 +40,7 @@ export type ContractPairedMetadata = {
   metadata: CanisterMetadata;
 };
 
-export type ContractKeyPairedMetadata = Record<string, CanisterMetadata>;
+export type ContractKeyPairedMetadata = Record<string, DABCollectionItem>;
 
 export type CanisterKeyPairedMetadata = { [canisterId: string]: CanisterMetadata; };
 export type CanisterNameKeyPairedId = Record<string, string>;

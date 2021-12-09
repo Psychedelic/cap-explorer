@@ -12,6 +12,8 @@ import {
   ContractPairedMetadata,
   ContractKeyPairedMetadata,
   getDabMetadata,
+  DABCollection,
+  DABCollectionItem,
 } from '@utils/dab';
 import { USE_MOCKUP } from './index';
 import { getCapRootInstance } from '@utils/cap';
@@ -33,7 +35,13 @@ export interface AccountStore {
   pageData: AccountData[],
   totalContracts: number,
   totalPages: number,
-  fetch: ({ capRouterInstance }: { capRouterInstance: CapRouter } ) => void,
+  fetch: ({
+    capRouterInstance,
+    dabCollection,
+  }: {
+    capRouterInstance: CapRouter,
+    dabCollection: DABCollection,
+  } ) => void,
   fetchDabMetadata: ({ pageData }: { pageData: AccountData[] }) => void,
   reset: () => void,
 }
@@ -52,6 +60,7 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     // CapRouter has App lifetime, as such
     // should be passed from App top-level
     capRouterInstance,
+    dabCollection,
   }) => {
     set((state: AccountStore) => ({
       // TODO: the set function merges state
@@ -134,15 +143,27 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
       promisedTokenContractsPairedRoots,
     });
 
+
     // Fetch the Dab metadata
-    await get().fetchDabMetadata({ pageData });
+    // await get().fetchDabMetadata({ pageData });
 
-    const contractPairedMetadata = await get().contractPairedMetadata;
+    // const contractPairedMetadata = await get().contractPairedMetadata;
 
-    const contractKeyPairedMetadata = contractPairedMetadata.reduce((acc, curr) => {
-      acc[curr.contractId] = curr?.metadata
+    // const contractKeyPairedMetadata = contractPairedMetadata.reduce((acc, curr) => {
+    //   acc[curr.contractId] = curr?.metadata
+    //   return acc;
+    // }, {} as Record<string, CanisterMetadata>);
+
+    // TODO: The dab collection should be fetched at this point
+    // along the accounts request, as in the future it'll be
+    // controlled by the pagination
+
+    const contractKeyPairedMetadata = dabCollection.reduce((acc, curr) => {
+      acc[curr?.principal_id?.toString()] = curr;
       return acc;
-    }, {} as Record<string, CanisterMetadata>);
+    }, {} as Record<string, DABCollectionItem>);
+
+    console.log('[debug] AccountStore: contractKeyPairedMetadata:', contractKeyPairedMetadata);
 
     pageData = pageData.map(({ contractId, dabCanister }: AccountData) => {
       return ({
@@ -154,31 +175,36 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
       })
     });
 
+    console.log('[debug] AccountStore: pageData:', pageData);
+
+    // TODO: seems best not to preload to deliver
+    // to the user as it goes or by item loading iteration...
+    // Disabled for now, but to test load the first 8 images...
     await preloadPageDataImages({ pageData });
 
-    const canisterKeyPairedMetadata = (pageData as AccountData[]).reduce((acc, curr: AccountData) => {
-      if (!curr.dabCanister.metadata) return acc;
+    // const canisterKeyPairedMetadata = (pageData as AccountData[]).reduce((acc, curr: AccountData) => {
+    //   if (!curr.dabCanister.metadata) return acc;
 
-      return {
-        ...acc,
-        [curr.contractId]: curr.dabCanister.metadata,
-      };
-    }, {} as CanisterKeyPairedMetadata);
+    //   return {
+    //     ...acc,
+    //     [curr.contractId]: curr.dabCanister.metadata,
+    //   };
+    // }, {} as CanisterKeyPairedMetadata);
 
-    const canisterNameKeyPairedId = 
-      Object
-        .keys(canisterKeyPairedMetadata)
-        .reduce((acc, curr) => {
-        return {
-          ...acc,
-          [canisterKeyPairedMetadata[curr].name]: curr,
-        }
-      }, {} as { [name: string]: string });
+    // const canisterNameKeyPairedId = 
+    //   Object
+    //     .keys(canisterKeyPairedMetadata)
+    //     .reduce((acc, curr) => {
+    //     return {
+    //       ...acc,
+    //       [canisterKeyPairedMetadata[curr].name]: curr,
+    //     }
+    //   }, {} as { [name: string]: string });
 
     set((state: AccountStore) => ({
       accounts: response,
-      canisterKeyPairedMetadata,
-      canisterNameKeyPairedId,
+      // canisterKeyPairedMetadata,
+      // canisterNameKeyPairedId,
       contractKeyPairedMetadata,
       isLoading: false,
       pageData,

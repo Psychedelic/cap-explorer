@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import React, {
+  useCallback,
   useEffect,
   useState,
 } from 'react';
@@ -20,7 +21,7 @@ import {
 } from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
 import { getCapRouterInstance } from '@utils/cap'; 
-import { TokenContractKeyPairedStandard } from '@utils/dab';
+import { TokenContractKeyPairedStandard, DABCollection } from '@utils/dab';
 import config from './config';
 import { LoadableLoadingPlaceholder } from '@components/LoadingForLoadable';
 
@@ -52,11 +53,13 @@ const Routes = ({
   bookmarkExpandHandler,
   loading,
   tokenContractKeyPairedStandard,
+  dabCollection,
 }: {
   bookmarkColumnMode: BookmarkColumnModes,
   bookmarkExpandHandler: BookmarkExpandHandler,
   loading: boolean,
   tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
+  dabCollection: DABCollection,
 }) => {
   const [capRouterInstance, setCapRouterInstance] = useState<CapRouter | undefined>();
   const accountStore = useAccountStore();
@@ -92,6 +95,7 @@ const Routes = ({
           <LazyOverview
             accountStore={accountStore}
             capRouterInstance={capRouterInstance}
+            dabCollection={dabCollection}
           />
         </Route>
       </Switch>
@@ -100,9 +104,13 @@ const Routes = ({
 }
 
 const App = () => {
+  // At time of writing we get the complete DAB Collection
+  // once the Service changes to support pagination
+  // this will have to change
   const {
     fetchDabCollection,
     tokenContractKeyPairedStandard,
+    dabCollection,
   } = useDabStore();
 
   useEffect(() => {
@@ -114,6 +122,10 @@ const App = () => {
     fetchDabCollection();
   }, []);
 
+  useEffect(() => {
+    console.log('[debug] dabCollection', dabCollection)
+  }, [dabCollection])
+
   return (
     <Router>
       <Routes
@@ -121,6 +133,7 @@ const App = () => {
         bookmarkExpandHandler={() => null}
         loading={false}
         tokenContractKeyPairedStandard={tokenContractKeyPairedStandard}
+        dabCollection={dabCollection}
       />
     </Router>
   );

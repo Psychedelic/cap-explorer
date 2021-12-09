@@ -3,7 +3,7 @@ import { styled } from '@stitched';
 // TODO: move the FormatterTypes, Tableid to the util
 import { FormatterTypes, TableId } from '@components/Tables/DataTable';
 import { NamedAccountLink } from '@components/Link';
-import { getDabMetadata, CanisterMetadata } from '@utils/dab';
+import { getDabMetadata, CanisterMetadata, DABCollection, DABCollectionItem } from '@utils/dab';
 import { DabLink } from '@components/Link';
 import ItemCell from '@components/ItemCell';
 import { UnknownItemCell } from '@components/ItemCell';
@@ -45,7 +45,7 @@ export interface AccountData {
   contractId: string,
   dabCanister: {
     contractId: string,
-    metadata?: CanisterMetadata,
+    metadata?: DABCollectionItem,
   },
 }
 
@@ -72,8 +72,10 @@ const columns: Column[] = [
 
 const AccountDab = ({
   canisterId,
+  dabCollection,
 }: {
   canisterId: string,
+  dabCollection: DABCollection,
 }) => {
   const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -105,24 +107,31 @@ const AccountDab = ({
     getDabMetadataHandler();
   }, []);
 
-  return (
-    <ItemCell
-      identityInDab={identityInDab}
-      derivedId={false}
-      asHoverState={true}
-    />
-  );
+  console.log('[debug] AccountDab: identityInDab:', identityInDab);
+  console.log('[debug] AccountDab: dabCollection:', dabCollection)
+
+  return <span>Ok</span>;
+
+  // return (
+  //   <ItemCell
+  //     identityInDab={identityInDab}
+  //     derivedId={false}
+  //     asHoverState={true}
+  //   />
+  // );
 };
 
 const AccountsTable = ({
   data = [],
   id,
   isLoading = false,
+  dabCollection,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: AccountData[],
   id: TableId,
   isLoading: boolean,
+  dabCollection: DABCollection,
 }) => {
   const formatters = useMemo(() => ({
     body: {
@@ -143,7 +152,10 @@ const AccountsTable = ({
               contractId={contractId}
               routeName='AppTransactions'
             >
-              <AccountDab canisterId={contractId} />
+              <AccountDab
+                canisterId={contractId}
+                dabCollection={dabCollection}
+              />
             </UnknownItemCell>
           )
         }
