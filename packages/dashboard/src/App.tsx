@@ -18,10 +18,11 @@ import { RouteNames } from '@utils/routes';
 import {
   useAccountStore,
   useDabStore,
+  AccountStore,
+  DabStore,
 } from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
 import { getCapRouterInstance } from '@utils/cap'; 
-import { TokenContractKeyPairedStandard, DABCollection } from '@utils/dab';
 import config from './config';
 import { LoadableLoadingPlaceholder } from '@components/LoadingForLoadable';
 
@@ -52,17 +53,16 @@ const Routes = ({
   bookmarkColumnMode,
   bookmarkExpandHandler,
   loading,
-  tokenContractKeyPairedStandard,
-  dabCollection,
+  accountStore,
+  dabStore,
 }: {
   bookmarkColumnMode: BookmarkColumnModes,
   bookmarkExpandHandler: BookmarkExpandHandler,
+  accountStore: AccountStore,
+  dabStore: DabStore,
   loading: boolean,
-  tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
-  dabCollection: DABCollection,
 }) => {
   const [capRouterInstance, setCapRouterInstance] = useState<CapRouter | undefined>();
-  const accountStore = useAccountStore();
 
   useEffect(() => {
     // On App launch, initialises CapRouter instance
@@ -88,14 +88,13 @@ const Routes = ({
         <Route path={RouteNames.AppTransactions}>
           <LazyAppTransactions
             capRouterInstance={capRouterInstance}
-            tokenContractKeyPairedStandard={tokenContractKeyPairedStandard}
           />
         </Route>
         <Route path={RouteNames.Overview}>
           <LazyOverview
             accountStore={accountStore}
+            dabStore={dabStore}
             capRouterInstance={capRouterInstance}
-            dabCollection={dabCollection}
           />
         </Route>
       </Switch>
@@ -104,27 +103,8 @@ const Routes = ({
 }
 
 const App = () => {
-  // At time of writing we get the complete DAB Collection
-  // once the Service changes to support pagination
-  // this will have to change
-  const {
-    fetchDabCollection,
-    tokenContractKeyPairedStandard,
-    dabCollection,
-  } = useDabStore();
-
-  useEffect(() => {
-    // Required to use as a lookup table to
-    // identify the token contract nft standard
-    // at time of writing the getAllNFTs is used
-    // and while this works for now, it's not scalable
-    // as the list increases; a nft registry is under dev
-    fetchDabCollection();
-  }, []);
-
-  useEffect(() => {
-    console.log('[debug] dabCollection', dabCollection)
-  }, [dabCollection])
+  const dabStore = useDabStore();
+  const accountStore = useAccountStore();
 
   return (
     <Router>
@@ -132,8 +112,9 @@ const App = () => {
         bookmarkColumnMode={BookmarkColumnModes.collapsed}
         bookmarkExpandHandler={() => null}
         loading={false}
-        tokenContractKeyPairedStandard={tokenContractKeyPairedStandard}
-        dabCollection={dabCollection}
+        dabStore={dabStore}
+        accountStore={accountStore}
+
       />
     </Router>
   );

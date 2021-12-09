@@ -39,10 +39,8 @@ const UserBar = styled('div', {
 
 const AppTransactions = ({
   capRouterInstance,
-  tokenContractKeyPairedStandard,
 }: {
   capRouterInstance: CapRouter | undefined,
-  tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
 }) => {
   const dabStore = useDabStore();
   const {
@@ -105,8 +103,10 @@ const AppTransactions = ({
   useEffect(() => {
     if (!pageData || !identityInDab) return;
 
+    // TODO: this needs to be refactored inline with latest dab collection changes
     // Should validate if known standard
-    const foundStandard = tokenContractKeyPairedStandard[tokenId];
+    // const foundStandard = tokenContractKeyPairedStandard[tokenId];
+    const foundStandard = '';
 
     if (!isValidStandard(foundStandard)) {
       console.warn(`Oops! Standard ${foundStandard} is unknown`)

@@ -72,43 +72,40 @@ const columns: Column[] = [
 
 const AccountDab = ({
   canisterId,
-  dabCollection,
 }: {
   canisterId: string,
-  dabCollection: DABCollection,
 }) => {
   const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Dab metadata handler
   useEffect(() => {
-    // TODO: Should this move to the store?
-    // at the moment is called as a "nice-to-have",
-    // not as main business logic...
-    const getDabMetadataHandler = async () => {
-      const metadata = await getDabMetadata({
-        canisterId,
-      });
+    // // TODO: Should this move to the store?
+    // // at the moment is called as a "nice-to-have",
+    // // not as main business logic...
+    // const getDabMetadataHandler = async () => {
+    //   const metadata = await getDabMetadata({
+    //     canisterId,
+    //   });
 
-      if (!metadata) {
-        setIsLoading(false);
+    //   if (!metadata) {
+    //     setIsLoading(false);
 
-        return;
-      }
+    //     return;
+    //   }
 
-      // TODO: Update name column, otherwise fallback
-      setIdentityInDab({
-        ...metadata,
-      });
+    //   // TODO: Update name column, otherwise fallback
+    //   setIdentityInDab({
+    //     ...metadata,
+    //   });
 
-      setIsLoading(false);
-    };
+    //   setIsLoading(false);
+    // };
 
-    getDabMetadataHandler();
+    // getDabMetadataHandler();
   }, []);
 
   console.log('[debug] AccountDab: identityInDab:', identityInDab);
-  console.log('[debug] AccountDab: dabCollection:', dabCollection)
 
   return <span>Ok</span>;
 
@@ -125,13 +122,11 @@ const AccountsTable = ({
   data = [],
   id,
   isLoading = false,
-  dabCollection,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: AccountData[],
   id: TableId,
   isLoading: boolean,
-  dabCollection: DABCollection,
 }) => {
   const formatters = useMemo(() => ({
     body: {
@@ -154,7 +149,6 @@ const AccountsTable = ({
             >
               <AccountDab
                 canisterId={contractId}
-                dabCollection={dabCollection}
               />
             </UnknownItemCell>
           )

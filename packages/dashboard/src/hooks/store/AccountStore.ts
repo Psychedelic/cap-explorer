@@ -24,6 +24,7 @@ import { Principal } from '@dfinity/principal';
 import {
   preloadPageDataImages,
 } from '@utils/images';
+import { DabStore, useDabStore } from './DabStore';
 
 export interface AccountStore {
   accounts: ContractsResponse | {},
@@ -32,15 +33,16 @@ export interface AccountStore {
   contractPairedMetadata: ContractPairedMetadata[],
   contractKeyPairedMetadata: ContractKeyPairedMetadata,
   isLoading: boolean,
+  setIsLoading: (isLoading: boolean) => void,
   pageData: AccountData[],
   totalContracts: number,
   totalPages: number,
   fetch: ({
     capRouterInstance,
-    dabCollection,
+    dabStore,
   }: {
     capRouterInstance: CapRouter,
-    dabCollection: DABCollection,
+    dabStore: DabStore,
   } ) => void,
   fetchDabMetadata: ({ pageData }: { pageData: AccountData[] }) => void,
   reset: () => void,
@@ -53,6 +55,7 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
   contractPairedMetadata: [],
   contractKeyPairedMetadata: {},
   isLoading: false,
+  setIsLoading: async(isLoading) => set({ isLoading }),
   pageData: [],
   totalContracts: 0,
   totalPages: 0,
@@ -60,14 +63,11 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     // CapRouter has App lifetime, as such
     // should be passed from App top-level
     capRouterInstance,
-    dabCollection,
+    dabStore,
   }) => {
-    set((state: AccountStore) => ({
-      // TODO: the set function merges state
-      // there seems to be no need to spread the data
-      ...state,
+    set({
       isLoading: true,
-    }));
+    });
 
     // Shall use mockup data?
     if (USE_MOCKUP) {
@@ -103,12 +103,9 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
       // TODO: What to do if no response? Handle gracefully
 
       // Loading stops
-      set((state: AccountStore) => ({
-        // TODO: the set function merges state
-        // there seems to be no need to spread the data
-        ...state,
+      set({
         isLoading: false,
-      }));
+      });
 
       return;
     }
@@ -158,7 +155,11 @@ export const useAccountStore = create<AccountStore>((set, get) => ({
     // along the accounts request, as in the future it'll be
     // controlled by the pagination
 
-    const contractKeyPairedMetadata = dabCollection.reduce((acc, curr) => {
+    const { fetchDabCollection, dabCollection } = dabStore;
+
+    await fetchDabCollection();
+
+    const contractKeyPairedMetadata = dabCollection?.reduce((acc, curr) => {
       acc[curr?.principal_id?.toString()] = curr;
       return acc;
     }, {} as Record<string, DABCollectionItem>);
