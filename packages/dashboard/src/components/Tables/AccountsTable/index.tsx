@@ -10,7 +10,7 @@ import { UnknownItemCell } from '@components/ItemCell';
 import loadable from '@loadable/component';
 import { LoadableLoadingPlaceholder } from '@components/LoadingForLoadable';
 
-const LazyDatatable = loadable(() => import('@components/Tables/DataTable'), {
+const LazyDatatable = loadable(() => import(/* webpackPreload: true */  '@components/Tables/DataTable'), {
   // The fallback to blank is intentional
   // which transitions to the loader for slower internet connections
   fallback: <LoadableLoadingPlaceholder alt='Loading the Databable...' />,
