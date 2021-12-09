@@ -52,7 +52,7 @@ const AppTransactions = ({
     contractKeyPairedMetadata,
   } = accountStore;
   const metadata = contractKeyPairedMetadata[tokenId];
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const isSmallerThanBreakpointLG = useWindowResize({
     breakpoint: BREAKPOINT_DATA_TABLE_L,
   });
@@ -93,6 +93,16 @@ const AppTransactions = ({
   }
   
   useEffect(() => {
+    // Loading should be triggered
+    // if the metadata is not available
+    // while the page data process is resolved
+    // see 'page data initialisation process'
+    if (metadata) return;
+
+    setIsLoading(true);
+  }, []);
+  
+  useEffect(() => {
     if (!pageData) return;
 
     setTransactions(pageData);
@@ -117,17 +127,31 @@ const AppTransactions = ({
     });
   }, [pageData]);
 
+  // The page data initialisation process
   useEffect(() => {
-    if (!rootCanisterId) return;
+    if (!rootCanisterId || !capRouterInstance) return;
 
-    fetch({
-      tokenId: rootCanisterId,
-      witness: false,
-    });
+    // The metadata is not available when
+    // a transaction page is requested directly
+    // when not requested from the app entry point or Overview
+    // for this reason, the metada should be requested
+    (async () => {
+      if (!metadata) {
+        await accountStore.fetch({
+          capRouterInstance,
+          dabStore,
+        });
+      }
 
-    // On unmount, reset the transaction state
+      await fetch({
+        tokenId: rootCanisterId,
+        witness: false,
+      });
+    })()
+
+    // On unmount, reset the transaction state (page data)
     return () => reset();
-  }, [rootCanisterId]);
+  }, [rootCanisterId, capRouterInstance]);
 
   useEffect(() => {
     if (!transactions) return;
@@ -158,6 +182,13 @@ const AppTransactions = ({
     })();
   }, [pageData]);
 
+  
+  // This is used to fallback when
+  // when the page data needs to be processed
+  // but metadata for breadcrumb is available
+  // and we don't want to hide it by setting the page isLoading
+  const isPageDataProcessing = !Array.isArray(pageData);
+
   return (
     <Page
       pageId="app-transactions-page"
@@ -165,7 +196,7 @@ const AppTransactions = ({
       <PageRow>
         <Breadcrumb
           metadata={metadata}
-          isLoading={false}
+          isLoading={isLoading}
         />
       </PageRow>
       <PageRow>
@@ -175,8 +206,8 @@ const AppTransactions = ({
           <DabLink tokenContractId={tokenId}>
           {
             metadata
-            ? <IdentityDab large={true} name={metadata?.name} image={metadata?.icon} isLoading={false} />
-            : <IdentityDab large={true} name='Unknown' isLoading={false} />
+            ? <IdentityDab large={true} name={metadata?.name} image={metadata?.icon} isLoading={isLoading} />
+            : <IdentityDab large={true} name='Unknown' isLoading={isLoading} />
           }
           </DabLink>
           <IdentityCopy
@@ -193,14 +224,14 @@ const AppTransactions = ({
               value: totalTransactions,
             },
           ]}
-          isLoading={isLoading}
+          isLoading={isLoading || isPageDataProcessing}
         />
       </PageRow>
       <PageRow>
         <TransactionsTable
           data={transactions}
           id="app-transactions-page"
-          isLoading={isLoading}
+          isLoading={isLoading || isPageDataProcessing}
           pageCount={totalPages}
           fetchPageDataHandler={fetchPageDataHandler}
           metadata={metadata}
