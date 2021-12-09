@@ -182,11 +182,9 @@ const AppTransactions = ({
     })();
   }, [pageData]);
 
-  
-  // This is used to fallback when
-  // when the page data needs to be processed
-  // but metadata for breadcrumb is available
-  // and we don't want to hide it by setting the page isLoading
+  // Use as a fallback when the page data needs to be handled (long process)
+  // while the metadata is readily available to the end-user
+  // as such, we don't want to hide components to show `loading`
   const isPageDataProcessing = !Array.isArray(pageData);
 
   return (
