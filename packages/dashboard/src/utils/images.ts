@@ -52,12 +52,12 @@ export const preloadPageDataImages = async ({
   let promises: any = [];
 
   for (let i = 0; i < PRE_FETCH_DAB_INDEX_COUNT; i++) {
-    const logoUrl = pageData[i]?.dabCanister?.metadata?.logo_url;
+    const icon = pageData[i]?.dabCanister?.metadata?.icon;
 
-    if (!logoUrl) continue;
+    if (!icon) continue;
 
     promises.push(
-      preloadImage(logoUrl)
+      preloadImage(icon)
     );
   }
 

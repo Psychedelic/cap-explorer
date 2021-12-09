@@ -3,7 +3,7 @@ import { styled } from '@stitched';
 // TODO: move the FormatterTypes, Tableid to the util
 import { FormatterTypes, TableId } from '@components/Tables/DataTable';
 import { NamedAccountLink } from '@components/Link';
-import { getDabMetadata, CanisterMetadata } from '@utils/dab';
+import { getDabMetadata, CanisterMetadata, DABCollection, DABCollectionItem } from '@utils/dab';
 import { DabLink } from '@components/Link';
 import ItemCell from '@components/ItemCell';
 import { UnknownItemCell } from '@components/ItemCell';
@@ -45,7 +45,7 @@ export interface AccountData {
   contractId: string,
   dabCanister: {
     contractId: string,
-    metadata?: CanisterMetadata,
+    metadata?: DABCollectionItem,
   },
 }
 
@@ -70,50 +70,6 @@ const columns: Column[] = [
   },
 ];
 
-const AccountDab = ({
-  canisterId,
-}: {
-  canisterId: string,
-}) => {
-  const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  // Dab metadata handler
-  useEffect(() => {
-    // TODO: Should this move to the store?
-    // at the moment is called as a "nice-to-have",
-    // not as main business logic...
-    const getDabMetadataHandler = async () => {
-      const metadata = await getDabMetadata({
-        canisterId,
-      });
-
-      if (!metadata) {
-        setIsLoading(false);
-
-        return;
-      }
-
-      // TODO: Update name column, otherwise fallback
-      setIdentityInDab({
-        ...metadata,
-      });
-
-      setIsLoading(false);
-    };
-
-    getDabMetadataHandler();
-  }, []);
-
-  return (
-    <ItemCell
-      identityInDab={identityInDab}
-      derivedId={false}
-      asHoverState={true}
-    />
-  );
-};
-
 const AccountsTable = ({
   data = [],
   id,
@@ -132,18 +88,19 @@ const AccountsTable = ({
         metadata,
       }: {
         contractId: string,
-        metadata?: CanisterMetadata,
+        metadata?: DABCollectionItem,
       }) => {
         if (!metadata) {
-          // Request the Dab metadata
-          // because we only fetch the very first ones to improve perf
-          // and serve the client ASAP
+          // Displayed as unknown
           return (
             <UnknownItemCell
               contractId={contractId}
               routeName='AppTransactions'
             >
-              <AccountDab canisterId={contractId} />
+              <ItemCell
+                derivedId={false}
+                asHoverState={true}
+              />
             </UnknownItemCell>
           )
         }
@@ -151,7 +108,7 @@ const AccountsTable = ({
         return (
           <DabLink tokenContractId={contractId}>
             <ItemCell
-              identityInDab={metadata}
+              metadata={metadata}
               // Overview page does not requires it
               derivedId={false}
               asHoverState={true}

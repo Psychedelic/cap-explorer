@@ -16,29 +16,35 @@ import {
 import {
   Event as TransactionEvent,
 } from '@psychedelic/cap-js';
+import { getDabMetadata, CanisterMetadata } from '@utils/dab';
 
+type TokenContractId = string;
 
 export interface DabStore {
   isLoading: boolean,
   nftItemDetails: NFTItemDetails,
   dabCollection: DABCollection,
+  canisterMetada: CanisterMetadata | undefined,
   tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
-  fetchDabCollection: () => void,
+  fetchDabCollection: () => Promise<DABCollection>,
   fetchDabItemDetails: ({
     data,
     tokenId,
     standard,
   }: {
+    // TODO: missing type definition for dab data
     data: any[],
     tokenId: string,
     standard: TokenStandards,
   }) => void,
+  fetchTokenContractDabMetadata: (tokenContractId: TokenContractId) => void,
 }
 
 export const useDabStore = create<DabStore>((set, get) => ({
   isLoading: false,
   nftItemDetails: {},
   dabCollection: [],
+  canisterMetada: undefined,
   tokenContractKeyPairedStandard: {},
   fetchDabCollection: async () => {
     const agent = new HttpAgent({
@@ -64,6 +70,8 @@ export const useDabStore = create<DabStore>((set, get) => ({
       tokenContractKeyPairedStandard,
       dabCollection,
     }));
+
+    return dabCollection;
   },
   fetchDabItemDetails: async ({
     data,
@@ -105,6 +113,30 @@ export const useDabStore = create<DabStore>((set, get) => ({
     set({
       isLoading: false,
       nftItemDetails: currNftItemDetails,
+    })
+  },
+  fetchTokenContractDabMetadata: async (tokenContactId) => {
+    set({
+      isLoading: true,
+    });
+
+    const canisterMetada = await getDabMetadata({
+      canisterId: tokenContactId,
+    });
+
+    if (!canisterMetada) {
+      console.warn('Oops! Failed to get Dab metadata for Token Contracts')
+
+      set({
+        isLoading: false,
+      });
+
+      return;
+    }
+    
+    set({
+      isLoading: false,
+      canisterMetada,
     })
   },
 }));

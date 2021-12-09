@@ -19,11 +19,8 @@ import {
 import { scrollTop } from '@utils/window';
 import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
 import {
-  getDabMetadata,
-  CanisterMetadata,
   isValidStandard,
   TokenStandards,
-  TokenContractKeyPairedStandard,
 } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import OverallValues from '@components/OverallValues';
@@ -39,11 +36,11 @@ const UserBar = styled('div', {
 
 const AppTransactions = ({
   capRouterInstance,
-  tokenContractKeyPairedStandard,
 }: {
   capRouterInstance: CapRouter | undefined,
-  tokenContractKeyPairedStandard: TokenContractKeyPairedStandard,
 }) => {
+  const { id: tokenId } = useParams() as { id: string };
+
   const dabStore = useDabStore();
   const {
     isLoading: isLoadingDabItemDetails,
@@ -51,10 +48,11 @@ const AppTransactions = ({
     nftItemDetails,
   } = dabStore;
   const accountStore = useAccountStore();
-  const { contractKeyPairedMetadata } = accountStore;
+  const {
+    contractKeyPairedMetadata,
+  } = accountStore;
+  const metadata = contractKeyPairedMetadata[tokenId];
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingDabMetada, setIsLoadingDabMetada] = useState(true);
-  const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
   const isSmallerThanBreakpointLG = useWindowResize({
     breakpoint: BREAKPOINT_DATA_TABLE_L,
   });
@@ -67,8 +65,6 @@ const AppTransactions = ({
   } = useTransactionStore((state) => state);
   const [rootCanisterId, setRootCanisterId] = useState<string>();
   const [transactions, setTransactions] = useState<TransactionEvent>(undefined);
-
-  let { id: tokenId } = useParams() as { id: string };
 
   // TODO: on fetch by token id and page nr, cache/memoize
   const fetchPageDataHandler: FetchPageDataHandler = async ({
@@ -103,10 +99,10 @@ const AppTransactions = ({
   }, [pageData]);
 
   useEffect(() => {
-    if (!pageData || !identityInDab) return;
+    if (!pageData) return;
 
     // Should validate if known standard
-    const foundStandard = tokenContractKeyPairedStandard[tokenId];
+    const foundStandard = metadata?.standard;
 
     if (!isValidStandard(foundStandard)) {
       console.warn(`Oops! Standard ${foundStandard} is unknown`)
@@ -119,7 +115,7 @@ const AppTransactions = ({
       tokenId,
       standard: foundStandard as TokenStandards,
     });
-  }, [pageData, identityInDab]);
+  }, [pageData]);
 
   useEffect(() => {
     if (!rootCanisterId) return;
@@ -162,57 +158,15 @@ const AppTransactions = ({
     })();
   }, [pageData]);
 
-  // TODO: This might be already in cache, if the user comes from Overview
-  // Dab metadata handler
-  useEffect(() => {
-    const getDabMetadataHandler = async () => {    
-      setIsLoadingDabMetada(true);
-
-      const metadata = await getDabMetadata({
-        canisterId: tokenId,
-      });
-
-      if (!metadata) {
-        setIsLoadingDabMetada(false);
-
-        return;
-      };
-
-      // TODO: Update name column, otherwise fallback
-      setIdentityInDab({
-        ...metadata,
-      });
-    };
-
-    if (!contractKeyPairedMetadata || !tokenId) {
-      getDabMetadataHandler();
-
-      return;
-    };
-
-    const identityInDab = contractKeyPairedMetadata[tokenId];
-
-    if (!identityInDab) {
-      getDabMetadataHandler();
-
-      return;
-    };
-
-    setIdentityInDab(identityInDab);
-  }, [contractKeyPairedMetadata, tokenId]);
-
-  useEffect(() => {
-    if (!identityInDab) return;
-
-    setIsLoadingDabMetada(false);
-  }, [identityInDab]);
-
   return (
     <Page
       pageId="app-transactions-page"
     >
       <PageRow>
-        <Breadcrumb identityInDab={identityInDab} isLoading={isLoadingDabMetada} />
+        <Breadcrumb
+          metadata={metadata}
+          isLoading={false}
+        />
       </PageRow>
       <PageRow>
         <UserBar
@@ -220,9 +174,9 @@ const AppTransactions = ({
         >
           <DabLink tokenContractId={tokenId}>
           {
-            identityInDab
-            ? <IdentityDab large={true} name={identityInDab?.name} image={identityInDab?.logo_url} isLoading={isLoadingDabMetada} />
-            : <IdentityDab large={true} name='Unknown' isLoading={isLoadingDabMetada} />
+            metadata
+            ? <IdentityDab large={true} name={metadata?.name} image={metadata?.icon} isLoading={false} />
+            : <IdentityDab large={true} name='Unknown' isLoading={false} />
           }
           </DabLink>
           <IdentityCopy
@@ -249,7 +203,7 @@ const AppTransactions = ({
           isLoading={isLoading}
           pageCount={totalPages}
           fetchPageDataHandler={fetchPageDataHandler}
-          identityInDab={identityInDab}
+          metadata={metadata}
           tokenId={tokenId}
           nftItemDetails={nftItemDetails}
           isLoadingDabItemDetails={isLoadingDabItemDetails}

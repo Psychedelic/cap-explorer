@@ -11,7 +11,7 @@ import { formatPriceForChart } from '@utils/formatters';
 import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
 import {
-  CanisterMetadata,
+  DABCollectionItem,
   NFTItemDetails,
 } from '@utils/dab';
 import { toICRocksPrincipal } from '@utils/link';
@@ -176,7 +176,7 @@ const TransactionsTable = ({
   pageCount,
   fetchPageDataHandler,
   isLoading = false,
-  identityInDab,
+  metadata,
   tokenId,
   nftItemDetails,
   isLoadingDabItemDetails,
@@ -187,7 +187,7 @@ const TransactionsTable = ({
   pageCount: number,
   fetchPageDataHandler: FetchPageDataHandler,
   isLoading: boolean,
-  identityInDab?: CanisterMetadata,
+  metadata?: DABCollectionItem,
   tokenId: string,
   nftItemDetails: NFTItemDetails,
   isLoadingDabItemDetails: boolean,
@@ -211,7 +211,7 @@ const TransactionsTable = ({
 
         return (
           <ItemCell
-            identityInDab={identityInDab}
+            metadata={metadata}
             cellValue={cellValue}
             derivedId={true}
             nftDetails={nftDetails}
@@ -249,7 +249,7 @@ const TransactionsTable = ({
       },
       time: (cellValue: string) => dateRelative(cellValue),
     },
-  }), [identityInDab, nftItemDetails, isLoadingDabItemDetails]);
+  }), [metadata, nftItemDetails, isLoadingDabItemDetails]);
 
   useEffect(() => {
     setCurrentData(data);

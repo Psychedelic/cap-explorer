@@ -1,7 +1,13 @@
 import {
   BookmarkColumnModes,
 } from '@components/BookmarkPanel';
-import { createBookmarkExpandHandler, trimAccount } from './account';
+import {
+  createBookmarkExpandHandler,
+  trimAccount,
+  contractKeyPairedMetadataHandler,
+} from './account';
+import { DABCollection } from './dab';
+import { Principal } from '@dfinity/principal';
 import { parseUserRootBucketsResponse } from '@utils/account';
 import { getRandomIdentity } from '@utils/principal';
 
@@ -204,6 +210,56 @@ describe('Account', () => {
           const expectedData = (async () => undefined)();
           expect(parsed).toStrictEqual(expectedData);
         });
+      });
+    });
+  });
+
+  describe('contractKeyPairedMetadataHandler', () => {
+    describe('on valid dab collection', () => {
+      const alicePrincipal = Principal.fromText('sgymv-uiaaa-aaaaa-aaaia-cai');
+      const bobPrincipal = Principal.fromText('ai7t5-aibaq-aaaaa-aaaaa-c');
+      const standard = 'Foobar';
+      const dabCollection: DABCollection = [{
+        description: '',
+        icon: '',
+        name: '',
+        principal_id: alicePrincipal,
+        standard,
+      }, {
+        description: '',
+        icon: '',
+        name: '',
+        principal_id: bobPrincipal,
+        standard,
+      }];
+
+      it('should create a list of token contract-metadata key pair', () => {
+        const contractKeyPairedMetadata = contractKeyPairedMetadataHandler({
+          dabCollection,
+        });
+        const expected = 2;
+
+        expect(
+          Object.keys(contractKeyPairedMetadata).length,
+        ).toBe(expected);
+      });
+
+      it('should have a particular contract', () => {
+        const contractKeyPairedMetadata = contractKeyPairedMetadataHandler({
+          dabCollection,
+        });
+
+        expect(contractKeyPairedMetadata[alicePrincipal.toString()].standard).toBe(standard);
+      });
+    });
+    
+    describe('on invalid dab collection', () => {
+      it('should return an empty object', () => {
+        const contractKeyPairedMetadata = contractKeyPairedMetadataHandler({
+          dabCollection: [],
+        });
+
+        expect(contractKeyPairedMetadata).toStrictEqual({});
       });
     });
   });

@@ -4,6 +4,7 @@ import Fleekon from '@components/Fleekon';
 import { RawLink } from '@components/Link';
 import {
   CanisterMetadata,
+  DABCollectionItem,
   DAB_IDENTITY_UNKNOWN,
 } from '@utils/dab';
 import Loading from '@components/Loading';
@@ -51,12 +52,12 @@ const LoadingContainer = styled('span', {
 });
 
 export interface BreadcrumbProps {
-  identityInDab?: CanisterMetadata,
+  metadata?: DABCollectionItem,
   isLoading: boolean,
 }
 
 const Breadcrumb = ({
-  identityInDab,
+  metadata,
   isLoading,
 }: BreadcrumbProps) => {
 
@@ -82,8 +83,8 @@ const Breadcrumb = ({
         : (
           <span>
           {
-            identityInDab
-            ? identityInDab?.name
+            metadata
+            ? metadata?.name
             : DAB_IDENTITY_UNKNOWN
           }
           </span>
