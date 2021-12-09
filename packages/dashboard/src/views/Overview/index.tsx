@@ -26,7 +26,11 @@ const Overview = ({
     pageData,
     fetch,    
   } = accountStore;
-  const [pageLoading, setPageLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(false);
+
+  useEffect(() => {
+    setPageLoading(true);
+  }, []);
 
   useEffect(() => {
     if (!capRouterInstance) return;
@@ -38,7 +42,11 @@ const Overview = ({
     // once added to Service side, then
     // it should be memoized by the page id
     // TODO: memoize the store selector instead
-    if (pageData.length) return;
+    if (pageData.length) {
+      setPageLoading(false);
+
+      return;
+    }
 
     // Async call
     (async () => {
