@@ -19,12 +19,8 @@ import {
 import { scrollTop } from '@utils/window';
 import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
 import {
-  getDabMetadata,
-  CanisterMetadata,
   isValidStandard,
   TokenStandards,
-  TokenContractKeyPairedStandard,
-  DABCollectionItem,
 } from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import OverallValues from '@components/OverallValues';
@@ -57,8 +53,6 @@ const AppTransactions = ({
   } = accountStore;
   const metadata = contractKeyPairedMetadata[tokenId];
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingDabMetada, setIsLoadingDabMetada] = useState(true);
-  const [identityInDab, setIdentityInDab] = useState<DABCollectionItem>();
   const isSmallerThanBreakpointLG = useWindowResize({
     breakpoint: BREAKPOINT_DATA_TABLE_L,
   });
@@ -107,9 +101,7 @@ const AppTransactions = ({
   useEffect(() => {
     if (!pageData) return;
 
-    // TODO: this needs to be refactored inline with latest dab collection changes
     // Should validate if known standard
-    // const foundStandard = tokenContractKeyPairedStandard[tokenId];
     const foundStandard = metadata?.standard;
 
     if (!isValidStandard(foundStandard)) {
@@ -165,55 +157,6 @@ const AppTransactions = ({
       setRootCanisterId(rootCanisterId.toText());
     })();
   }, [pageData]);
-
-  // TODO: This might be already in cache, if the user comes from Overview
-  // Dab metadata handler
-  // useEffect(() => {
-  //   const getDabMetadataHandler = async () => {    
-  //     setIsLoadingDabMetada(true);
-
-  //     const metadata = await getDabMetadata({
-  //       canisterId: tokenId,
-  //     });
-
-  //     if (!metadata) {
-  //       setIsLoadingDabMetada(false);
-
-  //       return;
-  //     };
-
-  //     // TODO: Update name column, otherwise fallback
-  //     setIdentityInDab({
-  //       ...metadata,
-  //     });
-  //   };
-
-  //   if (!contractKeyPairedMetadata || !tokenId) {
-  //     getDabMetadataHandler();
-
-  //     return;
-  //   };
-
-  //   const identityInDab = contractKeyPairedMetadata[tokenId];
-
-  //   if (!identityInDab) {
-  //     getDabMetadataHandler();
-
-  //     return;
-  //   };
-
-  //   setIdentityInDab(identityInDab);
-  // }, [contractKeyPairedMetadata, tokenId]);
-
-  // useEffect(() => {
-  //   if (!identityInDab) return;
-
-  //   setIsLoadingDabMetada(false);
-  // }, [identityInDab]);
-
-  useEffect(() => {
-    console.log('[debug] AppTransactions: nftItemDetails: ', nftItemDetails);
-  }, [nftItemDetails]);
 
   return (
     <Page
