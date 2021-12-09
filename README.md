@@ -20,6 +20,7 @@ Learn more about [Cap](https://github.com/Psychedelic/cap) by reading the origin
 - [Build the distribution app](#build-the-distribution-app)
 - [Configure NPM for Github Package Registry](#configure-npm-for-github-package-registry)
 - [Tests](#tests)
+- [Profiler](#profiler)
 - [Contribution guideline](#contribution-guideline)
 
 ## ⚙️ Requirements
@@ -235,6 +236,17 @@ Our stylesheets are created with [Stitches](https://stitches.dev/), a CSS-in-JS 
 
 Our icons are managed with [Icomoon Web App](https://icomoon.io/), that generates the icon fonts for us and placed in-componet by our font toolking [Fleekon](https://github.com/FleekHQ/fleekon).
 
+## ⚡️ Profiler
+
+Generate statistics about the modules for the dashboard, by running the profiler command:
+
+```sh
+yarn profiler:dashboard
+```
+
+The webpack bundle analyzer will start and if your OS allows it, open the dashboard in the default browser of your OS.
+
+Optionaly, find the `webpack-stats.json` in the `packages/dashboard` and upload it to [webpack analyse](https://webpack.github.io/analyse/).
 
 ## 🙏 Contribution guideline
 
