@@ -17,6 +17,7 @@ import {
   Event as TransactionEvent,
 } from '@psychedelic/cap-js';
 import { getDabMetadata, CanisterMetadata } from '@utils/dab';
+import { HOSTS } from '../../config';
 
 type TokenContractId = string;
 
@@ -48,7 +49,9 @@ export const useDabStore = create<DabStore>((set, get) => ({
   tokenContractKeyPairedStandard: {},
   fetchDabCollection: async () => {
     const agent = new HttpAgent({
-      host: config.host,
+      // TODO: At the moment we are not interested
+      // in testing DAB Locally, so we use the mainnet for Dab
+      host: HOSTS.mainnet,
     });
   
     const dabCollection = await getAllNFTS({ agent });

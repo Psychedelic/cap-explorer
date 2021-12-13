@@ -7,6 +7,8 @@ import {
   isValidPrincipalFromTextId,
 } from '@utils/config';
 
+export const HOSTS = Hosts;
+
 if (!process.env.NODE_ENV) throw Error('Oops! Missing the NODE_ENV environment variable.');
 
 // Safe-guard, should have an expected environment
