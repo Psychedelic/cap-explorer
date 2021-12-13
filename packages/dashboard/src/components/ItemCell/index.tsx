@@ -30,6 +30,12 @@ const ItemCell = styled('div', {
     },
   },
 
+  '& [data-icon-video]': {
+    marginRight: '10px',
+    width: '35px',
+    height: '35px',
+  },
+
   variants: {
     asHoverState: {
       true: {
@@ -42,6 +48,36 @@ const ItemCell = styled('div', {
     }
   },
 });
+
+const IconDisplayer = ({
+  mediaUrl,
+}: {
+  mediaUrl?: string,
+}) => {
+  const isValidImgIcon = mediaUrl?.match(/.gif|.png|.jpg/);
+  const isValidMediaIcon = mediaUrl?.match(/.mp4/);
+
+  if (isValidMediaIcon) {
+    return (
+      <video data-icon-video controls width="35" loop autoPlay>
+        <source src={mediaUrl} type="video/mp4" />
+      </video>
+    )
+  }
+
+  return (
+    <span
+      data-image
+      style={{
+        backgroundImage: `url(${isValidImgIcon ? mediaUrl : iconUnknown})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        display: 'inline-block',
+      }}
+    />
+  );
+}
 
 export default ({
   cellValue,
@@ -68,15 +104,8 @@ export default ({
           </span>
         )
         : (
-          <span
-            data-image
-            style={{
-              backgroundImage: `url(${nftDetails?.url || metadata?.icon || iconUnknown})`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              backgroundRepeat: 'no-repeat',
-              display: 'inline-block',
-            }}
+          <IconDisplayer
+          mediaUrl={nftDetails?.url || metadata?.icon}
           />
         )
       }
