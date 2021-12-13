@@ -34,6 +34,7 @@ const ItemCell = styled('div', {
     marginRight: '10px',
     width: '35px',
     height: '35px',
+    pointerEvents: 'none',
   },
 
   variants: {
