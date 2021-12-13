@@ -55,8 +55,16 @@ const IconDisplayer = ({
 }: {
   mediaUrl?: string,
 }) => {
-  const isValidImgIcon = mediaUrl?.match(/.gif|.png|.jpg/);
+  let isValidImgIcon = !!mediaUrl?.match(/.gif|.png|.jpe?g/);
   const isValidMediaIcon = mediaUrl?.match(/.mp4/);
+
+  if (!isValidImgIcon && !isValidMediaIcon && typeof mediaUrl !== 'undefined') {
+    // TODO: given that certain standards have URLs
+    // which do not have a png, jpg but valid
+    // maybe compute it here
+    // at time of writing it'll fallback to true
+    isValidImgIcon = true;
+  }
 
   if (isValidMediaIcon) {
     return (
@@ -106,7 +114,7 @@ export default ({
         )
         : (
           <IconDisplayer
-          mediaUrl={nftDetails?.url || metadata?.icon}
+            mediaUrl={nftDetails?.url || metadata?.icon}
           />
         )
       }
