@@ -1,23 +1,24 @@
 import { dateRelative } from './date';
-import dayjs from 'dayjs';
 
 describe('date', () => {
   describe('dateRelative', () => {
-    describe('for ISOString 2021-12-14T12:13:58.921Z', () => {
+    describe('for date 10/12/2021 15h00 (as ISOString)', () => {
       const timezoneEuropeLondon = 'Europe/London';
       const timezoneAmericaLosAngels = 'America/Los_Angeles';
       const timestamp = '2021-12-10T15:00:00.000Z';
-      const timestampPlusTenMinutes = '2021-12-10T15:10:00.000Z';
       const timestampPlusThirtyMinutes = '2021-12-10T15:30:00.000Z';
+      const timestampPlusTwoHours = '2021-12-10T17:00:00.000Z';
       const getNow = (
         timestamp: string,
-        timezone: string,
-      ) => dayjs.utc(timestamp).tz(timezone)
+        timeZone: string,
+      ) => new Date(
+        new Date(timestamp).toLocaleString("en-US", { timeZone }),
+      ).toISOString();
 
       describe('on timezone Europe/London', () => {
-          it('should be a 10m difference', () => {
+          it('on checking immediately should describe as few seconds ago', () => {
             const now = getNow(
-              timestampPlusTenMinutes,
+              timestamp,
               timezoneEuropeLondon,
             );
             const humanFriendlyDate = dateRelative(
@@ -25,12 +26,12 @@ describe('date', () => {
               now,
             );
 
-            const expected = '10 minutes ago';
+            const expected = 'a few seconds ago';
 
             expect(humanFriendlyDate).toBe(expected);
           });
 
-          it('should be a 30m difference', () => {
+          it('on checking 30m after should be a 30m difference', () => {
             const now = getNow(
               timestampPlusThirtyMinutes,
               timezoneEuropeLondon,
@@ -47,9 +48,9 @@ describe('date', () => {
       });
 
       describe('on timezone America/Los Angeles', () => {
-        it('should be a 10m difference', () => {
+        it('on original timestamp should offset by 8 hours difference', () => {
           const now = getNow(
-            timestampPlusTenMinutes,
+            timestamp,
             timezoneAmericaLosAngels,
           );
           const humanFriendlyDate = dateRelative(
@@ -57,14 +58,14 @@ describe('date', () => {
             now,
           );
 
-          const expected = '10 minutes ago';
+          const expected = 'in 8 hours';
 
           expect(humanFriendlyDate).toBe(expected);
         });
 
-        it('should be a 30m difference', () => {
+        it('on 2 hours from source timestamp should be a 6 hours difference', () => {
           const now = getNow(
-            timestampPlusThirtyMinutes,
+            timestampPlusTwoHours,
             timezoneAmericaLosAngels,
           );
           const humanFriendlyDate = dateRelative(
@@ -72,7 +73,7 @@ describe('date', () => {
             now,
           );
 
-          const expected = '30 minutes ago';
+          const expected = 'in 6 hours';
 
           expect(humanFriendlyDate).toBe(expected);
         });

@@ -21,23 +21,3 @@ export const dateRelative = (
   timestamp: string,
   now: string = NOW,
 ) => dayjs.utc(timestamp).from(now);
-
-// (() => {
-//   const timestamp = '2021-12-14T13:40:00.000Z';
-//   const timeZone = 'Europe/London';
-//   const localeTime = new Date(
-//     new Date(timestamp).toLocaleString("en-US", { timeZone })
-//   ).toISOString();
-//   const res = dateRelative(timestamp, localeTime);
-//   console.log('[debug] result eur/ldn', res);
-// })();
-
-// (() => {
-//   const timestamp = '2021-12-14T13:40:00.000Z';
-//   const timeZone = 'America/Los_Angeles';
-//   const localeTime = new Date(
-//     new Date(timestamp).toLocaleString("en-US", { timeZone })
-//   ).toISOString();
-//   const res = dateRelative(timestamp, localeTime);
-//   console.log('[debug] result america/la', res);
-// })();
