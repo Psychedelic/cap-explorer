@@ -1,3 +1,24 @@
+# [1.1.0](https://github.com/Psychedelic/cap-explorer/compare/v1.0.1...v1.1.0) (2021-12-14)
+
+
+### Bug Fixes
+
+* 🐛 amends icon arrow name ([#69](https://github.com/Psychedelic/cap-explorer/issues/69)) ([d60115e](https://github.com/Psychedelic/cap-explorer/commit/d60115ee923f92626ec4aefdea85a1fb3d76d098))
+* 🐛 image fallback ([aaa7e4d](https://github.com/Psychedelic/cap-explorer/commit/aaa7e4d28eac9a6567912206dc5fd17fc0fa8d24))
+* 🐛 learn more tooltip, link should open correct address ([#78](https://github.com/Psychedelic/cap-explorer/issues/78)) ([12ca14b](https://github.com/Psychedelic/cap-explorer/commit/12ca14bdb85fdb233a79b4ffd595501da3a681f9))
+* 🐛 pagination index computation ([#77](https://github.com/Psychedelic/cap-explorer/issues/77)) ([6a923f3](https://github.com/Psychedelic/cap-explorer/commit/6a923f3f3166064f54057a6d76983b665f0924ce))
+* 🐛 should extend page data not overwrite ([#72](https://github.com/Psychedelic/cap-explorer/issues/72)) ([4e2d8b8](https://github.com/Psychedelic/cap-explorer/commit/4e2d8b8837d8a533991ee8fc59fccad3e9292b7e))
+* 🐛 tooltip hover close area ([#75](https://github.com/Psychedelic/cap-explorer/issues/75)) ([2027ee3](https://github.com/Psychedelic/cap-explorer/commit/2027ee38ecedaad7079e622ea171a6bff388f16b))
+* 🐛 use DAB mainnet address during dev for now ([c1fe7a4](https://github.com/Psychedelic/cap-explorer/commit/c1fe7a4e0bf1bc11e30b9bd609b563845b75c88d))
+* 🐛 video should not have pointer events ([6278e27](https://github.com/Psychedelic/cap-explorer/commit/6278e276c7e65f77995043bebe0fdda0df7df00f))
+
+
+### Features
+
+* 🎸 item nft images ([#76](https://github.com/Psychedelic/cap-explorer/issues/76)) ([75edf68](https://github.com/Psychedelic/cap-explorer/commit/75edf688b5ce082d4acfd73ebd03bbf8b39cba92))
+* 🎸 search basic ([#68](https://github.com/Psychedelic/cap-explorer/issues/68)) ([0972f99](https://github.com/Psychedelic/cap-explorer/commit/0972f991dd24aa8645df1c8609aada6a320e563a))
+* 🎸 tooltip for dab unknown ([#73](https://github.com/Psychedelic/cap-explorer/issues/73)) ([a35c94b](https://github.com/Psychedelic/cap-explorer/commit/a35c94bd529de30122afae34990a5a79a24e320a))
+
 ## [1.0.1](https://github.com/Psychedelic/cap-explorer/compare/v1.0.0...v1.0.1) (2021-12-06)
 
 
