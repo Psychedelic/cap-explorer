@@ -21,6 +21,7 @@ import { useWindowResize } from '@hooks/windowResize';
 import { PAGE_SIZE } from '@hooks/store';
 import Loading from '@components/Loading';
 import Fleekon from '@components/Fleekon';
+import Pagination from '@components/Pagination';
 
 const RowWrapper = styled('div', {
   display: 'grid',
@@ -57,9 +58,19 @@ const RowWrapper = styled('div', {
 
 
   '&[data-row]': {
+    zIndex: 1,
 
     '&:hover': {  
       backgroundColor: '#333',
+      zIndex: 2,
+
+      '& [data-dab-identity-cell]': {
+        '&:hover': {
+          '& [data-tooltip]': {
+            display: 'block',
+          },
+        },
+      }
     },
   },
 });
@@ -89,59 +100,6 @@ const ColWrapper = styled('div', {
   '@dataTableBreakPointL': {
     width: '100%',
     overflow: 'visible',
-  },
-});
-
-const Pagination = styled('div', {
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'flex-end',
-  marginTop: '2em',
-  marginBottom: '2em',
-  fontFamily: 'Inter',
-  fontSize: '$s',
-  color: '$defaultTxtColour',
-
-  '& > span': {
-    padding: '0 20px',
-  },
-
-  '& svg': {
-    fontSize: '$s',
-    color: '$defaultTxtColour',
-    transition: 'fill 0.3s',
-
-    '&:hover': {
-      fill: '$purple !important',
-    }
-  },
-
-  '& button': {
-    transform: 'translateX(0)',
-    transition: 'transform 0.2s ease-in',
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-
-    '&:hover': {
-      transform: 'translateX(2px)',
-    },
-
-    '&:first-child': {
-      '&:hover': {
-        transform: 'translateX(-2px)',
-      },
-    },
-  },
-
-  '& .arrow': {
-    position: 'relative',
-    top: '1px',
-  },
-
-  '& .arrow-left': {
-    transform: 'rotate(180deg)',
   },
 });
 
@@ -431,8 +389,6 @@ const DataTable = <T extends {}>({
     headerGroups,
     page,
     prepareRow,
-    canPreviousPage,
-    canNextPage,
     pageOptions,
     nextPage,
     previousPage,
@@ -532,7 +488,10 @@ const DataTable = <T extends {}>({
                       prepareRow(row);
 
                       return (
-                        <RowWrapper key={row.index} data-row>
+                        <RowWrapper
+                          key={row.index}
+                          data-row
+                        >
                           {
                             row.cells.map((cell) => {
                               const { key: colHeaderKey } = cell.column.getHeaderProps();
@@ -561,44 +520,15 @@ const DataTable = <T extends {}>({
                 </div>
                 <IconHintScrollX show={showIconHintScrollX} />
               </ScrollXContainer>
-              {/*
-                TODO: hide arrows on total page 1
-              */}
-              <Pagination data-pagination>
-                <button
-                  type="button"
-                  aria-label="Previous page"
-                  onClick={() => previousPage()}
-                  disabled={!canPreviousPage}
-                  style={{
-                    display: pageOptions.length === 1 ? 'none' : '',
-                  }}
-                >
-                  <Fleekon
-                    icon="arrowRight"
-                    className="arrow arrow-left"
-                    size="13px"
-                  />
-                </button>
-                <span data-page-index={currentPageIndex}>
-                  {`${currentPageIndex} of ${pageOptions.length}`}
-                </span>
-                <button
-                  type="button"
-                  aria-label="Next page"
-                  onClick={() => nextPage()}
-                  disabled={!canNextPage}
-                  style={{
-                    display: pageOptions.length === 1 ? 'none' : '',
-                  }}
-                >
-                  <Fleekon
-                    icon="arrowRight"
-                    className="arrow arrow-right"
-                    size="13px"
-                  />
-                </button>
-              </Pagination>
+
+              <Pagination
+                canNextPage={currentPageIndex < pageCount}
+                canPreviousPage={currentPageIndex > 1}
+                currentPageIndex={currentPageIndex}
+                nextPage={nextPage}
+                pageOptions={pageOptions}
+                previousPage={previousPage}
+              />
             </ColWrapper>
           )
         }

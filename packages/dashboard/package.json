@@ -11,26 +11,27 @@
   "scripts": {
     "start": "webpack serve -c ./webpack/webpack.config.js --node-env development --mode development",
     "dev:development": "yarn start",
-    "dev:production": "IC_HISTORY_ROUTER_ID='lj532-6iaaa-aaaah-qcc7a-cai' MOCKUP=false webpack serve -c ./webpack/webpack.config.js --node-env production --mode production",
+    "dev:production": "IC_HISTORY_ROUTER_ID='lj532-6iaaa-aaaah-qcc7a-cai' USE_WEBPACK_DEV_SERVER=true MOCKUP=false webpack serve -c ./webpack/webpack.config.js --node-env production --mode production",
     "build:production": "webpack -c ./webpack/webpack.config.js --node-env production --mode=production",
     "build:staging": "webpack -c ./webpack/webpack.config.js --node-env staging --mode=production",
     "build:local": "webpack -c ./webpack/webpack.config.js --node-env development --mode=development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "test:unit": "jest --config jest.config.js"
+    "test:unit": "IC_HISTORY_ROUTER_ID='lj532-6iaaa-aaaah-qcc7a-cai' jest --config jest.config.js",
+    "webpack:profiler": "IC_HISTORY_ROUTER_ID='lj532-6iaaa-aaaah-qcc7a-cai' NODE_ENV=production npx webpack -c ./webpack/webpack.config.js --profile --json > webpack-stats.json && NODE_ENV=production npx webpack-bundle-analyzer webpack-stats.json && echo \"🤖 Optionally, find the webpack-stats.json in the dashboard and use it in https://webpack.github.io/analyse/\""
   },
   "author": {
     "name": "Helder Oliveira",
     "email": "helder@fleek.co"
   },
   "dependencies": {
-    "@dfinity/agent": "^0.10.1",
-    "@dfinity/candid": "^0.10.1",
-    "@dfinity/identity": "^0.10.1",
-    "@dfinity/principal": "^0.10.1",
+    "@dfinity/agent": "^0.9.3",
+    "@dfinity/candid": "^0.9.3",
+    "@dfinity/identity": "^0.9.3",
+    "@dfinity/principal": "^0.9.3",
     "@fleekhq/fleekon": "^0.0.4",
     "@loadable/component": "^5.14.1",
     "@psychedelic/cap-js": "^0.0.7",
-    "@psychedelic/dab-js": "^0.4.0",
+    "@psychedelic/dab-js": "^0.4.2",
     "@psychedelic/generate-random-principal": "^0.0.1",
     "@stitches/react": "^1.2.5",
     "@storybook/react": "^6.2.8",
@@ -86,5 +87,8 @@
   "engines": {
     "node": ">=12.18.2",
     "npm": ">=6.14.0"
+  },
+  "devDependencies": {
+    "webpack-bundle-analyzer": "^4.5.0"
   }
 }

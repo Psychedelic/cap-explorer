@@ -6,7 +6,7 @@ import IdentityCopy from '@components/IdentityCopy';
 import { DabLink } from '@components/Link';
 import {
   useTransactionStore,
-  PAGE_SIZE,
+  useAccountStore,
 } from '@hooks/store';
 import { useWindowResize } from '@hooks/windowResize';
 import {
@@ -18,10 +18,14 @@ import {
 } from '@psychedelic/cap-js';
 import { scrollTop } from '@utils/window';
 import { styled, BREAKPOINT_DATA_TABLE_L } from '@stitched';
-import { getDabMetadata, CanisterMetadata } from '@utils/dab';
+import {
+  isValidStandard,
+  TokenStandards,
+} from '@utils/dab';
 import IdentityDab from '@components/IdentityDab';
 import OverallValues from '@components/OverallValues';
 import { Principal } from '@dfinity/principal';
+import { useDabStore } from '@hooks/store';
 
 const UserBar = styled('div', {
   display: 'flex',
@@ -35,8 +39,20 @@ const AppTransactions = ({
 }: {
   capRouterInstance: CapRouter | undefined,
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [identityInDab, setIdentityInDab] = useState<CanisterMetadata>();
+  const { id: tokenId } = useParams() as { id: string };
+
+  const dabStore = useDabStore();
+  const {
+    isLoading: isLoadingDabItemDetails,
+    fetchDabItemDetails,
+    nftItemDetails,
+  } = dabStore;
+  const accountStore = useAccountStore();
+  const {
+    contractKeyPairedMetadata,
+  } = accountStore;
+  const metadata = contractKeyPairedMetadata[tokenId];
+  const [isLoading, setIsLoading] = useState(false);
   const isSmallerThanBreakpointLG = useWindowResize({
     breakpoint: BREAKPOINT_DATA_TABLE_L,
   });
@@ -49,8 +65,6 @@ const AppTransactions = ({
   } = useTransactionStore((state) => state);
   const [rootCanisterId, setRootCanisterId] = useState<string>();
   const [transactions, setTransactions] = useState<TransactionEvent>(undefined);
-
-  let { id: tokenId } = useParams() as { id: string };
 
   // TODO: on fetch by token id and page nr, cache/memoize
   const fetchPageDataHandler: FetchPageDataHandler = async ({
@@ -67,14 +81,26 @@ const AppTransactions = ({
     const pages = Array.from(Array(totalPages).keys()).reverse();
     const page = pages[pageIndex];
 
+    await setIsLoading(true);
+
     await fetch({
       tokenId: rootCanisterId,
       page,
       witness: false,
     });
-
+ 
     scrollTop();
   }
+  
+  useEffect(() => {
+    // Loading should be triggered
+    // if the metadata is not available
+    // while the page data process is resolved
+    // see 'page data initialisation process'
+    if (metadata) return;
+
+    setIsLoading(true);
+  }, []);
   
   useEffect(() => {
     if (!pageData) return;
@@ -83,16 +109,49 @@ const AppTransactions = ({
   }, [pageData]);
 
   useEffect(() => {
-    if (!rootCanisterId) return;
+    if (!pageData) return;
 
-    fetch({
-      tokenId: rootCanisterId,
-      witness: false,
+    // Should validate if known standard
+    const foundStandard = metadata?.standard;
+
+    if (!isValidStandard(foundStandard)) {
+      console.warn(`Oops! Standard ${foundStandard} is unknown`)
+
+      return;
+    };
+
+    fetchDabItemDetails({
+      data: pageData,
+      tokenId,
+      standard: foundStandard as TokenStandards,
     });
+  }, [pageData]);
 
-    // On unmount, reset the transaction state
+  // The page data initialisation process
+  useEffect(() => {
+    if (!rootCanisterId || !capRouterInstance) return;
+
+    // The metadata is not available when
+    // a transaction page is requested directly
+    // when not requested from the app entry point or Overview
+    // for this reason, the metada should be requested
+    (async () => {
+      if (!metadata) {
+        await accountStore.fetch({
+          capRouterInstance,
+          dabStore,
+        });
+      }
+
+      await fetch({
+        tokenId: rootCanisterId,
+        witness: false,
+      });
+    })()
+
+    // On unmount, reset the transaction state (page data)
     return () => reset();
-  }, [rootCanisterId]);
+  }, [rootCanisterId, capRouterInstance]);
 
   useEffect(() => {
     if (!transactions) return;
@@ -105,7 +164,10 @@ const AppTransactions = ({
       if (!capRouterInstance) return;
 
       const { canister } = await capRouterInstance.get_token_contract_root_bucket({
-        tokenId: Principal.fromText(tokenId),
+        // At time of writing the typedef in cap-js
+        // differs from the downgraded dfinity principal
+        // in the cap-explorer project
+        tokenId: (Principal.fromText(tokenId) as any),
       });
 
       const rootCanisterId = canister?.[0];
@@ -120,30 +182,20 @@ const AppTransactions = ({
     })();
   }, [pageData]);
 
-  // Dab metadata handler
-  useEffect(() => {
-    const getDabMetadataHandler = async () => {      
-      const metadata = await getDabMetadata({
-        canisterId: tokenId,
-      });
-
-      if (!metadata) return;
-
-      // TODO: Update name column, otherwise fallback
-      setIdentityInDab({
-        ...metadata,
-      });
-    };
-
-    getDabMetadataHandler();
-  }, []);
+  // Use as a fallback when the page data needs to be handled (long process)
+  // while the metadata is readily available to the end-user
+  // as such, we don't want to hide components to show `loading`
+  const isPageDataProcessing = !Array.isArray(pageData);
 
   return (
     <Page
       pageId="app-transactions-page"
     >
       <PageRow>
-        <Breadcrumb identityInDab={identityInDab} isLoading={isLoading} />
+        <Breadcrumb
+          metadata={metadata}
+          isLoading={isLoading}
+        />
       </PageRow>
       <PageRow>
         <UserBar
@@ -151,8 +203,8 @@ const AppTransactions = ({
         >
           <DabLink tokenContractId={tokenId}>
           {
-            identityInDab
-            ? <IdentityDab large={true} name={identityInDab?.name} image={identityInDab?.logo_url} isLoading={isLoading} />
+            metadata
+            ? <IdentityDab large={true} name={metadata?.name} image={metadata?.icon} isLoading={isLoading} />
             : <IdentityDab large={true} name='Unknown' isLoading={isLoading} />
           }
           </DabLink>
@@ -170,17 +222,20 @@ const AppTransactions = ({
               value: totalTransactions,
             },
           ]}
-          isLoading={isLoading}
+          isLoading={isLoading || isPageDataProcessing}
         />
       </PageRow>
       <PageRow>
         <TransactionsTable
           data={transactions}
           id="app-transactions-page"
-          isLoading={isLoading}
+          isLoading={isLoading || isPageDataProcessing}
           pageCount={totalPages}
           fetchPageDataHandler={fetchPageDataHandler}
-          identityInDab={identityInDab}
+          metadata={metadata}
+          tokenId={tokenId}
+          nftItemDetails={nftItemDetails}
+          isLoadingDabItemDetails={isLoadingDabItemDetails}
         />
       </PageRow>
     </Page>

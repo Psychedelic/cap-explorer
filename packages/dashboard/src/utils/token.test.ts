@@ -22,8 +22,11 @@ describe('token', () => {
       const invalidPrincipal = '32x-2-323dxcxxccc';
 
       it('should fail', () => {
-        const decoded = decodeTokenId(invalidPrincipal);
-        expect(decoded).toThrow();
+        expect(
+          () => {
+            decodeTokenId(invalidPrincipal)
+          }
+        ).toThrow();
       });
     });
   });

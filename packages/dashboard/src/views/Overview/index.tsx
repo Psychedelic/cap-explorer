@@ -1,41 +1,62 @@
-import React, { useEffect } from 'react';
+import React, {
+  useEffect,
+  useState,
+} from 'react';
 import AccountsTable from '@components/Tables/AccountsTable';
 import Title from '@components/Title';
 import Page, { PageRow } from '@components/Page';
 import {
-  AccountStore,
+  useAccountStore,
+  useDabStore,
 } from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
 import OverallValues from '@components/OverallValues';
+import SearchInput from '@components/SearchInput';
 
 const Overview = ({
-  accountStore,
   capRouterInstance,
 }: {
-  accountStore: AccountStore,
   capRouterInstance: CapRouter | undefined,
 }) => {
+  const [pageLoading, setPageLoading] = useState(false);
+  const dabStore = useDabStore();
+  const accountStore = useAccountStore();
+
   const {
-    isLoading,
     pageData,
-    fetch,
-    reset,
+    fetch,    
   } = accountStore;
+
+  useEffect(() => {
+    setPageLoading(true);
+  }, []);
 
   useEffect(() => {
     if (!capRouterInstance) return;
 
     // If data is ready, interrupt
-    if (pageData.length) return;
-    
-    // TODO: cache/memoizing fetch call
-    fetch({
-      capRouterInstance,
-    });
+    // at time of writing the data persists
+    // after the initial call, has we don't have
+    // a big number, thus no pagination
+    // once added to Service side, then
+    // it should be memoized by the page id
+    // TODO: memoize the store selector instead
+    if (pageData.length) {
+      setPageLoading(false);
 
-    // TODP: should only reset on unmount
-    // when pagination is ready
-    // return () => reset();
+      return;
+    }
+
+    // Async call
+    (async () => {
+      await fetch({
+        capRouterInstance,
+        // Optionally, maybe Move this to the fn handler
+        dabStore,
+      });
+
+      setPageLoading(false);
+    })();
   }, [capRouterInstance]);
 
   return (
@@ -46,6 +67,9 @@ const Overview = ({
         <Title size="xl">Cap Explorer</Title>
       </PageRow>
       <PageRow>
+        <SearchInput />
+      </PageRow>
+      <PageRow>
         <OverallValues
           data={[
             {
@@ -53,14 +77,14 @@ const Overview = ({
               value: pageData.length,
             },
           ]}
-          isLoading={isLoading}
+          isLoading={pageLoading}
         />
       </PageRow>
       <PageRow>
         <AccountsTable
           data={pageData}
           id="overview-page-transactions"
-          isLoading={isLoading}
+          isLoading={pageLoading}
         />
       </PageRow>
     </Page>

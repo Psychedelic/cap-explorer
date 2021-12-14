@@ -1,9 +1,7 @@
 /* eslint-disable no-console */
 import React, {
-  useCallback,
   useEffect,
   useState,
-  SetStateAction,
 } from 'react';
 import {
   BookmarkColumnModes,
@@ -13,16 +11,13 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  useLocation,
 } from 'react-router-dom';
 import loadable from '@loadable/component';
-import Loading from '@components/Loading';
 import { RouteNames } from '@utils/routes';
-import { createBookmarkExpandHandler } from '@utils/account';
-import { useAccountStore } from '@hooks/store';
 import { CapRouter } from '@psychedelic/cap-js';
 import { getCapRouterInstance } from '@utils/cap'; 
 import config from './config';
+import { LoadableLoadingPlaceholder } from '@components/LoadingForLoadable';
 
 export type BookmarkExpandHandler = (args?: BookmarkExpandHandlerOverrides) => void;
 
@@ -35,16 +30,16 @@ interface BookmarkExpandHandlerOverrides {
 // from the component path, but we keep it here for clear evidence
 // although you can dynamically import inner dependencies
 // in the component scope
-const LazyOverview = loadable(() => import('@views/Overview'), {
+const LazyOverview = loadable(() => import(/* webpackPreload: true */ '@views/Overview'), {
   // The fallback to blank is intentional
-  // previously displayed the <Loading /> but not required
-  fallback: <span data-component-loading />,
+  // which transitions to the loader for slower internet connections
+  fallback: <LoadableLoadingPlaceholder alt="Loading Overview page" />,
 });
 
-const LazyAppTransactions = loadable(() => import('@views/AppTransactions'), {
+const LazyAppTransactions = loadable(() => import(/* webpackPrefetch: true */ '@views/AppTransactions'), {
   // The fallback to blank is intentional
-  // previously displayed the <Loading /> but not required
-  fallback: <span data-component-loading />,
+  // which transitions to the loader for slower internet connections
+  fallback: <LoadableLoadingPlaceholder alt="Loading App Transactions page" />,
 });
 
 const Routes = ({
@@ -57,7 +52,6 @@ const Routes = ({
   loading: boolean,
 }) => {
   const [capRouterInstance, setCapRouterInstance] = useState<CapRouter | undefined>();
-  const accountStore = useAccountStore();
 
   useEffect(() => {
     // On App launch, initialises CapRouter instance
@@ -87,7 +81,6 @@ const Routes = ({
         </Route>
         <Route path={RouteNames.Overview}>
           <LazyOverview
-            accountStore={accountStore}
             capRouterInstance={capRouterInstance}
           />
         </Route>
@@ -102,6 +95,7 @@ const App = () => (
       bookmarkColumnMode={BookmarkColumnModes.collapsed}
       bookmarkExpandHandler={() => null}
       loading={false}
+
     />
   </Router>
 );

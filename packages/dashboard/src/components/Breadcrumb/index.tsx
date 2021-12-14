@@ -2,7 +2,11 @@ import React from 'react';
 import { styled } from '@stitched';
 import Fleekon from '@components/Fleekon';
 import { RawLink } from '@components/Link';
-import { CanisterMetadata } from '@utils/dab';
+import {
+  CanisterMetadata,
+  DABCollectionItem,
+  DAB_IDENTITY_UNKNOWN,
+} from '@utils/dab';
 import Loading from '@components/Loading';
 
 const Hover = styled('span', {
@@ -48,12 +52,12 @@ const LoadingContainer = styled('span', {
 });
 
 export interface BreadcrumbProps {
-  identityInDab?: CanisterMetadata,
+  metadata?: DABCollectionItem,
   isLoading: boolean,
 }
 
 const Breadcrumb = ({
-  identityInDab,
+  metadata,
   isLoading,
 }: BreadcrumbProps) => {
 
@@ -79,9 +83,9 @@ const Breadcrumb = ({
         : (
           <span>
           {
-            identityInDab
-            ? identityInDab?.name
-            : 'unknown'
+            metadata
+            ? metadata?.name
+            : DAB_IDENTITY_UNKNOWN
           }
           </span>
         )

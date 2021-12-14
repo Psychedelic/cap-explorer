@@ -21,7 +21,10 @@
   "release": {
     "branches": [
       "main",
-      "next"
+      {
+        "name": "beta",
+        "prerelease": true
+      }
     ],
     "plugins": [
       "@semantic-release/commit-analyzer",
@@ -82,7 +85,8 @@
     "cap:start": "./.scripts/run-cap-service.sh",
     "cap:reset": "./.scripts/cap-reset.sh",
     "cap:generate-mocks": ".scripts/generate-cap-mocks.sh",
-    "release": "standard-version"
+    "release": "standard-version",
+    "profiler:dashboard": "lerna run --stream --scope dashboard webpack:profiler"
   },
   "engines": {
     "node": ">=16",

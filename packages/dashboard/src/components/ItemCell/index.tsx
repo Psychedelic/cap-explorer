@@ -1,60 +1,175 @@
 import React from 'react';
-import { CanisterMetadata } from '@utils/dab';
+import {
+  CanisterMetadata,
+  DAB_IDENTITY_UNKNOWN,
+  DABCollectionItem,
+} from '@utils/dab';
 import { styled } from '@stitched';
 import iconUnknown from '@images/icon-unknown.svg';
+import { TableUnknownCellTooltip } from '@components/Tooltips'
+import { NFTDetails } from '@psychedelic/dab-js';
+import Loading from '@components/Loading';
+import { useHistory } from 'react-router-dom';
+import { getRouteByName, RouteName } from '@utils/routes';
 
 const ItemCell = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-  transition: 'color 0.3s',
+  '& [data-cta]': {
+    cursor: 'pointer',
+    paddingRight: '20px',
 
-  '& [data-image]': {
+    display: 'flex',
+    alignItems: 'center',
+    transition: 'color 0.3s',
+  
+    '& [data-image]': {
+      width: '35px',
+      height: '35px',
+      borderRadius: '6px',
+      marginRight: '10px',
+      position: 'relative',
+    },
+  },
+
+  '& [data-icon-video]': {
+    marginRight: '10px',
     width: '35px',
     height: '35px',
-    borderRadius: '6px',
-    marginRight: '10px',
+    pointerEvents: 'none',
   },
 
   variants: {
     asHoverState: {
       true: {
         '&:hover': {
-          color: '$purple',
-        },      
+          '& [data-identity-name]': {
+            color: '$purple',
+          },
+        },
       }
     }
   },
 });
 
-export default ({
-  cellValue,
-  derivedId = true,
-  identityInDab,
-  asHoverState = false,
+const IconDisplayer = ({
+  mediaUrl,
 }: {
-  cellValue?: number,
-  derivedId?: boolean,
-  identityInDab?: CanisterMetadata,
-  asHoverState?: boolean,
-}) => (
-  <ItemCell asHoverState={asHoverState}>
+  mediaUrl?: string,
+}) => {
+  let isValidImgIcon = !!mediaUrl?.match(/.gif|.png|.jpe?g/);
+  const isValidMediaIcon = mediaUrl?.match(/.mp4/);
+
+  if (!isValidImgIcon && !isValidMediaIcon && typeof mediaUrl !== 'undefined') {
+    // TODO: given that certain standards have URLs
+    // which do not have a png, jpg but valid
+    // maybe compute it here
+    // at time of writing it'll fallback to true
+    isValidImgIcon = true;
+  }
+
+  if (isValidMediaIcon) {
+    return (
+      <video data-icon-video controls width="35" loop autoPlay>
+        <source src={mediaUrl} type="video/mp4" />
+      </video>
+    )
+  }
+
+  return (
     <span
       data-image
       style={{
-        backgroundImage: `url(${identityInDab?.logo_url || iconUnknown})`,
+        backgroundImage: `url(${isValidImgIcon ? mediaUrl : iconUnknown})`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         display: 'inline-block',
       }}
     />
+  );
+}
 
-    { identityInDab?.name || 'Unknown' }
+export default ({
+  cellValue,
+  derivedId = true,
+  metadata,
+  asHoverState = false,
+  nftDetails,
+  isLoadingDabItemDetails = false,
+}: {
+  cellValue?: number,
+  derivedId?: boolean,
+  metadata?: DABCollectionItem,
+  asHoverState?: boolean,
+  nftDetails?: NFTDetails,
+  isLoadingDabItemDetails?: boolean,
+}) => (
+  <ItemCell data-dab-identity-cell asHoverState={asHoverState}>
+    <div data-cta>
+      {
+        isLoadingDabItemDetails
+        ? (
+          <span data-image>
+            <Loading size='s' alt='Loading' />
+          </span>
+        )
+        : (
+          <IconDisplayer
+            mediaUrl={nftDetails?.url || metadata?.icon}
+          />
+        )
+      }
+
+      <span data-identity-name>
+        { metadata?.name || DAB_IDENTITY_UNKNOWN }
+        {
+          // If undefined, hide the cellValue
+          derivedId
+            ? cellValue ? ' #' + cellValue : ''
+            : ''
+        }
+      </span>
+    </div>
+
     {
-      // If undefined, hide the cellValue
-      derivedId
-        ? cellValue ? ' #' + cellValue : ''
-        : ''
+      !metadata?.name
+      && (
+        <TableUnknownCellTooltip />
+      )
     }
   </ItemCell>
 );
+
+export const UnknownItemCell = ({
+  contractId,
+  children,
+  routeName,
+}: {
+  contractId: string,
+  children: React.ReactNode,
+  routeName: RouteName,
+}) => {
+  const history = useHistory();
+
+  const getRouteByNameHandler = () => 
+    routeName === 'AppTransactions'
+      ? getRouteByName('AppTransactions', { id: contractId })
+      : ''
+  
+
+  return (
+    <span onClick={(e) => {
+      if ((e.target as HTMLInputElement).getAttribute('data-tooltip')) {
+        return;
+      }
+
+      if (!(e.target as HTMLInputElement).getAttribute('data-learn-more')) {
+        history.push(
+          getRouteByNameHandler()
+        );
+        return;
+      }
+    }}>
+      { children }
+    </span>
+  );
+};

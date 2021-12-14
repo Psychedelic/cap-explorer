@@ -1,19 +1,30 @@
 import React, {
-  useCallback,
   useEffect,
   useState,
   useMemo,
 } from 'react';
 import { styled } from '@stitched';
-import DataTable, { HeaderTabs, TableId } from '@components/Tables/DataTable';
+// TODO: move the tableid to the util
+import { TableId } from '@components/Tables/DataTable';
 import { dateRelative } from '@utils/date';
 import { formatPriceForChart } from '@utils/formatters';
 import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
-import { CanisterMetadata } from '@utils/dab';
+import {
+  DABCollectionItem,
+  NFTItemDetails,
+} from '@utils/dab';
 import { toICRocksPrincipal } from '@utils/link';
 import { trimAccount } from '@utils/account';
 import ItemCell from '@components/ItemCell';
+import loadable from '@loadable/component';
+import { LoadableLoadingPlaceholder } from '@components/LoadingForLoadable';
+
+const LazyDatatable = loadable(() => import(/* webpackPrefetch: true */  '@components/Tables/DataTable'), {
+  // The fallback to blank is intentional
+  // which transitions to the loader for slower internet connections
+  fallback: <LoadableLoadingPlaceholder alt='Loading the Databable...' />,
+});
 
 const Container = styled('div', {
   fontSize: '$s',
@@ -121,8 +132,6 @@ export type FetchPageDataHandler = ({
   pageIndex: number,
 }) => void;
 
-const DEFAULT_BASE_STATE = TransactionTypes.all;
-
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'item',
   'operation',
@@ -167,7 +176,10 @@ const TransactionsTable = ({
   pageCount,
   fetchPageDataHandler,
   isLoading = false,
-  identityInDab,
+  metadata,
+  tokenId,
+  nftItemDetails,
+  isLoadingDabItemDetails,
 }: {
   // eslint-disable-next-line react/require-default-props
   data?: Data[],
@@ -175,32 +187,12 @@ const TransactionsTable = ({
   pageCount: number,
   fetchPageDataHandler: FetchPageDataHandler,
   isLoading: boolean,
-  identityInDab?: CanisterMetadata,
+  metadata?: DABCollectionItem,
+  tokenId: string,
+  nftItemDetails: NFTItemDetails,
+  isLoadingDabItemDetails: boolean,
 }) => {
   const [currentData, setCurrentData] = useState<Data[]>(data);
-
-  const onSelectionHandler = useCallback((selected: TransactionTypes) => {
-    // TODO: this will be connected to the IC
-    if (selected === DEFAULT_BASE_STATE) {
-      setCurrentData(
-        data,
-      );
-      return;
-    }
-
-    // TODO: set current, as disabled transaction type
-    // setCurrentData(
-    //   data.filter((v) => v.transactionType === selected),
-    // );
-  }, [data]);
-
-  const headerGroupHandler = useCallback((filters: TransactionTypes[]) => (
-    <HeaderTabs
-      filters={filters}
-      onSelectionHandler={onSelectionHandler}
-      id={id}
-    />
-  ), [onSelectionHandler]);
 
   const formatters = useMemo(() => ({
     body: {
@@ -208,13 +200,25 @@ const TransactionsTable = ({
         if (typeof cellValue !== 'string') return;
         return <Operation type={cellValue} />
       },
-      item: (cellValue: number) => (
-        <ItemCell
-            identityInDab={identityInDab}
+      item: (cellValue: number) => {
+        let nftDetails;
+
+        try {
+          nftDetails = nftItemDetails?.[tokenId]?.[cellValue];
+        } catch (err) {
+          console.warn(`Oops! Failed to get NFT details for token ${tokenId} and mint ${cellValue}`, err);
+        }
+
+        return (
+          <ItemCell
+            metadata={metadata}
             cellValue={cellValue}
             derivedId={true}
-        />
-      ),
+            nftDetails={nftDetails}
+            isLoadingDabItemDetails={isLoadingDabItemDetails}
+          />
+        );
+      },
       amount: (cellValue: number) => {
         if (!cellValue || typeof cellValue !== 'bigint') return NOT_AVAILABLE_PLACEHOLDER;
 
@@ -245,7 +249,7 @@ const TransactionsTable = ({
       },
       time: (cellValue: string) => dateRelative(cellValue),
     },
-  }), [headerGroupHandler]);
+  }), [metadata, nftItemDetails, isLoadingDabItemDetails]);
 
   useEffect(() => {
     setCurrentData(data);
@@ -255,7 +259,7 @@ const TransactionsTable = ({
     <Container
       data-id={id}
     >
-      <DataTable
+      <LazyDatatable
         columns={columns}
         data={currentData}
         formatters={formatters}
