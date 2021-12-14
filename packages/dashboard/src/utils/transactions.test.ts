@@ -8,7 +8,7 @@ describe('utils/transactions', () => {
       it('should return valid transaction time (large number)', () => {
         const time = 1600000000000n;
         const result = toTransactionTime(time);
-        const expected = '13/09/2020';
+        const expected = '2020-09-13T12:26:40.000Z';
         expect(result).toBe(expected);
       })
     });
