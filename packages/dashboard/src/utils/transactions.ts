@@ -28,9 +28,6 @@ export const toTransactionTime = (time: bigint) => {
     return;
   };
 
-  // const dateChunks = ISOString.split('T')[0].split('-');
-  // const formated = `${dateChunks[2]}/${dateChunks[1]}/${dateChunks[0]}`;
-
   return ISOString;
 }
 
