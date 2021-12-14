@@ -6,6 +6,7 @@ describe('date', () => {
       const timezoneEuropeLondon = 'Europe/London';
       const timezoneAmericaLosAngels = 'America/Los_Angeles';
       const timestamp = '2021-12-10T15:00:00.000Z';
+      const timestampMinusEigthHours = '2021-12-10T07:00:00.000Z';
       const timestampPlusThirtyMinutes = '2021-12-10T15:30:00.000Z';
       const timestampPlusTwoHours = '2021-12-10T17:00:00.000Z';
       const getNow = (
@@ -48,32 +49,32 @@ describe('date', () => {
       });
 
       describe('on timezone America/Los Angeles', () => {
-        it('on original timestamp should offset by 8 hours difference', () => {
+        it('on a timestamp which is 8 hours earlier should show few seconds ago', () => {
           const now = getNow(
             timestamp,
             timezoneAmericaLosAngels,
           );
           const humanFriendlyDate = dateRelative(
-            timestamp,
+            timestampMinusEigthHours,
             now,
           );
 
-          const expected = 'in 8 hours';
+          const expected = 'a few seconds ago';
 
           expect(humanFriendlyDate).toBe(expected);
         });
 
-        it('on 2 hours from source timestamp should be a 6 hours difference', () => {
+        it('on 2 hours from source timestamp should be a 2 hours difference', () => {
           const now = getNow(
             timestampPlusTwoHours,
             timezoneAmericaLosAngels,
           );
           const humanFriendlyDate = dateRelative(
-            timestamp,
+            timestampMinusEigthHours,
             now,
           );
 
-          const expected = 'in 6 hours';
+          const expected = '2 hours ago';
 
           expect(humanFriendlyDate).toBe(expected);
         });
