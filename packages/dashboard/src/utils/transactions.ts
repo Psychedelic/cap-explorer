@@ -55,6 +55,7 @@ export const parseGetTransactionsResponse = ({
 
     // TODO: validate details
 
+    // TODO: To remove "possible fields" as the Token Standard field is now available!
     // TODO: there are no conventions on naming fields
     // so, for the moment will check for matching token
     const possibleFields: TokenFields = ['token', 'token_id', 'tokenId'];
