@@ -32,8 +32,8 @@ export const toTransactionTime = (time: bigint) => {
 }
 
 type TransactionDetails = {
-  from: Principal;
-  to: Principal;
+  from: Principal | string;
+  to: Principal | string;
   amount: bigint;
   token?: string;
   tokenId?: string;
@@ -51,7 +51,7 @@ export const parseGetTransactionsResponse = ({
   if (!data || !Array.isArray(data) || !data.length) return [];
 
   return data.map(v => {
-    const { details } = prettifyCapTransactions(v);
+    const { details } = prettifyCapTransactions(v) as { details : TransactionDetails};
 
     // TODO: validate details
 
@@ -87,13 +87,13 @@ export const parseGetTransactionsResponse = ({
       ...v,
       item: tokenField
             ? itemHandler(
-              (details as unknown as TransactionDetails),
+              details,
               tokenField,
             )
             : undefined,
-      to: (details as unknown as TransactionDetails)?.to?.toText(),
-      from: (details as unknown as TransactionDetails)?.from?.toText(),
-      amount: (details as unknown as TransactionDetails)?.amount,
+      to: details?.to?.toText ? details?.to?.toText : details?.to,
+      from: details?.from?.toText ? details?.from?.toText : details?.from,
+      amount: details?.amount,
       operation: v.operation,
       time: toTransactionTime(v.time),
     }
