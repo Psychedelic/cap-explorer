@@ -51,7 +51,7 @@ export const parseGetTransactionsResponse = ({
   if (!data || !Array.isArray(data) || !data.length) return [];
 
   return data.map(v => {
-    const { details } = prettifyCapTransactions(v) as { details : TransactionDetails};
+    const { details } = prettifyCapTransactions(v) as unknown as { details : TransactionDetails};
 
     // TODO: validate details
 
@@ -91,8 +91,8 @@ export const parseGetTransactionsResponse = ({
               tokenField,
             )
             : undefined,
-      to: details?.to?.toText ? details?.to?.toText : details?.to,
-      from: details?.from?.toText ? details?.from?.toText : details?.from,
+      to: details?.to?.toString(),
+      from: details?.from?.toString(),
       amount: details?.amount,
       operation: v.operation,
       time: toTransactionTime(v.time),
