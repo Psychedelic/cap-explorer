@@ -124,8 +124,8 @@ type Suggestions = string[];
 const SearchInput = () => {
   const accountStore = useAccountStore();
   const {
-    canisterKeyPairedMetadata,
     canisterNameKeyPairedId,
+    contractKeyPairedMetadata,
   } = accountStore;
   const refDOM = useRef<HTMLDivElement | undefined>();
   const [userInput, setUserInput] = useState<string>('');
@@ -133,35 +133,33 @@ const SearchInput = () => {
   const clickedOutside = useOutsideHandler({
     domElement: refDOM?.current,
   });
-  const onInputHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const onInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Filter by name
     // gets a list of names
     const matchesByName =
       Object
         .keys(canisterNameKeyPairedId)
         .filter(
-          (val: string) => val.toLowerCase().includes(e.currentTarget.value.toLowerCase())
+          (val: string) => val.toLowerCase().includes(e.currentTarget.value.trim().toLowerCase())
         );
 
     // Reverse lookup which computes the name based in the requested id
     // gets a list of names
     const matchesById =
-      canisterKeyPairedMetadata
+      contractKeyPairedMetadata
       && Object
-          .keys(canisterKeyPairedMetadata)
-          .map((canisterId) => canisterId)
+          .keys(contractKeyPairedMetadata)
           .filter(
-            (val: string) => val.toLowerCase().includes(e.currentTarget.value.toLowerCase())
+            (val: string) => val.toLowerCase().includes(e.currentTarget.value.trim().toLowerCase())
           )
-          .map((canisterId: string) => canisterKeyPairedMetadata[canisterId].name)
+          .map((canisterId: string) => contractKeyPairedMetadata[canisterId].name)
       || [];
 
-    setSuggestions([
-      ...matchesByName,
-      ...matchesById,
-    ]);
+    const suggestions = [...new Set([...matchesByName, ...matchesById])];
+
+    setSuggestions(suggestions);
     setUserInput(e.currentTarget.value);
-  }, [canisterNameKeyPairedId, setSuggestions, setUserInput]);
+  };
 
   const showSuggestions = !!(userInput.length && suggestions.length);
 
