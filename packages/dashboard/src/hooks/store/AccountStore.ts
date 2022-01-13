@@ -7,7 +7,6 @@ import {
 } from '@psychedelic/cap-js';
 import { contractKeyPairedMetadataHandler } from '@utils/account';
 import {
-  CanisterKeyPairedMetadata,
   CanisterNameKeyPairedId,
   ContractKeyPairedMetadata,
 } from '@utils/dab';
@@ -24,7 +23,6 @@ import { DabStore } from './DabStore';
 
 export interface AccountStore {
   accounts: ContractsResponse | {},
-  canisterKeyPairedMetadata?: CanisterKeyPairedMetadata,
   canisterNameKeyPairedId: CanisterNameKeyPairedId,
   contractKeyPairedMetadata: ContractKeyPairedMetadata,
   isLoading: boolean,
@@ -44,7 +42,6 @@ export interface AccountStore {
 
 export const useAccountStore = create<AccountStore>((set, get) => ({
   accounts: {},
-  canisterKeyPairedMetadata: {},
   canisterNameKeyPairedId: {},
   contractPairedMetadata: [],
   contractKeyPairedMetadata: {},

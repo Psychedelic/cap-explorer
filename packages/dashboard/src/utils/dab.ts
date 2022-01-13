@@ -37,7 +37,6 @@ export interface CanisterMetadata {
 
 export type ContractKeyPairedMetadata = Record<string, DABCollectionItem>;
 
-export type CanisterKeyPairedMetadata = { [canisterId: string]: CanisterMetadata; };
 export type CanisterNameKeyPairedId = Record<string, string>;
 
 const USE_MOCKUP = shouldUseMockup();
