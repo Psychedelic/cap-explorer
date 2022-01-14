@@ -32,8 +32,8 @@ export const toTransactionTime = (time: bigint) => {
 }
 
 type TransactionDetails = {
-  from: Principal;
-  to: Principal;
+  from: Principal | string;
+  to: Principal | string;
   amount: bigint;
   token?: string;
   tokenId?: string;
@@ -51,10 +51,11 @@ export const parseGetTransactionsResponse = ({
   if (!data || !Array.isArray(data) || !data.length) return [];
 
   return data.map(v => {
-    const { details } = prettifyCapTransactions(v);
+    const { details } = prettifyCapTransactions(v) as unknown as { details : TransactionDetails};
 
     // TODO: validate details
 
+    // TODO: To remove "possible fields" as the Token Standard field is now available!
     // TODO: there are no conventions on naming fields
     // so, for the moment will check for matching token
     const possibleFields: TokenFields = ['token', 'token_id', 'tokenId'];
@@ -86,13 +87,13 @@ export const parseGetTransactionsResponse = ({
       ...v,
       item: tokenField
             ? itemHandler(
-              (details as unknown as TransactionDetails),
+              details,
               tokenField,
             )
             : undefined,
-      to: (details as unknown as TransactionDetails)?.to?.toText(),
-      from: (details as unknown as TransactionDetails)?.from?.toText(),
-      amount: (details as unknown as TransactionDetails)?.amount,
+      to: details?.to?.toString(),
+      from: details?.from?.toString(),
+      amount: details?.amount,
       operation: v.operation,
       time: toTransactionTime(v.time),
     }

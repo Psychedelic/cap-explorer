@@ -11,7 +11,8 @@
   },
   "keywords": [],
   "scripts": {
-    "build": "tsc -b tsconfig.json"
+    "build": "tsc -b tsconfig.json",
+    "prepare": "npm run build"
   },
   "author": "Helder Oliveira",
   "dependencies": {
