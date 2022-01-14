@@ -1,3 +1,17 @@
+# [1.2.0](https://github.com/Psychedelic/cap-explorer/compare/v1.1.0...v1.2.0) (2022-01-14)
+
+
+### Bug Fixes
+
+* 🐛  generate random principal, prepare should call build ([cf9f44c](https://github.com/Psychedelic/cap-explorer/commit/cf9f44c872b983dc3825dbde2e3dabf814c96cea))
+* 🐛  psychedelic to lowercase ([67f2911](https://github.com/Psychedelic/cap-explorer/commit/67f291169aaf84c54717ef182666175f406b56a0))
+* 🐛 search input ([#95](https://github.com/Psychedelic/cap-explorer/issues/95)) ([f64e007](https://github.com/Psychedelic/cap-explorer/commit/f64e007359ba796fa3d22d42ffd2c003fba979c3))
+
+
+### Features
+
+* 🎸 more flexible to/from fields ([#93](https://github.com/Psychedelic/cap-explorer/issues/93)) ([2c0c4ff](https://github.com/Psychedelic/cap-explorer/commit/2c0c4ffdb7d80c1c33c42e01541f13015d016230))
+
 # [1.1.0](https://github.com/Psychedelic/cap-explorer/compare/v1.0.1...v1.1.0) (2021-12-14)
 
 
