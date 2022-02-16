@@ -11,17 +11,17 @@ Learn more about [Cap](https://github.com/Psychedelic/cap) by reading the origin
 
 ## 📒 Table of Contents 
 
-- [Requirements](#requirements)
-- [Getting Started](#getting-started)
-  - [Dashboard development](#dashboard-development)
+- [Requirements](#-requirements)
+- [Getting Started](#-getting-started)
+  - [Dashboard development](#-dashboard-development)
   - [The CAP Service](#the-cap-service)
     - [Version control](#cap-service-version-control)
     - [Mock data generator](#cap-service-mock-data-generator)
-- [Build the distribution app](#build-the-distribution-app)
-- [Configure NPM for Github Package Registry](#configure-npm-for-github-package-registry)
-- [Tests](#tests)
-- [Profiler](#profiler)
-- [Contribution guideline](#contribution-guideline)
+- [Build the distribution app](#-build-the-distribution-app)
+- [Configure NPM for Github Package Registry](#-configure-npm-for-github-package-registry)
+- [Tests](#-tests)
+- [Profiler](#-profiler)
+- [Contribution guideline](#-contribution-guideline)
 
 ## ⚙️ Requirements
 
