@@ -215,9 +215,9 @@ const TransactionsTable = ({
         );
       },
       price: (cellValue: {
-        price?: bigint,
-        price_decimals?: bigint,
-        price_currency?: string,
+        value?: bigint,
+        decimals?: bigint,
+        currency?: string,
       }) => {
         return (
           <PriceCell>

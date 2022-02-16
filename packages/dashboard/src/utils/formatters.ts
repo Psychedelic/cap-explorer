@@ -139,9 +139,9 @@ export const formatPriceForChart = ({
   return computedValue;
 };
 
-export const formatPriceDetailToString = (price: { price?: bigint, price_decimals?: bigint, price_currency?: string }) => {
-  if (!price.price) return '-';
-  const divisor = price.price_decimals ? 10 ** Number(price.price_decimals) : 1;
-  const currency = price.price_currency || '';
-  return `${(Number(price.price) / divisor).toFixed(2)} ${currency}`;
+export const formatPriceDetailToString = (price: { value?: bigint, decimals?: bigint, currency?: string }) => {
+  if (!price.value) return '-';
+  const divisor = price.decimals ? 10 ** Number(price.decimals) : 1;
+  const currency = price.currency || '';
+  return `${(Number(price.value) / divisor).toFixed(2)} ${currency}`;
 };

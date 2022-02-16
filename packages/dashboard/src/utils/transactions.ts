@@ -96,9 +96,9 @@ export const parseGetTransactionsResponse = ({
       to: details?.to?.toString(),
       from: details?.from?.toString(),
       price: {
-        price: details?.price,
-        price_currency: details?.price_currency,
-        price_decimals: details?.price_decimals,
+        value: details?.price,
+        currency: details?.price_currency,
+        decimals: details?.price_decimals,
       },
       operation: v.operation,
       time: toTransactionTime(v.time),
