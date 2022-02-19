@@ -34,10 +34,12 @@ export const toTransactionTime = (time: bigint) => {
 type TransactionDetails = {
   from: Principal | string;
   to: Principal | string;
-  amount: bigint;
   token?: string;
   tokenId?: string;
   token_id?: string;
+  price?: bigint;
+  price_decimals?: bigint;
+  price_currency?: string;
 }
 
 type TokenField = 'token' | 'token_id' | 'tokenId';
@@ -93,7 +95,11 @@ export const parseGetTransactionsResponse = ({
             : undefined,
       to: details?.to?.toString(),
       from: details?.from?.toString(),
-      amount: details?.amount,
+      price: {
+        value: details?.price,
+        currency: details?.price_currency,
+        decimals: details?.price_decimals,
+      },
       operation: v.operation,
       time: toTransactionTime(v.time),
     }

@@ -11,17 +11,17 @@ Learn more about [Cap](https://github.com/Psychedelic/cap) by reading the origin
 
 ## 📒 Table of Contents 
 
-- [Requirements](#requirements)
-- [Getting Started](#getting-started)
-  - [Dashboard development](#dashboard-development)
+- [Requirements](#-requirements)
+- [Getting Started](#-getting-started)
+  - [Dashboard development](#-dashboard-development)
   - [The CAP Service](#the-cap-service)
     - [Version control](#cap-service-version-control)
     - [Mock data generator](#cap-service-mock-data-generator)
-- [Build the distribution app](#build-the-distribution-app)
-- [Configure NPM for Github Package Registry](#configure-npm-for-github-package-registry)
-- [Tests](#tests)
-- [Profiler](#profiler)
-- [Contribution guideline](#contribution-guideline)
+- [Build the distribution app](#-build-the-distribution-app)
+- [Configure NPM for Github Package Registry](#-configure-npm-for-github-package-registry)
+- [Tests](#-tests)
+- [Profiler](#-profiler)
+- [Contribution guideline](#-contribution-guideline)
 
 ## ⚙️ Requirements
 
@@ -204,7 +204,7 @@ To pull and install from [@Psychedelic](https://github.com/psychedelic) via the 
 - A personal access token (you can create a personal acess token [here](https://github.com/settings/tokens))
 - The personal access token with the correct scopes, **repositories**, **org repositories** and **read:packages** to be granted access to the [GitHub Package Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages).
 
-- Authentication via `npm login`, using your Github email for the **username** and the **personal access token** as your **password**:
+- Authentication via `npm login`, using your Github username for the **username** and the **personal access token** as your **password**:
 
 Once you have those ready, run:
 

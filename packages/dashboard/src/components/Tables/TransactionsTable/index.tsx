@@ -7,7 +7,7 @@ import { styled } from '@stitched';
 // TODO: move the tableid to the util
 import { TableId } from '@components/Tables/DataTable';
 import { dateRelative } from '@utils/date';
-import { formatPriceForChart } from '@utils/formatters';
+import { formatPriceDetailToString, formatPriceForChart } from '@utils/formatters';
 import Fleekon, { IconNames } from '@components/Fleekon';
 import { getXTCMarketValue } from '@utils/xtc';
 import {
@@ -19,6 +19,7 @@ import { trimAccount } from '@utils/account';
 import ItemCell from '@components/ItemCell';
 import loadable from '@loadable/component';
 import { LoadableLoadingPlaceholder } from '@components/LoadingForLoadable';
+import { Principal } from '@dfinity/principal';
 
 const LazyDatatable = loadable(() => import(/* webpackPrefetch: true */  '@components/Tables/DataTable'), {
   // The fallback to blank is intentional
@@ -105,16 +106,10 @@ export enum TransactionTypes {
   withdraw = 'withdraw',
 }
 
-enum TransactionTypeAlias {
-  all = 'All',
-  deposit = 'Deposit Cycles',
-  withdraw = 'Withdraw Cycles'
-}
-
 export interface Data {
   operation: string,
   item: number,
-  amount: string,
+  price: string,
   from: string,
   to: string,
   time: string,
@@ -135,7 +130,7 @@ export type FetchPageDataHandler = ({
 export const DEFAULT_COLUMN_ORDER: (keyof Data)[] = [
   'item',
   'operation',
-  'amount',
+  'price',
   'from',
   'to',
   'time'
@@ -154,7 +149,7 @@ const columns: Column[] = [
   },
   {
     Header: 'Price',
-    accessor: 'amount',
+    accessor: 'price',
   },
   {
     Header: 'From',
@@ -219,15 +214,14 @@ const TransactionsTable = ({
           />
         );
       },
-      amount: (cellValue: number) => {
-        if (!cellValue || typeof cellValue !== 'bigint') return NOT_AVAILABLE_PLACEHOLDER;
-
-        const usdValue = getXTCMarketValue(cellValue);
-
+      price: (cellValue: {
+        value?: bigint,
+        decimals?: bigint,
+        currency?: string,
+      }) => {
         return (
           <PriceCell>
-            <div>{formatPriceForChart({ value: usdValue, abbreviation: 'USD' })}</div>
-            <div>{formatPriceForChart({ value: cellValue, abbreviation: 'CYCLES' })}</div>
+            <div>{formatPriceDetailToString(cellValue)}</div>
           </PriceCell>
         );
       },
