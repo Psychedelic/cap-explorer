@@ -1,6 +1,6 @@
 {
   "name": "cap-explorer",
-  "private": true,
+  "license": "GPL-3.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Psychedelic/cap-explorer"
