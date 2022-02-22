@@ -1,5 +1,6 @@
 {
   "name": "cap-explorer",
+  "description": "Explorer interface for CAP Open Internet Service",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
