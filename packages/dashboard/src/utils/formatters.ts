@@ -138,3 +138,10 @@ export const formatPriceForChart = ({
   computedValue = priceFormatByAbbreviation({ value: computedValue, abbreviation });
   return computedValue;
 };
+
+export const formatPriceDetailToString = (price: { value?: bigint, decimals?: bigint, currency?: string }) => {
+  if (!price.value) return '-';
+  const divisor = price.decimals ? 10 ** Number(price.decimals) : 1;
+  const currency = price.currency || '';
+  return `${(Number(price.value) / divisor).toFixed(2)} ${currency}`;
+};
