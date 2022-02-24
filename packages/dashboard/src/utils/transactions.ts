@@ -37,12 +37,13 @@ type TransactionDetails = {
   token?: string;
   tokenId?: string;
   token_id?: string;
+  tokend_id?: string;
   price?: bigint;
   price_decimals?: bigint;
   price_currency?: string;
 }
 
-type TokenField = 'token' | 'token_id' | 'tokenId';
+type TokenField = 'token' | 'token_id' | 'tokenId' | 'tokend_id';
 type TokenFields = TokenField[];
 
 export const parseGetTransactionsResponse = ({
@@ -60,7 +61,7 @@ export const parseGetTransactionsResponse = ({
     // TODO: To remove "possible fields" as the Token Standard field is now available!
     // TODO: there are no conventions on naming fields
     // so, for the moment will check for matching token
-    const possibleFields: TokenFields = ['token', 'token_id', 'tokenId'];
+    const possibleFields: TokenFields = ['token', 'token_id', 'tokenId', 'tokend_id'];
     const tokenField = possibleFields.find((field) => details[field]);
 
     const itemHandler = (details: TransactionDetails, tokenField: TokenField) => {      
