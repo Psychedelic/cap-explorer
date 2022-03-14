@@ -34,16 +34,13 @@ export const toTransactionTime = (time: bigint) => {
 type TransactionDetails = {
   from: Principal | string;
   to: Principal | string;
-  token?: string;
-  tokenId?: string;
-  token_id?: string;
   price?: bigint;
   price_decimals?: bigint;
   price_currency?: string;
+  [key : TokenField] : string;
 }
 
-type TokenField = 'token' | 'token_id' | 'tokenId';
-type TokenFields = TokenField[];
+type TokenField = `token${string}`
 
 export const parseGetTransactionsResponse = ({
   data,
@@ -60,8 +57,11 @@ export const parseGetTransactionsResponse = ({
     // TODO: To remove "possible fields" as the Token Standard field is now available!
     // TODO: there are no conventions on naming fields
     // so, for the moment will check for matching token
-    const possibleFields: TokenFields = ['token', 'token_id', 'tokenId'];
-    const tokenField = possibleFields.find((field) => details[field]);
+
+    // regex to find token fields
+    const regex = new RegExp('token*');
+    // returns undefined if no match, otherwise a string of type TokenField
+    const tokenField = Object.keys(details).find((field) => regex.test(field));
 
     const itemHandler = (details: TransactionDetails, tokenField: TokenField) => {      
       let tokenIndex: number | undefined;
@@ -90,7 +90,7 @@ export const parseGetTransactionsResponse = ({
       item: tokenField
             ? itemHandler(
               details,
-              tokenField,
+              tokenField as TokenField, // cast to TokenField so that TS doesn't complain
             )
             : undefined,
       to: details?.to?.toString(),
