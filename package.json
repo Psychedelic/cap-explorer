@@ -1,6 +1,7 @@
 {
   "name": "cap-explorer",
-  "private": true,
+  "description": "Explorer interface for CAP Open Internet Service",
+  "license": "GPL-3.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Psychedelic/cap-explorer"
