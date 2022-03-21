@@ -1,3 +1,16 @@
+# [1.3.0](https://github.com/Psychedelic/cap-explorer/compare/v1.2.0...v1.3.0) (2022-03-21)
+
+
+### Bug Fixes
+
+* 🐛readme table of content links ([bf1a973](https://github.com/Psychedelic/cap-explorer/commit/bf1a973541866874490a57b1c3c6d3147dd55938))
+
+
+### Features
+
+* 🎸 added new token field ([#101](https://github.com/Psychedelic/cap-explorer/issues/101)) ([fd658f5](https://github.com/Psychedelic/cap-explorer/commit/fd658f5d92f6fac3f7b877bf0d2fec03fdd845e1))
+* 🎸 Price column in transaction tables ([47fb269](https://github.com/Psychedelic/cap-explorer/commit/47fb269f2eda12ff2d709f3b0e91a313f16f8310))
+
 # [1.2.0](https://github.com/Psychedelic/cap-explorer/compare/v1.1.0...v1.2.0) (2022-01-14)
 
 
